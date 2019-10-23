@@ -1,5 +1,5 @@
 '''Jointly developed by Gagan Singh, Aniemsh Ghosh 
-	& Bhupesh Varshney
+    & Bhupesh Varshney
 '''
 from django.db import models
 from django.contrib.auth.models import User
@@ -73,7 +73,7 @@ class Solution(models.Model):
     WRONG = 'wrong'
     NOT_ATTEMPT = 'not-attempted'
 
-	STATUS = (
+    STATUS = (
         (ACCEPTED, 'Accepted'),
         (PARTIALLY_SUBMIT, 'Partially Submitted'),
         (WRONG, 'Wrong Answer'),
