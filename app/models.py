@@ -5,11 +5,18 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
 
+class Institution(models.Model):
+    name = models.CharField(max_length=200, blank=True)
+
+    def __str__(self):
+        return self.name
+
+
 class Student(models.Model):
     user = models.OneToOneField(to=User, on_delete=models.CASCADE)
     name = models.CharField(max_length=100, blank=True)
     profile_pic = models.ImageField(upload_to='StudentProfilePic', blank=True)
-    college_name = models.CharField(max_length=200, blank=True)
+    institution = models.ForeignKey(to=Institution, blank=True, null=True, on_delete=models.CASCADE)
     course = models.CharField(max_length=50, blank=True)
     roll_no = models.IntegerField()
 
@@ -25,7 +32,7 @@ class Professor(models.Model):
     user = models.OneToOneField(to=User, on_delete=models.CASCADE)
     name = models.CharField(max_length=100, blank=True)
     profile_pic = models.ImageField(upload_to='ProfessorProfilePic', blank=True)
-    college_name = models.CharField(max_length=200, blank=True)
+    institution = models.ForeignKey(to=Institution, blank=True, null=True, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name
@@ -82,11 +89,12 @@ class Solution(models.Model):
     )
 
     question = models.ForeignKey(to=Question, on_delete=models.CASCADE)
+    assignment = models.ForeignKey(to=Assignment, on_delete=models.CASCADE)
     student = models.ForeignKey(to=Student, on_delete=models.CASCADE)
     sub_date = models.DateTimeField(default=timezone.now)
     status = models.CharField(max_length=100, choices=STATUS)
     submission = models.FileField(
-        upload_to=f'question{question}/submissions/{student}',
+        upload_to=f'assignments/{assignment}/questions/{question}/submissions/{student}',
         blank=False
     )
     remark = models.CharField(max_length=500, blank=True)
