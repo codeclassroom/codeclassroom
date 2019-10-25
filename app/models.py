@@ -62,6 +62,7 @@ class Question(models.Model):
     sample_input = models.TextField(blank=True)
     sample_output = models.TextField(blank=True)
     marks = models.IntegerField()
+    draft = models.BooleanField(default=False)
 
     def __str__(self):
         return self.title
