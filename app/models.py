@@ -1,6 +1,4 @@
-'''Jointly developed by Gagan Singh, Aniemsh Ghosh 
-    & Bhupesh Varshney
-'''
+'''Jointly developed by Gagan Singh, Bhupesh Varshney & Animesh Ghosh.'''
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
