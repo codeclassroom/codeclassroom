@@ -14,7 +14,6 @@ class Institution(models.Model):
 
 class Student(models.Model):
     user = models.OneToOneField(to=User, on_delete=models.CASCADE)
-    name = models.CharField(max_length=100, blank=True)
     profile_pic = models.ImageField(upload_to='StudentProfilePic', blank=True)
     institution = models.ForeignKey(to=Institution, blank=True, null=True, on_delete=models.CASCADE)
     course = models.CharField(max_length=50, blank=True)
@@ -30,7 +29,6 @@ class Professor(models.Model):
     delete automatically*.
     '''
     user = models.OneToOneField(to=User, on_delete=models.CASCADE)
-    name = models.CharField(max_length=100, blank=True)
     profile_pic = models.ImageField(upload_to='ProfessorProfilePic', blank=True)
     institution = models.ForeignKey(to=Institution, blank=True, null=True, on_delete=models.CASCADE)
 

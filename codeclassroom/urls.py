@@ -19,3 +19,6 @@ from django.urls import path
 urlpatterns = [
     path('admin/', admin.site.urls),
 ]
+
+admin.site.site_header = "CodeClassroom Administration"
+admin.site.site_title = "CodeClassroom Admin"
