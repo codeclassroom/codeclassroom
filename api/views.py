@@ -1,17 +1,21 @@
 '''API views using mostly ModelViewSet.'''
+from django.contrib.auth.models import User
 from rest_framework import viewsets
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
-from rest_framework.reverse import reverse
-from app.models import Professor
-from app.serializers import ProfessorSerializer
+from app.models import Student, Professor
+from app.serializers import (
+    UserSerializer, StudentSerializer, ProfessorSerializer,
+)
 
-@api_view(['GET',])
-def index(request):
-    '''API root for CodeClassroom.'''
-    return Response({
-        'professors': reverse('professor-list', request=request),
-    })
+
+class UserViewSet(viewsets.ModelViewSet):
+    serializer_class = UserSerializer
+    queryset = User.objects.all()
+
+
+class StudentViewSet(viewsets.ModelViewSet):
+    serializer_class = StudentSerializer
+    queryset = Student.objects.all()
+
 
 class ProfessorViewSet(viewsets.ModelViewSet):
     serializer_class = ProfessorSerializer
