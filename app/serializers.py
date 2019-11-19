@@ -1,6 +1,5 @@
 '''Serializer classes for models using ModelSerializer. Serializing all fields.'''
 from django.contrib.auth.models import User
-from django.contrib.auth.hashers import make_password
 from rest_framework import serializers
 from .models import (
     Institution, Student, Professor, Classroom, Assignment, Question, Solution
@@ -13,37 +12,76 @@ class InstitutionSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class UserSerializer(serializers.ModelSerializer):
+class UserSignupSerializer(serializers.ModelSerializer):
+    '''Serializer for signing-up new users.'''
+    password = serializers.CharField(
+        style={'input_type': 'password'}, write_only=True
+    )
 
     class Meta:
         model = User
-        fields = ['id', 'username', 'email', 'first_name', 'last_name', 'password']
-    
-    # taken from Django REST Framework's documentation
+        fields = ['username', 'email', 'password']
+
+
+class UserSerializer(serializers.ModelSerializer):
+    '''Serializer for listing/retrieving existing users.'''
+
+    class Meta:
+        model = User
+        fields = ['id', 'username', 'email', 'first_name', 'last_name']
+
+
+class ProfessorSignupSerializer(serializers.ModelSerializer):
+    '''Serializer for signing-up new professors.'''
+    user = UserSignupSerializer()
+
+    class Meta:
+        model = Professor
+        fields = '__all__'
+
     def create(self, validated_data):
-        user = User(
-            username=validated_data['username'],
-            email=validated_data['email'],
-            first_name=validated_data['first_name'],
-            last_name=validated_data['last_name'],
-            password=make_password(validated_data['password'])
-        )
-        user.save()
-        return user
+        user_data = validated_data.pop('user')
+        user = User.objects.create_user(**user_data)
+        professor = Professor.objects.create(user=user, **validated_data)
+        return professor
 
 
-class StudentSerializer(serializers.ModelSerializer):
+class ProfessorSerializer(serializers.ModelSerializer):
+    '''Serializer for listing/retrieving existing professors.'''
+    user = UserSerializer()
+    institution = serializers.StringRelatedField()
+
+    class Meta:
+        model = Professor
+        fields = '__all__'
+
+
+class StudentSignupSerializer(serializers.ModelSerializer):
+    '''Serializer for signing-up new students.'''
+    user = UserSignupSerializer()
 
     class Meta:
         model = Student
         fields = '__all__'
 
+    def create(self, validated_data):
+        user_data = validated_data.pop('user')
+        user = User.objects.create_user(**user_data)
+        student = Student.objects.create(user=user, **validated_data)
+        return student
 
-class ProfessorSerializer(serializers.ModelSerializer):
+
+class StudentSerializer(serializers.ModelSerializer):
+    '''Serializer for listing/retrieving existing students.'''
+    user = UserSerializer()
+    institution = serializers.StringRelatedField()
 
     class Meta:
-        model = Professor
+        model = Student
         fields = '__all__'
+        extra_kwargs = {
+            'url': {'view_name': 'students'},
+        }
 
 
 class ClassroomSerializer(serializers.ModelSerializer):
