@@ -23,6 +23,11 @@ class UserSignupSerializer(serializers.ModelSerializer):
         fields = ['username', 'email', 'password']
 
 
+class UserLoginSerializer(serializers.Serializer):
+    username = serializers.CharField(allow_blank=False)
+    password = serializers.CharField(style={'input_type': 'password'})
+
+
 class UserSerializer(serializers.ModelSerializer):
     '''Serializer for listing/retrieving existing users.'''
 

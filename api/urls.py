@@ -1,6 +1,7 @@
 from django.urls import path, include
 from .views import (
 	index,
+    UserLoginView, UserLogoutView,
 	StudentSignupView, StudentViewSet,
 	ProfessorSignupView, ProfessorViewSet
 )
@@ -16,6 +17,8 @@ urlpatterns = [
 	path('', index, name='index'),
     path('signup/professor', ProfessorSignupView.as_view(), name='prof-signup'),
     path('signup/student', StudentSignupView.as_view(), name='student-signup'),
+    path('login/', UserLoginView.as_view(), name='login'),
+    path('logout/', UserLogoutView.as_view(), name='logout'),
     path('students/', student_list, name='students'),
     path('students/<int:pk>/', student_detail, name='student'),
     path('professors/', professor_list, name='professors'),
