@@ -9,6 +9,9 @@ urlpatterns = [
     path('api/', include('api.urls')),
 ]
 
+admin.site.site_header = "CodeClassroom Administration"
+admin.site.site_title = "CodeClassroom Admin"
+
 # for serving media files during development, taken from Django documentation
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

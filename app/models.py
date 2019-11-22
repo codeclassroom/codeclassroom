@@ -11,6 +11,7 @@ class Institution(models.Model):
         return self.name
 
 
+
 class Professor(models.Model):
     '''Assuming a professor can create multiple classrooms and each classroom can have 
     multiple assignments. if a classroom is deleted, all of the assignments of that class will
