@@ -1,3 +1,6 @@
 from django.shortcuts import render
+from django.http import HttpResponse
 
-# Create your views here.
+def index(request):
+    html = 'CodeClassroom API.<br/>Go to <a href="api"><code>api/</code></a> for the full list of end-points.'
+    return HttpResponse(html)

@@ -1,9 +1,8 @@
-'''Jointly developed by Gagan Singh, Aniemsh Ghosh 
-    & Bhupesh Varshney
-'''
+'''Jointly developed by Gagan Singh, Bhupesh Varshney & Animesh Ghosh.'''
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
+
 
 class Institution(models.Model):
     name = models.CharField(max_length=200, blank=True)
@@ -11,16 +10,6 @@ class Institution(models.Model):
     def __str__(self):
         return self.name
 
-
-class Student(models.Model):
-    user = models.OneToOneField(to=User, on_delete=models.CASCADE)
-    profile_pic = models.ImageField(upload_to='StudentProfilePic', blank=True)
-    institution = models.ForeignKey(to=Institution, blank=True, null=True, on_delete=models.CASCADE)
-    course = models.CharField(max_length=50, blank=True)
-    roll_no = models.IntegerField()
-
-    def __str__(self):
-        return self.name
 
 
 class Professor(models.Model):
@@ -33,7 +22,18 @@ class Professor(models.Model):
     institution = models.ForeignKey(to=Institution, blank=True, null=True, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.name
+        return self.user.username
+
+
+class Student(models.Model):
+    user = models.OneToOneField(to=User, on_delete=models.CASCADE)
+    profile_pic = models.ImageField(upload_to='StudentProfilePic', blank=True)
+    institution = models.ForeignKey(to=Institution, blank=True, null=True, on_delete=models.CASCADE)
+    course = models.CharField(max_length=50, blank=True)
+    roll_no = models.IntegerField()
+
+    def __str__(self):
+        return self.user.username
 
 
 class Classroom(models.Model):
