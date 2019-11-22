@@ -103,3 +103,7 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+
+# Remove all CSV and JSON file
+*.csv
+*.json
