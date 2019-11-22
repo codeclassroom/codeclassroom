@@ -8,11 +8,14 @@ from rest_framework.response import Response
 from rest_framework.reverse import reverse
 from rest_framework import generics
 from rest_framework import viewsets
-from app.models import (Professor, Student,)
+from rest_framework import status
+from app.models import (Professor, Student, Classroom, Assignment, Question)
 from app.serializers import (
     UserLoginSerializer,
     ProfessorSignupSerializer, ProfessorSerializer,
     StudentSignupSerializer, StudentSerializer,
+    ClassroomSerializer, AssignmentSerializer,
+    QuestionSerializer,
 )
 
 
@@ -27,11 +30,15 @@ def index(request):
         'logout': reverse('logout', request=request),
         'students': reverse('students', request=request),
         'professors': reverse('professors', request=request),
+        'create-classroom' : reverse('classroom-create', request=request),
+        'classrooms' : reverse('classrooms', request=request),
+        'create-assignment' : reverse('assignment-create', request=request),
+        'create-question' : reverse('question-create', request=request),
     })
 
 
 class UserLoginView(views.APIView):
-    '''API view for logging-in users.'''
+    '''API view for logging-in users'''
     permission_classes = [AllowAny]
     serializer_class = UserLoginSerializer
 
@@ -61,7 +68,7 @@ class UserLoginView(views.APIView):
 
 
 class UserLogoutView(views.APIView):
-    '''API view to logout an authenticated user.'''
+    '''API view to logout an authenticated user'''
     authentication_classes = [SessionAuthentication, BasicAuthentication]
     permission_classes = [IsAuthenticated]
 
@@ -71,14 +78,14 @@ class UserLogoutView(views.APIView):
 
 
 class ProfessorSignupView(generics.CreateAPIView):
-    '''API view for signing-up professors.'''
+    '''API view for signing-up professors'''
     queryset = Professor.objects.all()
     serializer_class = ProfessorSignupSerializer
     permission_classes = [AllowAny]
 
 
 class ProfessorViewSet(viewsets.ReadOnlyModelViewSet):
-    '''API view for listing professors.'''
+    '''API view for listing professors'''
     queryset = Professor.objects.all()
     serializer_class = ProfessorSerializer
     authentication_classes = [SessionAuthentication, BasicAuthentication]
@@ -86,15 +93,93 @@ class ProfessorViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class StudentSignupView(generics.CreateAPIView):
-    '''API view for signing-up students.'''
+    '''API view for signing-up students'''
     queryset = Student.objects.all()
     serializer_class = StudentSignupSerializer
     permission_classes = [AllowAny]
 
 
 class StudentViewSet(viewsets.ReadOnlyModelViewSet):
-    '''API view for listing students.'''
+    '''API view for listing students'''
     queryset = Student.objects.all()
     serializer_class = StudentSerializer
     authentication_classes = [SessionAuthentication, BasicAuthentication]
     permission_classes = [IsAuthenticated]
+
+
+class ClassroomViewSet(viewsets.ReadOnlyModelViewSet):
+    '''API view for listing classrooms'''
+    queryset = Classroom.objects.all()
+    serializer_class = ClassroomSerializer
+    authentication_classes = [SessionAuthentication, BasicAuthentication]
+    permission_classes = [IsAuthenticated]
+
+
+class ClassroomView(views.APIView):
+    '''API view for creating a classroom'''
+    serializer_class = ClassroomSerializer
+    authentication_classes = [SessionAuthentication, BasicAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        serializer = ClassroomSerializer(data=request.data)
+
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+class AssignmentView(views.APIView):
+    '''API view for listing assignments'''
+    serializer_class = AssignmentSerializer
+    authentication_classes = [SessionAuthentication, BasicAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, class_id):
+        context = Assignment.objects.filter(classroom__id=class_id)
+        serializer = AssignmentSerializer(context, many=True)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
+class AssignmentCreateView(views.APIView):
+    '''API view for creating assignments'''
+    serializer_class = AssignmentSerializer
+    authentication_classes = [SessionAuthentication, BasicAuthentication]
+    permission_classes = [IsAuthenticated]
+    
+    def post(self, request):
+        serializer = AssignmentSerializer(data=request.data)
+
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class QuestionView(views.APIView):
+    '''API view for listing questions'''
+    serializer_class = QuestionSerializer
+    authentication_classes = [SessionAuthentication, BasicAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, assg_id):
+        context = Question.objects.filter(assignment__id=assg_id)
+        serializer = AssignmentSerializer(context, many=True)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
+class QuestionCreateView(views.APIView):
+    '''API view for creating questions'''
+    serializer_class = QuestionSerializer
+    authentication_classes = [SessionAuthentication, BasicAuthentication]
+    permission_classes = [IsAuthenticated]
+    
+    def post(self, request):
+        serializer = QuestionSerializer(data=request.data)
+
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
