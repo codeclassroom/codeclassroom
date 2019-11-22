@@ -17,7 +17,7 @@ from app.serializers import (
     ClassroomSerializer, AssignmentSerializer,
     QuestionSerializer,
 )
-
+import coderunner
 
 @api_view(['GET'])
 @permission_classes([AllowAny])
@@ -57,14 +57,14 @@ class UserLoginView(views.APIView):
                     'detail': 'User logged in.',
                     'authenticated': True
                 }
-                return Response(content)
+                return Response(content, status=status.HTTP_202_ACCEPTED)
 
             else:
                 content = {
                     'detail': "User either doesn't exist or has invalid credentials.",
                     'authenticated': False
                 }
-                return Response(content)
+                return Response(content, status=status.HTTP_401_UNAUTHORIZED)
 
 
 class UserLogoutView(views.APIView):
@@ -74,7 +74,7 @@ class UserLogoutView(views.APIView):
 
     def get(self, request):
         logout(request)
-        return Response({'logout': True})
+        return Response({'logout': True}, status=status.HTTP_202_ACCEPTED)
 
 
 class ProfessorSignupView(generics.CreateAPIView):
@@ -183,3 +183,31 @@ class QuestionCreateView(views.APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class RunCode(views.APIView):
+    def post(self, request):
+        code = request.data["code"]
+        lang = request.data["language"]
+
+        # assignment_id = request.data["assignment"]
+        # question_id = request.data["question_id"]
+
+        # expected_output = Question.objects.filter(assignment__id=assg_id, question__id = question_id).get('sample_output')
+        # standard_input = Question.objects.filter(assignment__id=assg_id, question__id = question_id).get('sample_input')
+
+        r = coderunner.Run(code, lang, output, path=False)
+        submission_status = r.getStatus()
+        standard_output = r.getOutput()
+
+        if submission_status == "Accepted":
+            content = { 'status': 'Accepted', 'output': standard_output }
+        else:
+            error = r.getError()
+            content = { 
+            'status': 'Wrong Answer', 
+            'output': standard_output,
+            'error': error 
+            }
+        return Response(content, status=status.HTTP_200_OK)
+
