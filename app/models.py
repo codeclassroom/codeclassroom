@@ -52,9 +52,16 @@ class Classroom(models.Model):
 
 
 class Assignment(models.Model):
+    LANGUAGE = (
+        ('Python', 'Python'),
+        ('Java', 'Java'),
+        ('C++', 'C++'),
+        ('C', 'C')
+    )
     classroom = models.ForeignKey(to=Classroom, on_delete=models.CASCADE)
     title = models.CharField(max_length=200, blank=False)
     deadline = models.DateTimeField(default=timezone.now)
+    language = models.CharField(max_length=50, choices=LANGUAGE)
     
     def __str__(self):
         return self.title
