@@ -4,6 +4,14 @@ from django.contrib.auth.models import User
 from django.utils import timezone
 
 
+def submission_directory_path(instance, filename):
+    """
+    file will be uploaded to MEDIA_ROOT/assignments/<assg_id>/questions/<ques_id/submissions/<student_id>
+    """
+    return 'assignments/{0}/questions/{1}/submissions/{2}/'.format(
+        instance.assignment.id, instance.question.id, instance.student.id, filename)
+
+
 class Institution(models.Model):
     name = models.CharField(max_length=200, blank=True)
 
@@ -99,7 +107,7 @@ class Solution(models.Model):
     sub_date = models.DateTimeField(default=timezone.now)
     status = models.CharField(max_length=100, choices=STATUS)
     submission = models.FileField(
-        upload_to=f'assignments/{assignment}/questions/{question}/submissions/{student}',
+        upload_to=submission_directory_path,
         blank=False
     )
     remark = models.CharField(max_length=500, blank=True)

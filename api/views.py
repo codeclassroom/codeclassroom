@@ -9,13 +9,15 @@ from rest_framework.reverse import reverse
 from rest_framework import generics
 from rest_framework import viewsets
 from rest_framework import status
-from app.models import (Professor, Student, Classroom, Assignment, Question)
+from rest_framework.parsers import MultiPartParser, FormParser
+from app.models import (Professor, Student, Classroom, Assignment, Question, Solution)
 from app.serializers import (
     UserLoginSerializer,
     ProfessorSignupSerializer, ProfessorSerializer,
     StudentSignupSerializer, StudentSerializer,
     ClassroomSerializer, AssignmentSerializer,
-    QuestionSerializer,
+    QuestionSerializer, 
+    SolutionSerializer,
 )
 import coderunner
 
@@ -34,6 +36,8 @@ def index(request):
         'classrooms' : reverse('classrooms', request=request),
         'create-assignment' : reverse('assignment-create', request=request),
         'create-question' : reverse('question-create', request=request),
+        'run-code' : reverse('run-code', request=request),
+        'submit-solution' : reverse('submission', request=request),
     })
 
 
@@ -205,9 +209,25 @@ class RunCode(views.APIView):
         else:
             error = r.getError()
             content = { 
-            'status': 'Wrong Answer', 
-            'output': standard_output,
-            'error': error 
+                'status': 'Wrong Answer', 
+                'output': standard_output,
+                'error': error 
             }
         return Response(content, status=status.HTTP_200_OK)
 
+
+
+class SolutionView(views.APIView):
+    '''API view for submitting solutions'''
+    serializer_class = SolutionSerializer
+    authentication_classes = [SessionAuthentication, BasicAuthentication]
+    permission_classes = [IsAuthenticated]
+    parser_classes = (MultiPartParser, FormParser)
+
+
+    def post(self, request):
+        serializer = SolutionSerializer(data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
