@@ -37,7 +37,7 @@ def index(request):
         'create-assignment' : reverse('assignment-create', request=request),
         'create-question' : reverse('question-create', request=request),
         'run-code' : reverse('run-code', request=request),
-        'submit-solution' : reverse('submission', request=request),
+        'submit-solution' : reverse('submission-create', request=request),
     })
 
 
@@ -170,7 +170,7 @@ class QuestionView(views.APIView):
 
     def get(self, request, assg_id):
         context = Question.objects.filter(assignment__id=assg_id)
-        serializer = AssignmentSerializer(context, many=True)
+        serializer = QuestionSerializer(context, many=True)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
@@ -190,26 +190,39 @@ class QuestionCreateView(views.APIView):
 
 
 class RunCode(views.APIView):
+    '''API for running code'''
+    authentication_classes = [SessionAuthentication, BasicAuthentication]
+    permission_classes = [IsAuthenticated]
+
     def post(self, request):
         code = request.data["code"]
         lang = request.data["language"]
+        question = request.data["question_id"]
 
-        # assignment_id = request.data["assignment"]
-        # question_id = request.data["question_id"]
+        expected_output = Question.objects.filter(question__id = question).get('sample_output')
+        standard_input = Question.objects.filter(question__id = question).get('sample_input')
 
-        # expected_output = Question.objects.filter(assignment__id=assg_id, question__id = question_id).get('sample_output')
-        # standard_input = Question.objects.filter(assignment__id=assg_id, question__id = question_id).get('sample_input')
-
-        r = coderunner.Run(code, lang, output, path=False)
+        if standard_input.exists():
+            r = coderunner.Run(code, lang, standard_input, expected_output, path=False)
+        else:
+            r = coderunner.Run(code, lang, expected_output, path=False)
+        
         submission_status = r.getStatus()
         standard_output = r.getOutput()
 
         if submission_status == "Accepted":
-            content = { 'status': 'Accepted', 'output': standard_output }
+            content = { 
+                'status': 'Accepted', 
+                'output': standard_output 
+            }
+        elif submission_status == "Wrong Answer":
+            content = { 
+                'status': 'Wrong Answer'
+            }
         else:
             error = r.getError()
             content = { 
-                'status': 'Wrong Answer', 
+                'status': 'Error Occured', 
                 'output': standard_output,
                 'error': error 
             }
@@ -227,7 +240,52 @@ class SolutionView(views.APIView):
 
     def post(self, request):
         serializer = SolutionSerializer(data=request.data)
+
         if serializer.is_valid(raise_exception=True):
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            question = request.data['question']
+            assignment = request.data['assignment']
+
+            file_obj = request.FILES['submission']
+            code = str(file_obj.read().decode())
+
+            expected_output = Question.objects.filter(id=question).values('sample_output')
+            standard_input = Question.objects.filter(id=question).values('sample_input')
+            lang = Assignment.objects.filter(id=assignment).values('language')
+            lang = lang[0]['language']
+
+            expected_output = expected_output[0]['sample_output']
+
+            if standard_input.exists():
+                standard_input = standard_input[0]['sample_input']
+                r = coderunner.Run(code, lang, standard_input, expected_output, path=False)
+            else:
+                r = coderunner.Run(code, lang, expected_output, path=False)
+            
+            submission_status = r.getStatus()
+            standard_output = r.getOutput()
+
+            if submission_status == "Accepted":
+                execution_status = "accepted"
+            elif submission_status == "Wrong Answer":
+                execution_status = "wrong"
+            else:
+                execution_status = "not-attempted"
+
+            context = { "status": submission_status }
+
+            serializer.save(status=execution_status)
+
+            return Response(context, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class GetSubmission(views.APIView):
+    '''API View for returning submissions by a student'''
+    serializer_class = SolutionSerializer
+    authentication_classes = [SessionAuthentication, BasicAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, question, student):
+        context = Solution.objects.filter(student_id=student, question_id=question).distinct()
+        serializer = SolutionSerializer(context, many=True)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)

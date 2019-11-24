@@ -7,7 +7,7 @@ from .views import (
     ClassroomView, ClassroomViewSet,
     AssignmentView, AssignmentCreateView,
     QuestionView, QuestionCreateView,
-    RunCode, SolutionView,
+    RunCode, SolutionView, GetSubmission
 )
 
 
@@ -44,6 +44,7 @@ urlpatterns = [
     path('assignments/<int:assg_id>/questions/', QuestionView.as_view(), name='classroom-assignments-questions'),
     
     path('coderunner/', RunCode.as_view(), name='run-code'),
-    path('submission/', SolutionView.as_view(), name='submission'),
+    path('submission/create', SolutionView.as_view(), name='submission-create'),
+    path('submissions/<int:question>/<int:student>/', GetSubmission.as_view(), name='submissions'),
 
 ]
