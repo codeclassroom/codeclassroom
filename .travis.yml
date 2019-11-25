@@ -1,0 +1,15 @@
+language: python
+
+python:
+  - 3.6
+  - 3.7
+
+env:
+  - DJANGO_VERSION=2.2.6
+  - DJANGO_SETTINGS_MODULE='codeclassroom.settings.test'
+
+install:
+  - pip install -r requirements.txt
+  
+script:
+  - python manage.py test
