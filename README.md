@@ -2,6 +2,7 @@
 
 > codeclassroom is back-end of the "CodeClassroom" project.
 
+[![Build Status](https://travis-ci.org/codeclassroom/codeclassroom.svg?branch=master)](https://travis-ci.org/codeclassroom/codeclassroom)
 
 ### Prerequisties
 - Python 3.6.8+
