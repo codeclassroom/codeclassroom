@@ -89,6 +89,19 @@ class StudentSerializer(serializers.ModelSerializer):
         }
 
 
+class ClassroomCreateSerializer(serializers.ModelSerializer):
+    join_code = serializers.CharField(read_only=True)
+
+    class Meta:
+        model = Classroom
+        fields = ['professor', 'title', 'join_code']
+
+
+class ClassroomJoincodeSerializer(serializers.Serializer):
+    '''Serializer for the join code.'''
+    join_code = serializers.CharField(max_length=5, min_length=5, allow_blank=False, required=True)
+
+
 class ClassroomSerializer(serializers.ModelSerializer):
 
     class Meta:

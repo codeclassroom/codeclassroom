@@ -1,4 +1,5 @@
 '''Jointly developed by Gagan Singh, Bhupesh Varshney & Animesh Ghosh.'''
+import random
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
@@ -12,12 +13,17 @@ def submission_directory_path(instance, filename):
         instance.assignment.id, instance.question.id, instance.student.id, filename)
 
 
+def random_code(length=5):
+    '''Returns a random code of given length.'''
+    code_chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
+    return ''.join(random.choices(population=code_chars, k=length))
+
+
 class Institution(models.Model):
     name = models.CharField(max_length=200, blank=True)
 
     def __str__(self):
         return self.name
-
 
 
 class Professor(models.Model):
@@ -48,8 +54,8 @@ class Classroom(models.Model):
     professor = models.ForeignKey(to=Professor, on_delete=models.CASCADE)
     title = models.CharField(max_length=200, blank=False)
     students = models.ManyToManyField(to=Student, blank=True)
-    '''because a student can join multiple classroom and each classroom can have multiple 
-    students'''
+    # because a student can join multiple classrooms and each classroom can have multiple students
+    join_code = models.CharField(max_length=5, default=random_code, editable=False, unique=True)
 
     class Meta:
         verbose_name = 'Classroom'
