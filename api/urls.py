@@ -4,7 +4,7 @@ from .views import (
     UserLoginView, UserLogoutView,
 	StudentSignupView, StudentViewSet,
 	ProfessorSignupView, ProfessorViewSet,
-    ClassroomView, ClassroomViewSet,
+    ClassroomCreateView, ClassroomJoinView, ClassroomViewSet,
     AssignmentView, AssignmentCreateView,
     QuestionView, QuestionCreateView,
     RunCode, SolutionView, GetSubmission
@@ -33,7 +33,8 @@ urlpatterns = [
     path('professors/', professor_list, name='professors'),
     path('professors/<int:pk>/', professor_detail, name='student'),
     
-    path('classroom/create', ClassroomView.as_view(), name='classroom-create'),
+    path('classroom/create', ClassroomCreateView.as_view(), name='classroom-create'),
+    path('classroom/join/', ClassroomJoinView.as_view(), name='classroom-join'),
     path('classroom/<int:pk>/', classroom_detail, name='classroom'),
     path('classrooms/', classroom_list, name='classrooms'),
     

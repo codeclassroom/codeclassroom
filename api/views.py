@@ -15,7 +15,8 @@ from app.serializers import (
     UserLoginSerializer,
     ProfessorSignupSerializer, ProfessorSerializer,
     StudentSignupSerializer, StudentSerializer,
-    ClassroomSerializer, AssignmentSerializer,
+    ClassroomCreateSerializer, ClassroomJoincodeSerializer, ClassroomSerializer,
+    AssignmentSerializer,
     QuestionSerializer, 
     SolutionSerializer,
 )
@@ -33,6 +34,7 @@ def index(request):
         'students': reverse('students', request=request),
         'professors': reverse('professors', request=request),
         'create-classroom' : reverse('classroom-create', request=request),
+        'join-classroom': reverse('classroom-join', request=request),
         'classrooms' : reverse('classrooms', request=request),
         'create-assignment' : reverse('assignment-create', request=request),
         'create-question' : reverse('question-create', request=request),
@@ -42,7 +44,7 @@ def index(request):
 
 
 class UserLoginView(views.APIView):
-    '''API view for logging-in users'''
+    '''API view for logging-in users.'''
     permission_classes = [AllowAny]
     serializer_class = UserLoginSerializer
 
@@ -72,7 +74,7 @@ class UserLoginView(views.APIView):
 
 
 class UserLogoutView(views.APIView):
-    '''API view to logout an authenticated user'''
+    '''API view to logout an authenticated user.'''
     authentication_classes = [SessionAuthentication, BasicAuthentication]
     permission_classes = [IsAuthenticated]
 
@@ -82,14 +84,14 @@ class UserLogoutView(views.APIView):
 
 
 class ProfessorSignupView(generics.CreateAPIView):
-    '''API view for signing-up professors'''
+    '''API view for signing-up professors.'''
     queryset = Professor.objects.all()
     serializer_class = ProfessorSignupSerializer
     permission_classes = [AllowAny]
 
 
 class ProfessorViewSet(viewsets.ReadOnlyModelViewSet):
-    '''API view for listing professors'''
+    '''API view for listing professors.'''
     queryset = Professor.objects.all()
     serializer_class = ProfessorSerializer
     authentication_classes = [SessionAuthentication, BasicAuthentication]
@@ -97,36 +99,28 @@ class ProfessorViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class StudentSignupView(generics.CreateAPIView):
-    '''API view for signing-up students'''
+    '''API view for signing-up students.'''
     queryset = Student.objects.all()
     serializer_class = StudentSignupSerializer
     permission_classes = [AllowAny]
 
 
 class StudentViewSet(viewsets.ReadOnlyModelViewSet):
-    '''API view for listing students'''
+    '''API view for listing students.'''
     queryset = Student.objects.all()
     serializer_class = StudentSerializer
     authentication_classes = [SessionAuthentication, BasicAuthentication]
     permission_classes = [IsAuthenticated]
 
 
-class ClassroomViewSet(viewsets.ReadOnlyModelViewSet):
-    '''API view for listing classrooms'''
-    queryset = Classroom.objects.all()
-    serializer_class = ClassroomSerializer
-    authentication_classes = [SessionAuthentication, BasicAuthentication]
-    permission_classes = [IsAuthenticated]
-
-
-class ClassroomView(views.APIView):
-    '''API view for creating a classroom'''
-    serializer_class = ClassroomSerializer
+class ClassroomCreateView(views.APIView):
+    '''API view for creating a classroom.'''
+    serializer_class = ClassroomCreateSerializer
     authentication_classes = [SessionAuthentication, BasicAuthentication]
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
-        serializer = ClassroomSerializer(data=request.data)
+        serializer = ClassroomCreateSerializer(data=request.data)
 
         if serializer.is_valid(raise_exception=True):
             serializer.save()
@@ -134,9 +128,36 @@ class ClassroomView(views.APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+class ClassroomJoinView(views.APIView):
+    '''API view for joining a classroom.'''
+    # queryset = Classroom.objects.all()
+    serializer_class = ClassroomJoincodeSerializer
+    authentication_classes = [SessionAuthentication, BasicAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        serializer = ClassroomJoincodeSerializer(data=request.data)
+
+        if serializer.is_valid(raise_exception=True):
+            join_code = serializer.data['join_code']
+            student = Student.objects.get(user=request.user)
+
+            classroom = Classroom.objects.get(join_code=join_code)
+            classroom.students.add(student)
+            return Response({'status': 'Student joined classroom.'}, status=status.HTTP_202_ACCEPTED)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class ClassroomViewSet(viewsets.ReadOnlyModelViewSet):
+    '''API view for listing classrooms.'''
+    queryset = Classroom.objects.all()
+    serializer_class = ClassroomSerializer
+    authentication_classes = [SessionAuthentication, BasicAuthentication]
+    permission_classes = [IsAuthenticated]
 
 class AssignmentView(views.APIView):
-    '''API view for listing assignments'''
+    '''API view for listing assignments.'''
     serializer_class = AssignmentSerializer
     authentication_classes = [SessionAuthentication, BasicAuthentication]
     permission_classes = [IsAuthenticated]
@@ -148,7 +169,7 @@ class AssignmentView(views.APIView):
 
 
 class AssignmentCreateView(views.APIView):
-    '''API view for creating assignments'''
+    '''API view for creating assignments.'''
     serializer_class = AssignmentSerializer
     authentication_classes = [SessionAuthentication, BasicAuthentication]
     permission_classes = [IsAuthenticated]
@@ -163,7 +184,7 @@ class AssignmentCreateView(views.APIView):
 
 
 class QuestionView(views.APIView):
-    '''API view for listing questions'''
+    '''API view for listing questions.'''
     serializer_class = QuestionSerializer
     authentication_classes = [SessionAuthentication, BasicAuthentication]
     permission_classes = [IsAuthenticated]
@@ -175,7 +196,7 @@ class QuestionView(views.APIView):
 
 
 class QuestionCreateView(views.APIView):
-    '''API view for creating questions'''
+    '''API view for creating questions.'''
     serializer_class = QuestionSerializer
     authentication_classes = [SessionAuthentication, BasicAuthentication]
     permission_classes = [IsAuthenticated]
@@ -190,7 +211,7 @@ class QuestionCreateView(views.APIView):
 
 
 class RunCode(views.APIView):
-    '''API for running code'''
+    '''API for running code.'''
     authentication_classes = [SessionAuthentication, BasicAuthentication]
     permission_classes = [IsAuthenticated]
 
@@ -231,7 +252,7 @@ class RunCode(views.APIView):
 
 
 class SolutionView(views.APIView):
-    '''API view for submitting solutions'''
+    '''API view for submitting solutions.'''
     serializer_class = SolutionSerializer
     authentication_classes = [SessionAuthentication, BasicAuthentication]
     permission_classes = [IsAuthenticated]
@@ -280,7 +301,7 @@ class SolutionView(views.APIView):
 
 
 class GetSubmission(views.APIView):
-    '''API View for returning submissions by a student'''
+    '''API View for returning submissions by a student.'''
     serializer_class = SolutionSerializer
     authentication_classes = [SessionAuthentication, BasicAuthentication]
     permission_classes = [IsAuthenticated]
