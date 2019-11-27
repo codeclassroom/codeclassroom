@@ -12,7 +12,7 @@ SECRET_KEY = os.environ['SECRET_KEY']
 
 DEBUG = os.environ['DEBUG']
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['codeclassroom.pythonanywhere.com']
 
 
 # Application definition
