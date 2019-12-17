@@ -1,4 +1,4 @@
-Django==2.2.6
+Django==2.2.8
 djangorestframework==3.10.3
 Pillow==6.2.1
 python-dotenv
