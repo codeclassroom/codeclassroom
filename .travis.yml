@@ -6,10 +6,15 @@ python:
   - 3.8
 
 env:
-  - DJANGO_VERSION=2.2.6
+  - DJANGO_VERSION=2.2.8
 
 install:
   - pip install -r requirements.txt
+  - pip install codecov
   
 script:
   - python manage.py test
+  - coverage run --source=. manage.py test
+  
+after_success:
+  - codecov
