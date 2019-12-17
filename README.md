@@ -3,6 +3,9 @@
 > codeclassroom is back-end of the "CodeClassroom" project.
 
 [![Build Status](https://travis-ci.org/codeclassroom/codeclassroom.svg?branch=master)](https://travis-ci.org/codeclassroom/codeclassroom)
+![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/codeclassroom/codeclassroom)
+[![CodeFactor](https://www.codefactor.io/repository/github/codeclassroom/codeclassroom/badge)](https://www.codefactor.io/repository/github/codeclassroom/codeclassroom)
+[![Maintainability](https://api.codeclimate.com/v1/badges/982b856aa598f852f9a8/maintainability)](https://codeclimate.com/github/codeclassroom/codeclassroom/maintainability)
 [![GitHub](https://img.shields.io/github/license/codeclassroom/codeclassroom)](https://github.com/codeclassroom/codeclassroom/blob/master/LICENSE)
 
 ### Prerequisties
