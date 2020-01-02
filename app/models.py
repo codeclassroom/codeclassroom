@@ -20,7 +20,7 @@ def random_code(length=5):
 
 
 class Institution(models.Model):
-    name = models.CharField(max_length=200, blank=True)
+    name = models.CharField(max_length=200, blank=True, null=True)
 
     def __str__(self):
         return self.name
@@ -32,7 +32,7 @@ class Professor(models.Model):
     delete automatically*.
     '''
     user = models.OneToOneField(to=User, on_delete=models.CASCADE)
-    profile_pic = models.ImageField(upload_to='ProfessorProfilePic', blank=True)
+    profile_pic = models.ImageField(upload_to='ProfessorProfilePic', blank=True, null=True)
     institution = models.ForeignKey(to=Institution, blank=True, null=True, on_delete=models.CASCADE)
 
     def __str__(self):
@@ -41,7 +41,7 @@ class Professor(models.Model):
 
 class Student(models.Model):
     user = models.OneToOneField(to=User, on_delete=models.CASCADE)
-    profile_pic = models.ImageField(upload_to='StudentProfilePic', blank=True)
+    profile_pic = models.ImageField(upload_to='StudentProfilePic', blank=True, null=True)
     institution = models.ForeignKey(to=Institution, blank=True, null=True, on_delete=models.CASCADE)
     course = models.CharField(max_length=50, blank=True)
     roll_no = models.IntegerField()

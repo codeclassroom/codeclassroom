@@ -12,7 +12,7 @@ SECRET_KEY = os.environ['SECRET_KEY']
 
 DEBUG = os.environ['DEBUG']
 
-ALLOWED_HOSTS = ['codeclassroom.pythonanywhere.com']
+ALLOWED_HOSTS = ['codeclassroom.pythonanywhere.com', '127.0.0.1']
 
 
 # Application definition
@@ -27,7 +27,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
     'app',
-    'api'
+    'api',
+    'utilities'
 ]
 
 MIDDLEWARE = [
