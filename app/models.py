@@ -54,6 +54,7 @@ class Classroom(models.Model):
     professor = models.ForeignKey(to=Professor, on_delete=models.CASCADE)
     title = models.CharField(max_length=200, blank=False)
     students = models.ManyToManyField(to=Student, blank=True)
+    created_date = models.DateTimeField(default=timezone.now)
     # because a student can join multiple classrooms and each classroom can have multiple students
     join_code = models.CharField(max_length=5, default=random_code, editable=False, unique=True)
 
@@ -74,6 +75,7 @@ class Assignment(models.Model):
     )
     classroom = models.ForeignKey(to=Classroom, on_delete=models.CASCADE)
     title = models.CharField(max_length=200, blank=False)
+    created_date = models.DateTimeField(default=timezone.now)
     deadline = models.DateTimeField(default=timezone.now)
     language = models.CharField(max_length=50, choices=LANGUAGE)
     
@@ -89,6 +91,7 @@ class Question(models.Model):
     sample_output = models.TextField(blank=True)
     marks = models.IntegerField()
     draft = models.BooleanField(default=False)
+    created_date = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
         return self.title
