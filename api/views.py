@@ -34,13 +34,13 @@ def index(request):
         'logout': reverse('logout', request=request),
         'students': reverse('students', request=request),
         'professors': reverse('professors', request=request),
-        'create-classroom' : reverse('classroom-create', request=request),
+        'create-classroom': reverse('classroom-create', request=request),
         'join-classroom': reverse('classroom-join', request=request),
-        'classrooms' : reverse('classrooms', request=request),
-        'create-assignment' : reverse('assignment-create', request=request),
-        'create-question' : reverse('question-create', request=request),
-        'run-code' : reverse('run-code', request=request),
-        'submit-solution' : reverse('submission-create', request=request),
+        'classrooms': reverse('classrooms', request=request),
+        'create-assignment': reverse('assignment-create', request=request),
+        'create-question': reverse('question-create', request=request),
+        'run-code': reverse('run-code', request=request),
+        'submit-solution': reverse('submission-create', request=request),
     })
 
 
@@ -236,6 +236,7 @@ class SolutionView(views.APIView):
 
     def post(self, request):
         serializer = SolutionSerializer(data=request.data)
+        print(request.data)
 
         if serializer.is_valid(raise_exception=True):
             question = request.data['question']

@@ -3,7 +3,7 @@ import random
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
-
+from django.core.validators import MaxValueValidator, MinValueValidator
 
 def submission_directory_path(instance, filename):
     """
@@ -34,6 +34,7 @@ class Professor(models.Model):
     user = models.OneToOneField(to=User, on_delete=models.CASCADE)
     profile_pic = models.ImageField(upload_to='ProfessorProfilePic', blank=True, null=True)
     institution = models.ForeignKey(to=Institution, blank=True, null=True, on_delete=models.CASCADE)
+    moss_id = models.CharField(max_length=50, blank=True, null=True)
 
     def __str__(self):
         return self.user.username
@@ -68,17 +69,19 @@ class Classroom(models.Model):
 
 class Assignment(models.Model):
     LANGUAGE = (
-        ('Python', 'Python'),
+        ('Python3', 'Python3'),
         ('Java', 'Java'),
         ('C++', 'C++'),
-        ('C', 'C')
+        ('C', 'C'),
+        ('PHP', 'PHP'),
+        ('Bash', 'Bash')
     )
     classroom = models.ForeignKey(to=Classroom, on_delete=models.CASCADE)
     title = models.CharField(max_length=200, blank=False)
     created_date = models.DateTimeField(default=timezone.now)
     deadline = models.DateTimeField(default=timezone.now)
     language = models.CharField(max_length=50, choices=LANGUAGE)
-    
+
     def __str__(self):
         return self.title
 
@@ -121,3 +124,18 @@ class Solution(models.Model):
     )
     remark = models.CharField(max_length=500, blank=True)
     # this field may be filled by prof as remark
+
+
+class PlagResult(models.Model):
+    question = models.ForeignKey(to=Question, on_delete=models.CASCADE)
+    solution_1 = models.ForeignKey(to=Solution, on_delete=models.CASCADE, related_name='solution_1')
+    solution_2 = models.ForeignKey(to=Solution, on_delete=models.CASCADE, related_name='solution_2')
+    perc_1 = models.IntegerField(validators=[MinValueValidator(0), MaxValueValidator(100)])
+    perc_2 = models.IntegerField(validators=[MinValueValidator(0), MaxValueValidator(100)])
+    lines_matched = models.CharField(max_length=100)
+    lines_match_count = models.IntegerField()
+    moss_page_url = models.URLField()
+    created_date = models.DateTimeField(default=timezone.now)
+
+    def __str__(self):
+        return "{}-{}".format(self.solution_1, self.solution_2)

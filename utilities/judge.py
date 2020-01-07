@@ -10,9 +10,11 @@ def run_code(code, lang, question):
         question__id=question).get('sample_input')
 
     if standard_input.exists():
-        r = coderunner.code(code, lang, standard_input, expected_output, path=False)
+        r = coderunner.code(code, lang, standard_input, expected_output, False)
     else:
-        r = coderunner.code(code, lang, expected_output, path=False)
+        r = coderunner.code(code, lang, expected_output, False)
+
+    r.run()
 
     submission_status = r.getStatus()
     standard_output = r.getOutput()
@@ -41,9 +43,11 @@ def submit_code(question, assignment, code):
 
     if standard_input.exists():
         standard_input = standard_input[0]['sample_input']
-        r = coderunner.code(code, lang, standard_input, expected_output, path=False)
+        r = coderunner.code(code, lang, standard_input, expected_output, False)
     else:
-        r = coderunner.code(code, lang, expected_output, path=False)
+        r = coderunner.code(code, lang, expected_output, False)
+
+    r.run()
 
     submission_status = r.getStatus()
     standard_output = r.getOutput()
