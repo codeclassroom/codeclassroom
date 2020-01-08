@@ -236,13 +236,13 @@ class SolutionView(views.APIView):
 
     def post(self, request):
         serializer = SolutionSerializer(data=request.data)
-        print(request.data)
 
         if serializer.is_valid(raise_exception=True):
             question = request.data['question']
             assignment = request.data['assignment']
 
             file_obj = request.FILES['submission']
+
             code = str(file_obj.read().decode())
 
             context, execution_status = submit_code(question, assignment, code)

@@ -128,3 +128,6 @@ class SolutionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Solution
         fields = ['question', 'assignment', 'student', 'sub_date', 'submission', 'remark']
+
+    def create(self, validated_data):
+        return Solution.objects.create(**validated_data)

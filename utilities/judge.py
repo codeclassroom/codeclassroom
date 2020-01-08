@@ -4,61 +4,38 @@ import coderunner
 
 
 def run_code(code, lang, question):
-    expected_output = Question.objects.filter(
-        question__id=question).get('sample_output')
-    standard_input = Question.objects.filter(
-        question__id=question).get('sample_input')
+    execution_status = {}
 
-    if standard_input.exists():
+    expected_output = Question.objects.only(
+        'sample_output').get(pk=question).sample_output
+    standard_input = Question.objects.only(
+        'sample_input').get(pk=question).sample_input
+
+    if standard_input != "":
         r = coderunner.code(code, lang, standard_input, expected_output, False)
     else:
         r = coderunner.code(code, lang, expected_output, False)
 
     r.run()
 
-    submission_status = r.getStatus()
-    standard_output = r.getOutput()
+    execution_status["status"] = r.getStatus()
+    execution_status["output"] = r.getOutput()
+    execution_status["error"] = r.getError()
 
-    if submission_status == "Accepted":
-        content = {'status': 'Accepted', 'output': standard_output}
-    elif submission_status == "Wrong Answer":
-        content = {'status': 'Wrong Answer'}
-    else:
-        error = r.getError()
-        content = {
-            'status': 'Error Occured',
-            'output': standard_output,
-            'error': error
-        }
-    return content
+    return execution_status
 
 
 def submit_code(question, assignment, code):
-    expected_output = Question.objects.filter(id=question).values('sample_output')
-    standard_input = Question.objects.filter(id=question).values('sample_input')
-    lang = Assignment.objects.filter(id=assignment).values('language')
-    lang = lang[0]['language']
 
-    expected_output = expected_output[0]['sample_output']
+    lang = Assignment.objects.only('language').get(pk=assignment).language
 
-    if standard_input.exists():
-        standard_input = standard_input[0]['sample_input']
-        r = coderunner.code(code, lang, standard_input, expected_output, False)
-    else:
-        r = coderunner.code(code, lang, expected_output, False)
+    program_status = run_code(code, lang, question)
 
-    r.run()
-
-    submission_status = r.getStatus()
-    standard_output = r.getOutput()
-
-    if submission_status == "Accepted":
+    if program_status["status"] == "Accepted":
         execution_status = "accepted"
-    elif submission_status == "Wrong Answer":
+    elif program_status["status"] == "Wrong Answer":
         execution_status = "wrong"
     else:
         execution_status = "not-attempted"
 
-    context = {"status": submission_status, "output": standard_output}
-
-    return context, execution_status
+    return program_status, execution_status

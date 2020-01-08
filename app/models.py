@@ -4,6 +4,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
 from django.core.validators import MaxValueValidator, MinValueValidator
+from app.storage import OverwriteStorage
 
 def submission_directory_path(instance, filename):
     """
@@ -14,7 +15,7 @@ def submission_directory_path(instance, filename):
 
 
 def random_code(length=5):
-    '''Returns a random code of given length.'''
+    '''Returns a random code of given length'''
     code_chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
     return ''.join(random.choices(population=code_chars, k=length))
 
@@ -29,7 +30,7 @@ class Institution(models.Model):
 class Professor(models.Model):
     '''Assuming a professor can create multiple classrooms and each classroom can have 
     multiple assignments. if a classroom is deleted, all of the assignments of that class will
-    delete automatically*.
+    delete automatically
     '''
     user = models.OneToOneField(to=User, on_delete=models.CASCADE)
     profile_pic = models.ImageField(upload_to='ProfessorProfilePic', blank=True, null=True)
@@ -92,7 +93,7 @@ class Question(models.Model):
     description = models.TextField(blank=True)
     sample_input = models.TextField(blank=True)
     sample_output = models.TextField(blank=True)
-    marks = models.IntegerField()
+    marks = models.IntegerField(blank=True)
     draft = models.BooleanField(default=False)
     created_date = models.DateTimeField(default=timezone.now)
 
@@ -117,10 +118,11 @@ class Solution(models.Model):
     assignment = models.ForeignKey(to=Assignment, on_delete=models.CASCADE)
     student = models.ForeignKey(to=Student, on_delete=models.CASCADE)
     sub_date = models.DateTimeField(default=timezone.now)
-    status = models.CharField(max_length=100, choices=STATUS)
+    status = models.CharField(max_length=100, choices=STATUS, default=STATUS[3][0])
     submission = models.FileField(
         upload_to=submission_directory_path,
-        blank=False
+        blank=False,
+        storage=OverwriteStorage()
     )
     remark = models.CharField(max_length=500, blank=True)
     # this field may be filled by prof as remark
