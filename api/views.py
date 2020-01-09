@@ -17,10 +17,11 @@ from app.serializers import (
     StudentSignupSerializer, StudentSerializer,
     ClassroomCreateSerializer, ClassroomJoincodeSerializer, ClassroomSerializer,
     AssignmentSerializer,
-    QuestionSerializer, 
+    QuestionSerializer,
     SolutionSerializer,
 )
-import coderunner
+from utilities.judge import run_code, submit_code
+
 
 @api_view(['GET'])
 @permission_classes([AllowAny])
@@ -33,13 +34,13 @@ def index(request):
         'logout': reverse('logout', request=request),
         'students': reverse('students', request=request),
         'professors': reverse('professors', request=request),
-        'create-classroom' : reverse('classroom-create', request=request),
+        'create-classroom': reverse('classroom-create', request=request),
         'join-classroom': reverse('classroom-join', request=request),
-        'classrooms' : reverse('classrooms', request=request),
-        'create-assignment' : reverse('assignment-create', request=request),
-        'create-question' : reverse('question-create', request=request),
-        'run-code' : reverse('run-code', request=request),
-        'submit-solution' : reverse('submission-create', request=request),
+        'classrooms': reverse('classrooms', request=request),
+        'create-assignment': reverse('assignment-create', request=request),
+        'create-question': reverse('question-create', request=request),
+        'run-code': reverse('run-code', request=request),
+        'submit-solution': reverse('submission-create', request=request),
     })
 
 
@@ -156,6 +157,7 @@ class ClassroomViewSet(viewsets.ReadOnlyModelViewSet):
     authentication_classes = [SessionAuthentication, BasicAuthentication]
     permission_classes = [IsAuthenticated]
 
+
 class AssignmentView(views.APIView):
     '''API view for listing assignments.'''
     serializer_class = AssignmentSerializer
@@ -173,7 +175,7 @@ class AssignmentCreateView(views.APIView):
     serializer_class = AssignmentSerializer
     authentication_classes = [SessionAuthentication, BasicAuthentication]
     permission_classes = [IsAuthenticated]
-    
+
     def post(self, request):
         serializer = AssignmentSerializer(data=request.data)
 
@@ -200,7 +202,7 @@ class QuestionCreateView(views.APIView):
     serializer_class = QuestionSerializer
     authentication_classes = [SessionAuthentication, BasicAuthentication]
     permission_classes = [IsAuthenticated]
-    
+
     def post(self, request):
         serializer = QuestionSerializer(data=request.data)
 
@@ -220,35 +222,9 @@ class RunCode(views.APIView):
         lang = request.data["language"]
         question = request.data["question_id"]
 
-        expected_output = Question.objects.filter(question__id = question).get('sample_output')
-        standard_input = Question.objects.filter(question__id = question).get('sample_input')
+        content = run_code(code, lang, question)
 
-        if standard_input.exists():
-            r = coderunner.Run(code, lang, standard_input, expected_output, path=False)
-        else:
-            r = coderunner.Run(code, lang, expected_output, path=False)
-        
-        submission_status = r.getStatus()
-        standard_output = r.getOutput()
-
-        if submission_status == "Accepted":
-            content = { 
-                'status': 'Accepted', 
-                'output': standard_output 
-            }
-        elif submission_status == "Wrong Answer":
-            content = { 
-                'status': 'Wrong Answer'
-            }
-        else:
-            error = r.getError()
-            content = { 
-                'status': 'Error Occured', 
-                'output': standard_output,
-                'error': error 
-            }
         return Response(content, status=status.HTTP_200_OK)
-
 
 
 class SolutionView(views.APIView):
@@ -258,7 +234,6 @@ class SolutionView(views.APIView):
     permission_classes = [IsAuthenticated]
     parser_classes = (MultiPartParser, FormParser)
 
-
     def post(self, request):
         serializer = SolutionSerializer(data=request.data)
 
@@ -267,32 +242,10 @@ class SolutionView(views.APIView):
             assignment = request.data['assignment']
 
             file_obj = request.FILES['submission']
+
             code = str(file_obj.read().decode())
 
-            expected_output = Question.objects.filter(id=question).values('sample_output')
-            standard_input = Question.objects.filter(id=question).values('sample_input')
-            lang = Assignment.objects.filter(id=assignment).values('language')
-            lang = lang[0]['language']
-
-            expected_output = expected_output[0]['sample_output']
-
-            if standard_input.exists():
-                standard_input = standard_input[0]['sample_input']
-                r = coderunner.Run(code, lang, standard_input, expected_output, path=False)
-            else:
-                r = coderunner.Run(code, lang, expected_output, path=False)
-            
-            submission_status = r.getStatus()
-            standard_output = r.getOutput()
-
-            if submission_status == "Accepted":
-                execution_status = "accepted"
-            elif submission_status == "Wrong Answer":
-                execution_status = "wrong"
-            else:
-                execution_status = "not-attempted"
-
-            context = { "status": submission_status }
+            context, execution_status = submit_code(question, assignment, code)
 
             serializer.save(status=execution_status)
 
