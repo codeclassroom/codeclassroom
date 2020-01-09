@@ -93,7 +93,7 @@ class Question(models.Model):
     description = models.TextField(blank=True)
     sample_input = models.TextField(blank=True)
     sample_output = models.TextField(blank=True)
-    marks = models.IntegerField(blank=True)
+    marks = models.IntegerField(blank=True, null=True)
     draft = models.BooleanField(default=False)
     created_date = models.DateTimeField(default=timezone.now)
 
