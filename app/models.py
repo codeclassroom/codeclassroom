@@ -6,11 +6,12 @@ from django.utils import timezone
 from django.core.validators import MaxValueValidator, MinValueValidator
 from app.storage import OverwriteStorage
 
+
 def submission_directory_path(instance, filename):
     """
-    file will be uploaded to MEDIA_ROOT/assignments/<assg_id>/questions/<ques_id/submissions/<student_id>
+    Location: MEDIA_ROOT/submissions/assignments/<assg_id>/<ques_id>_<student_id>
     """
-    return 'assignments/{0}/questions/{1}/submissions/{2}/'.format(
+    return 'submissions/assignments/{0}/{1}_{2}'.format(
         instance.assignment.id, instance.question.id, instance.student.id, filename)
 
 
