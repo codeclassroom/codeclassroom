@@ -7,7 +7,8 @@ from .views import (
     ClassroomCreateView, ClassroomJoinView, ClassroomViewSet,
     AssignmentView, AssignmentCreateView,
     QuestionView, QuestionCreateView,
-    RunCode, SolutionView, GetSubmission
+    RunCode, SolutionView, GetSubmission,
+    PlagiarismView
 )
 
 
@@ -47,5 +48,6 @@ urlpatterns = [
     path('coderunner/', RunCode.as_view(), name='run-code'),
     path('submission/create', SolutionView.as_view(), name='submission-create'),
     path('submissions/<int:question>/<int:student>/', GetSubmission.as_view(), name='submissions'),
+    path('plagiarism-detector/', PlagiarismView.as_view(), name='plagiarism-detector')
 
 ]

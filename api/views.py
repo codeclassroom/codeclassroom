@@ -21,6 +21,7 @@ from app.serializers import (
     SolutionSerializer,
 )
 from utilities.judge import run_code, submit_code
+from utilities.plagiarism import plagiarism
 
 
 @api_view(['GET'])
@@ -263,3 +264,13 @@ class GetSubmission(views.APIView):
         context = Solution.objects.filter(student_id=student, question_id=question).distinct()
         serializer = SolutionSerializer(context, many=True)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
+class PlagiarismView(views.APIView):
+    '''API View for running plagiarism service'''
+    authentication_classes = [SessionAuthentication, BasicAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        assignment_id = request.data["assignment"]
+        plagiarism(assignment_id)
