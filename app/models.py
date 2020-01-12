@@ -5,7 +5,8 @@ from django.contrib.auth.models import User
 from django.utils import timezone
 from django.core.validators import MaxValueValidator, MinValueValidator
 from app.storage import OverwriteStorage
-
+from django.dispatch import receiver
+import os
 
 def submission_directory_path(instance, filename):
     """
@@ -115,9 +116,9 @@ class Solution(models.Model):
         (NOT_ATTEMPT, 'Not Attempted')
     )
 
-    question = models.ForeignKey(to=Question, on_delete=models.CASCADE)
-    assignment = models.ForeignKey(to=Assignment, on_delete=models.CASCADE)
-    student = models.ForeignKey(to=Student, on_delete=models.CASCADE)
+    question = models.OneToOneField(to=Question, on_delete=models.CASCADE)
+    assignment = models.OneToOneField(to=Assignment, on_delete=models.CASCADE)
+    student = models.OneToOneField(to=Student, on_delete=models.CASCADE)
     sub_date = models.DateTimeField(default=timezone.now)
     status = models.CharField(max_length=100, choices=STATUS, default=STATUS[3][0])
     submission = models.FileField(
@@ -126,7 +127,9 @@ class Solution(models.Model):
         storage=OverwriteStorage()
     )
     remark = models.CharField(max_length=500, blank=True)
-    # this field may be filled by prof as remark
+
+    def __str__(self):
+        return '{0}_{1}'.format(self.question.title, self.student)
 
 
 class PlagResult(models.Model):
@@ -142,3 +145,14 @@ class PlagResult(models.Model):
 
     def __str__(self):
         return "{}-{}".format(self.solution_1, self.solution_2)
+
+
+@receiver(models.signals.post_delete, sender=Solution)
+def auto_delete_file_on_delete(sender, instance, **kwargs):
+    """
+    Deletes file from filesystem
+    when corresponding `MediaFile` object is deleted.
+    """
+    if instance.submission:
+        if os.path.isfile(instance.submission.path):
+            os.remove(instance.submission.path)
