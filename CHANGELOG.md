@@ -19,6 +19,8 @@ All notable changes to this project will be documented in this file.
 - Default submission status is now set to _Not Attempted_.
 - Renamed `Python` to `Python3`.
 - `marks` field in **Question** model is now `NULL` acceptable.
+- Only 1 Submission per student, **Solution** now relates to Assignment, Question & Student by `OneToOne`.
+- Update/Delete options for Classroom, Assignment, Questions & Submissions.
 
 
 ## [1.0.0] - Nov 27, 2019

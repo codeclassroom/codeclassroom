@@ -95,6 +95,12 @@ class ProfessorViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = ProfessorSerializer
 
 
+class ProfessorDetail(generics.RetrieveUpdateDestroyAPIView):
+    '''API view for updating professors'''
+    queryset = Professor.objects.all()
+    serializer_class = ProfessorSerializer
+
+
 class StudentSignupView(generics.CreateAPIView):
     '''API view for signing-up students.'''
     queryset = Student.objects.all()
@@ -103,13 +109,19 @@ class StudentSignupView(generics.CreateAPIView):
 
 
 class StudentViewSet(viewsets.ReadOnlyModelViewSet):
-    '''API view for listing students.'''
+    '''API view for listing all students'''
+    queryset = Student.objects.all()
+    serializer_class = StudentSerializer
+
+
+class StudentDetail(generics.RetrieveUpdateDestroyAPIView):
+    '''API view for updating students'''
     queryset = Student.objects.all()
     serializer_class = StudentSerializer
 
 
 class ClassroomCreateView(views.APIView):
-    '''API view for creating a classroom.'''
+    '''API view for creating a classroom'''
     serializer_class = ClassroomCreateSerializer
 
     def post(self, request):
@@ -122,8 +134,7 @@ class ClassroomCreateView(views.APIView):
 
 
 class ClassroomJoinView(views.APIView):
-    '''API view for joining a classroom.'''
-    # queryset = Classroom.objects.all()
+    '''API view for joining a classroom'''
     serializer_class = ClassroomJoincodeSerializer
 
     def post(self, request):
@@ -140,8 +151,14 @@ class ClassroomJoinView(views.APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class ClassroomViewSet(viewsets.ReadOnlyModelViewSet):
-    '''API view for listing classrooms.'''
+class ClassroomList(generics.ListAPIView):
+    '''API view for listing all sClassrooms'''
+    serializer_class = ClassroomSerializer
+    queryset = Classroom.objects.all()
+
+
+class ClassroomDetail(generics.RetrieveUpdateDestroyAPIView):
+    '''API view for updating Classroom'''
     serializer_class = ClassroomSerializer
     queryset = Classroom.objects.all()
 
@@ -166,7 +183,7 @@ class AssignmentList(generics.ListAPIView):
 
 
 class AssignmentDetail(generics.RetrieveUpdateDestroyAPIView):
-    '''API View for Detailed View with Update and Delete'''
+    '''API View for updaating Assignment'''
     serializer_class = AssignmentSerializer
     queryset = Assignment.objects.all()
 
@@ -191,7 +208,7 @@ class QuestionList(generics.ListAPIView):
 
 
 class QuestionDetail(generics.RetrieveUpdateDestroyAPIView):
-    '''API View for Detailed View with Update and Delete'''
+    '''API View for Updating Question'''
     serializer_class = QuestionSerializer
     queryset = Question.objects.all()
 
@@ -220,15 +237,12 @@ class SubmissionCreate(generics.CreateAPIView):
         if serializer.is_valid(raise_exception=True):
             question = request.data['question']
             assignment = request.data['assignment']
-
             file_obj = request.FILES['submission']
 
             code = str(file_obj.read().decode())
 
             context, execution_status = submit_code(question, assignment, code)
-
             serializer.save(status=execution_status)
-
             return Response(context, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 

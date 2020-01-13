@@ -97,6 +97,7 @@ class Question(models.Model):
     sample_output = models.TextField(blank=True)
     marks = models.IntegerField(blank=True, null=True)
     draft = models.BooleanField(default=False)
+    check_plagiarism = models.BooleanField(default=True)
     created_date = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
@@ -151,7 +152,7 @@ class PlagResult(models.Model):
 def auto_delete_file_on_delete(sender, instance, **kwargs):
     """
     Deletes file from filesystem
-    when corresponding `MediaFile` object is deleted.
+    when corresponding `Solution` object is deleted
     """
     if instance.submission:
         if os.path.isfile(instance.submission.path):
