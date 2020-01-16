@@ -10,7 +10,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = os.environ['SECRET_KEY']
 
 
-DEBUG = os.environ['DEBUG']
+DEBUG = bool(os.environ['DEBUG'])
 
 ALLOWED_HOSTS = ['codeclassroom.pythonanywhere.com', '127.0.0.1']
 
