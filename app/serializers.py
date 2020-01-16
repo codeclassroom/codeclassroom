@@ -5,6 +5,7 @@ from .models import (
     Institution, Student, Professor, Classroom, Assignment, Question, Solution
 )
 
+
 class InstitutionSerializer(serializers.ModelSerializer):
 
     class Meta:

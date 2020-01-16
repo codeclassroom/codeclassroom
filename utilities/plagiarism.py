@@ -43,3 +43,9 @@ def plagiarism(assignment):
 
     for code in submissions['submissions']:
         moss.addFile(code)
+
+    moss.submit()
+
+    results = moss.getResults()
+
+    return results

@@ -39,7 +39,7 @@ def index(request):
         'classrooms': reverse('classrooms', request=request),
         'create-assignment': reverse('assignment-create', request=request),
         'create-question': reverse('question-create', request=request),
-        'run-code': reverse('run-code', request=request),
+        'code-judge': reverse('code-judge', request=request),
         'submit-solution': reverse('submission-create', request=request),
     })
 
@@ -232,6 +232,7 @@ class SubmissionCreate(generics.CreateAPIView):
     parser_classes = (MultiPartParser, FormParser)
 
     def post(self, request):
+
         serializer = SolutionSerializer(data=request.data)
 
         if serializer.is_valid(raise_exception=True):
@@ -264,4 +265,5 @@ class PlagiarismView(views.APIView):
 
     def post(self, request):
         assignment_id = request.data["assignment"]
-        plagiarism(assignment_id)
+        results = plagiarism(assignment_id)
+        return Response(results, status=status.HTTP_201_CREATED)

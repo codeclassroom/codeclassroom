@@ -27,15 +27,15 @@ urlpatterns = [
     path('logout/', UserLogoutView.as_view(), name='logout'),
 
     path('students/', student_list, name='students'),
-    path('students/<int:pk>/', StudentDetail.as_view(), name='student'),
+    path('students/<int:pk>', StudentDetail.as_view(), name='student'),
     path('professors/', professor_list, name='professors'),
-    path('professors/<int:pk>/', ProfessorDetail.as_view(), name='professor'),
+    path('professors/<int:pk>', ProfessorDetail.as_view(), name='professor'),
 
     # All Classroom URLs
     path('classrooms/create', ClassroomCreateView.as_view(), name='classroom-create'),
-    path('classrooms/join/', ClassroomJoinView.as_view(), name='classroom-join'),
-    path('classrooms/<int:pk>/', ClassroomDetail.as_view(), name='classroom-detail'),
-    path('classrooms/', ClassroomList.as_view(), name='classrooms'),
+    path('classrooms/join', ClassroomJoinView.as_view(), name='classroom-join'),
+    path('classrooms/<int:pk>', ClassroomDetail.as_view(), name='classroom-detail'),
+    path('classrooms', ClassroomList.as_view(), name='classrooms'),
 
     # All Assignment URLs
     path('assignments/create', AssignmentCreate.as_view(),
@@ -51,11 +51,11 @@ urlpatterns = [
     # All Solution/Submission URLs
     path('submissions/create', SubmissionCreate.as_view(), name='submission-create'),
     path('submissions/<int:pk>', SubmissionDetail.as_view(), name='submissions-detail'),
-    path('submissions/', SubmissionList.as_view(), name='submissions'),
+    path('submissions', SubmissionList.as_view(), name='submissions'),
 
     # Utility URLs
-    path('coderunner/', RunCode.as_view(), name='run-code'),
-    path('plagiarism-detector/', PlagiarismView.as_view(),
+    path('judge', RunCode.as_view(), name='code-judge'),
+    path('plagiarism-detector', PlagiarismView.as_view(),
          name='plagiarism-detector')
 
 ]

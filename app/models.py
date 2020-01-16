@@ -8,6 +8,7 @@ from app.storage import OverwriteStorage
 from django.dispatch import receiver
 import os
 
+
 def submission_directory_path(instance, filename):
     """
     Location: MEDIA_ROOT/submissions/assignments/<assg_id>/<ques_id>_<student_id>
@@ -117,8 +118,8 @@ class Solution(models.Model):
         (NOT_ATTEMPT, 'Not Attempted')
     )
 
-    question = models.OneToOneField(to=Question, on_delete=models.CASCADE)
-    assignment = models.OneToOneField(to=Assignment, on_delete=models.CASCADE)
+    question = models.ForeignKey(to=Question, on_delete=models.CASCADE)
+    assignment = models.ForeignKey(to=Assignment, on_delete=models.CASCADE)
     student = models.OneToOneField(to=Student, on_delete=models.CASCADE)
     sub_date = models.DateTimeField(default=timezone.now)
     status = models.CharField(max_length=100, choices=STATUS, default=STATUS[3][0])
