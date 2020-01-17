@@ -20,7 +20,7 @@ from app.serializers import (
     SolutionSerializer,
 )
 from utilities.judge import run_code, submit_code
-from utilities.plagiarism import plagiarism
+from utilities.codesim import codesim
 
 
 @api_view(['GET'])
@@ -264,6 +264,9 @@ class PlagiarismView(views.APIView):
     '''API View for running plagiarism service'''
 
     def post(self, request):
-        assignment_id = request.data["assignment"]
-        results = plagiarism(assignment_id)
-        return Response(results, status=status.HTTP_201_CREATED)
+        try:
+            assignment = Assignment.objects.get(pk=request.data["assignment"])
+            results = codesim(request.data["assignment"])
+            return Response(results, status=status.HTTP_200_OK)
+        except Assignment.DoesNotExist:
+            return Response({"detail": "Assignment Does Not Exist"}, status=status.HTTP_404_NOT_FOUND)

@@ -55,7 +55,7 @@ urlpatterns = [
 
     # Utility URLs
     path('judge', RunCode.as_view(), name='code-judge'),
-    path('plagiarism-detector', PlagiarismView.as_view(),
+    path('codesim/', PlagiarismView.as_view(),
          name='plagiarism-detector')
 
 ]
