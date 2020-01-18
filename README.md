@@ -1,18 +1,29 @@
 <h1 align="center">CodeClassroom API</h1>
 <p align="center">
-  <img alt="CodeClassroom Logo" src="https://avatars1.githubusercontent.com/u/51260271?s=200&v=4" />
+  <img alt="CodeClassroom Logo" src="https://avatars1.githubusercontent.com/u/51260271?s=200&v=4" /><br><br>
+   <a href="https://travis-ci.org/codeclassroom/codeclassroom">
+    <img alt="logo" src="https://travis-ci.org/codeclassroom/codeclassroom.svg?branch=master" target="_blank" />
+  </a>
+  <a href="https://github.com/codeclassroom/codeclassroom/releases">
+    <img alt="release" src="https://img.shields.io/github/v/release/codeclassroom/codeclassroom" target="_blank" />
+  </a>
+  <a href="https://requires.io/github/codeclassroom/codeclassroom/requirements/?branch=master">
+    <img alt="dependencies" src="https://requires.io/github/codeclassroom/codeclassroom/requirements.svg?branch=master" target="_blank" />
+  </a>
+  <a href="https://www.codacy.com/gh/codeclassroom/codeclassroom?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=codeclassroom/codeclassroom&amp;utm_campaign=Badge_Grade">
+    <img alt="Codacy" src="https://api.codacy.com/project/badge/Grade/91c4c80af77442d5979eb5253afa3759" target="_blank" />
+  </a>
+  <a href="https://codeclimate.com/github/codeclassroom/codeclassroom/maintainability">
+    <img alt="CodeClimate" src="https://api.codeclimate.com/v1/badges/982b856aa598f852f9a8/maintainability" target="_blank" />
+  </a>
+  <a href="https://lgtm.com/projects/g/codeclassroom/codeclassroom/alerts/">
+    <img alt="lgtm" src="https://img.shields.io/lgtm/alerts/g/codeclassroom/codeclassroom.svg?logo=lgtm&logoWidth=18" target="_blank" />
+  </a>
+    <a href="https://github.com/codeclassroom/codeclassroom/blob/master/LICENSE">
+    <img alt="LICENSE" src="https://img.shields.io/github/license/codeclassroom/codeclassroom" target="_blank" />
+  </a>
 </p>
 
-
-
-[![Build Status](https://travis-ci.org/codeclassroom/codeclassroom.svg?branch=master)](https://travis-ci.org/codeclassroom/codeclassroom)
-![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/codeclassroom/codeclassroom)
-[![Requirements Status](https://requires.io/github/codeclassroom/codeclassroom/requirements.svg?branch=master)](https://requires.io/github/codeclassroom/codeclassroom/requirements/?branch=master)
-[![CodeFactor](https://www.codefactor.io/repository/github/codeclassroom/codeclassroom/badge)](https://www.codefactor.io/repository/github/codeclassroom/codeclassroom)  
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/91c4c80af77442d5979eb5253afa3759)](https://www.codacy.com/gh/codeclassroom/codeclassroom?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=codeclassroom/codeclassroom&amp;utm_campaign=Badge_Grade)
-[![Maintainability](https://api.codeclimate.com/v1/badges/982b856aa598f852f9a8/maintainability)](https://codeclimate.com/github/codeclassroom/codeclassroom/maintainability)
-[![Total alerts](https://img.shields.io/lgtm/alerts/g/codeclassroom/codeclassroom.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/codeclassroom/codeclassroom/alerts/)
-[![GitHub](https://img.shields.io/github/license/codeclassroom/codeclassroom)](https://github.com/codeclassroom/codeclassroom/blob/master/LICENSE)
 
 ## Developing 👷
 
