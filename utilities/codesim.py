@@ -1,4 +1,4 @@
-"""All Moss Services here"""
+"""All Plagiarism Utilities"""
 import plagcheck
 from app.models import Assignment, Professor, Solution, Question, Classroom, PlagResult
 import os
@@ -30,7 +30,7 @@ def format_lang(language: str):
 
 
 def extract_ids(path1, path2):
-    """Extract Solution & Quesiton IDs from submission file path"""
+    """Extract Solution & Quesiton IDs from submission file paths"""
     solution1 = int(os.path.basename(path1).split('_')[1])
     solution2 = int(os.path.basename(path2).split('_')[1])
     question = int(os.path.basename(path1).split('_')[0])
@@ -52,7 +52,7 @@ def codesim(assignment):
     if moss_user_id != "":
         moss = plagcheck.check(format_lang(lang), moss_user_id)
     else:
-        # if progessor has no moss_id, use from env
+        # if professor has no moss_id, use from env
         moss_user_id = os.environ['MOSS_ID']
         moss = plagcheck.check(format_lang(lang), moss_user_id)
 
@@ -65,18 +65,19 @@ def codesim(assignment):
 
     results = moss.getResults()
 
-    # the list contains the data that will be the response
     moss_data = []
 
     for result in results:
         path1 = result['file1']
         path2 = result['file2']
         sub1, sub2, question = extract_ids(path1, path2)
+        question_title = Question.objects.get(pk=question).title
 
         result_dict = moss_data_dict(
             submission1=sub1,
             submission2=sub2,
-            question=question,
+            question_id=question,
+            question_title=question_title,
             percentage_sub1=result['percentage_file1'],
             percentage_sub2=result['percentage_file2'],
             no_of_lines_matched=result['no_of_lines_matched'],
@@ -86,22 +87,3 @@ def codesim(assignment):
         moss_data.append(result_dict)
 
     return moss_data
-
-    # plaglist = []
-
-    # for result in moss.getResults():
-    #     path1 = result['file1']
-    #     path2 = result['file2']
-    #     sub1, sub2, question = extract_ids(path1, path2)
-
-    #     plaglist.append(PlagResult(
-    #             question=question,
-    #             solution_1=sub1,
-    #             solution_2=sub2,
-    #             perc1=result['precentage_file1'],
-    #             perc2=result['precentage_File2'],
-    #             lines_matched=result['lines_matched'],
-    #             no_of_lines_matched=result['no_of_lines_matched']
-    #         ))
-
-    # PlagResult.objects.bulk_create(plaglist)

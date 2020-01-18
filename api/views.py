@@ -236,15 +236,20 @@ class SubmissionCreate(generics.CreateAPIView):
         serializer = SolutionSerializer(data=request.data)
 
         if serializer.is_valid(raise_exception=True):
-            question = request.data['question']
-            assignment = request.data['assignment']
-            file_obj = request.FILES['submission']
+            c = Classroom.objects.filter(students=request.data["student"])
 
-            code = str(file_obj.read().decode())
+            if c.exists():
+                question = request.data['question']
+                assignment = request.data['assignment']
+                file_obj = request.FILES['submission']
 
-            context, execution_status = submit_code(question, assignment, code)
-            serializer.save(status=execution_status)
-            return Response(context, status=status.HTTP_201_CREATED)
+                code = str(file_obj.read().decode())
+
+                context, execution_status = submit_code(question, assignment, code)
+                serializer.save(status=execution_status)
+                return Response(context, status=status.HTTP_201_CREATED)
+            else:
+                return Response({"detail": "Student has not joined any classroom yet"}, status=status.HTTP_403_FORBIDDEN)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
