@@ -1,10 +1,11 @@
-"""All Judge/Code Running Utilities here"""
+"""All Judge/Code Running Utilities"""
 from app.models import Question, Assignment
 import coderunner
 
 
 def run_code(code, lang, question):
-    execution_status = {}
+    """Judge Code for correctness"""
+    execution = {}
 
     expected_output = Question.objects.only(
         'sample_output').get(pk=question).sample_output
@@ -18,11 +19,13 @@ def run_code(code, lang, question):
 
     r.run()
 
-    execution_status["status"] = r.getStatus()
-    execution_status["output"] = r.getOutput()
-    execution_status["error"] = r.getError()
+    execution["status"] = r.getStatus()
+    execution["output"] = r.getOutput()
+    execution["error"] = r.getError()
+    execution["memory"] = r.getMemory()
+    execution["execution_time"] = r.getTime()
 
-    return execution_status
+    return execution
 
 
 def submit_code(question, assignment, code):

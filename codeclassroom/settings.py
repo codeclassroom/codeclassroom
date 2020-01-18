@@ -10,7 +10,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = os.environ['SECRET_KEY']
 
 
-DEBUG = os.environ['DEBUG']
+DEBUG = bool(os.environ['DEBUG'])
 
 ALLOWED_HOSTS = ['codeclassroom.pythonanywhere.com', '127.0.0.1']
 
@@ -64,6 +64,15 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'codeclassroom.wsgi.application'
 
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.BasicAuthentication'
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ]
+}
 
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases

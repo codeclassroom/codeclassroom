@@ -5,13 +5,19 @@ from django.contrib.auth.models import User
 from django.utils import timezone
 from django.core.validators import MaxValueValidator, MinValueValidator
 from app.storage import OverwriteStorage
+from django.dispatch import receiver
+import os
+
 
 def submission_directory_path(instance, filename):
     """
-    file will be uploaded to MEDIA_ROOT/assignments/<assg_id>/questions/<ques_id/submissions/<student_id>
+    Location:
+    MEDIA_ROOT/submissions/assignments/<assg_id>/<ques_id>_<student_id>
     """
-    return 'assignments/{0}/questions/{1}/submissions/{2}/'.format(
-        instance.assignment.id, instance.question.id, instance.student.id, filename)
+    return 'submissions/assignments/{0}/{1}_{2}'.format(
+            instance.assignment.id, instance.question.id,
+            instance.student.id, filename
+        )
 
 
 def random_code(length=5):
@@ -95,6 +101,7 @@ class Question(models.Model):
     sample_output = models.TextField(blank=True)
     marks = models.IntegerField(blank=True, null=True)
     draft = models.BooleanField(default=False)
+    check_plagiarism = models.BooleanField(default=True)
     created_date = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
@@ -116,7 +123,7 @@ class Solution(models.Model):
 
     question = models.ForeignKey(to=Question, on_delete=models.CASCADE)
     assignment = models.ForeignKey(to=Assignment, on_delete=models.CASCADE)
-    student = models.ForeignKey(to=Student, on_delete=models.CASCADE)
+    student = models.OneToOneField(to=Student, on_delete=models.CASCADE)
     sub_date = models.DateTimeField(default=timezone.now)
     status = models.CharField(max_length=100, choices=STATUS, default=STATUS[3][0])
     submission = models.FileField(
@@ -125,7 +132,9 @@ class Solution(models.Model):
         storage=OverwriteStorage()
     )
     remark = models.CharField(max_length=500, blank=True)
-    # this field may be filled by prof as remark
+
+    def __str__(self):
+        return '{0}_{1}'.format(self.question.title, self.student)
 
 
 class PlagResult(models.Model):
@@ -141,3 +150,14 @@ class PlagResult(models.Model):
 
     def __str__(self):
         return "{}-{}".format(self.solution_1, self.solution_2)
+
+
+@receiver(models.signals.post_delete, sender=Solution)
+def auto_delete_file_on_delete(sender, instance, **kwargs):
+    """
+    Deletes file from filesystem
+    when corresponding `Solution` object is deleted
+    """
+    if instance.submission:
+        if os.path.isfile(instance.submission.path):
+            os.remove(instance.submission.path)

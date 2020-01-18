@@ -1,7 +1,6 @@
 '''API views.'''
 from django.contrib.auth import authenticate, login, logout
-from rest_framework.authentication import SessionAuthentication, BasicAuthentication
-from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.permissions import AllowAny
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework import views
 from rest_framework.response import Response
@@ -21,6 +20,7 @@ from app.serializers import (
     SolutionSerializer,
 )
 from utilities.judge import run_code, submit_code
+from utilities.codesim import codesim
 
 
 @api_view(['GET'])
@@ -39,7 +39,7 @@ def index(request):
         'classrooms': reverse('classrooms', request=request),
         'create-assignment': reverse('assignment-create', request=request),
         'create-question': reverse('question-create', request=request),
-        'run-code': reverse('run-code', request=request),
+        'code-judge': reverse('code-judge', request=request),
         'submit-solution': reverse('submission-create', request=request),
     })
 
@@ -76,8 +76,6 @@ class UserLoginView(views.APIView):
 
 class UserLogoutView(views.APIView):
     '''API view to logout an authenticated user.'''
-    authentication_classes = [SessionAuthentication, BasicAuthentication]
-    permission_classes = [IsAuthenticated]
 
     def get(self, request):
         logout(request)
@@ -95,8 +93,12 @@ class ProfessorViewSet(viewsets.ReadOnlyModelViewSet):
     '''API view for listing professors.'''
     queryset = Professor.objects.all()
     serializer_class = ProfessorSerializer
-    authentication_classes = [SessionAuthentication, BasicAuthentication]
-    permission_classes = [IsAuthenticated]
+
+
+class ProfessorDetail(generics.RetrieveUpdateDestroyAPIView):
+    '''API view for updating professors'''
+    queryset = Professor.objects.all()
+    serializer_class = ProfessorSerializer
 
 
 class StudentSignupView(generics.CreateAPIView):
@@ -107,18 +109,20 @@ class StudentSignupView(generics.CreateAPIView):
 
 
 class StudentViewSet(viewsets.ReadOnlyModelViewSet):
-    '''API view for listing students.'''
+    '''API view for listing all students'''
     queryset = Student.objects.all()
     serializer_class = StudentSerializer
-    authentication_classes = [SessionAuthentication, BasicAuthentication]
-    permission_classes = [IsAuthenticated]
+
+
+class StudentDetail(generics.RetrieveUpdateDestroyAPIView):
+    '''API view for updating students'''
+    queryset = Student.objects.all()
+    serializer_class = StudentSerializer
 
 
 class ClassroomCreateView(views.APIView):
-    '''API view for creating a classroom.'''
+    '''API view for creating a classroom'''
     serializer_class = ClassroomCreateSerializer
-    authentication_classes = [SessionAuthentication, BasicAuthentication]
-    permission_classes = [IsAuthenticated]
 
     def post(self, request):
         serializer = ClassroomCreateSerializer(data=request.data)
@@ -130,11 +134,8 @@ class ClassroomCreateView(views.APIView):
 
 
 class ClassroomJoinView(views.APIView):
-    '''API view for joining a classroom.'''
-    # queryset = Classroom.objects.all()
+    '''API view for joining a classroom'''
     serializer_class = ClassroomJoincodeSerializer
-    authentication_classes = [SessionAuthentication, BasicAuthentication]
-    permission_classes = [IsAuthenticated]
 
     def post(self, request):
         serializer = ClassroomJoincodeSerializer(data=request.data)
@@ -150,31 +151,21 @@ class ClassroomJoinView(views.APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class ClassroomViewSet(viewsets.ReadOnlyModelViewSet):
-    '''API view for listing classrooms.'''
-    queryset = Classroom.objects.all()
+class ClassroomList(generics.ListAPIView):
+    '''API view for listing all sClassrooms'''
     serializer_class = ClassroomSerializer
-    authentication_classes = [SessionAuthentication, BasicAuthentication]
-    permission_classes = [IsAuthenticated]
+    queryset = Classroom.objects.all()
 
 
-class AssignmentView(views.APIView):
-    '''API view for listing assignments.'''
+class ClassroomDetail(generics.RetrieveUpdateDestroyAPIView):
+    '''API view for updating Classroom'''
+    serializer_class = ClassroomSerializer
+    queryset = Classroom.objects.all()
+
+
+class AssignmentCreate(views.APIView):
+    '''API view for creating assignments'''
     serializer_class = AssignmentSerializer
-    authentication_classes = [SessionAuthentication, BasicAuthentication]
-    permission_classes = [IsAuthenticated]
-
-    def get(self, request, class_id):
-        context = Assignment.objects.filter(classroom__id=class_id)
-        serializer = AssignmentSerializer(context, many=True)
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
-
-
-class AssignmentCreateView(views.APIView):
-    '''API view for creating assignments.'''
-    serializer_class = AssignmentSerializer
-    authentication_classes = [SessionAuthentication, BasicAuthentication]
-    permission_classes = [IsAuthenticated]
 
     def post(self, request):
         serializer = AssignmentSerializer(data=request.data)
@@ -185,23 +176,21 @@ class AssignmentCreateView(views.APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class QuestionView(views.APIView):
-    '''API view for listing questions.'''
+class AssignmentList(generics.ListAPIView):
+    '''API view for all listing assignments'''
+    serializer_class = AssignmentSerializer
+    queryset = Assignment.objects.all()
+
+
+class AssignmentDetail(generics.RetrieveUpdateDestroyAPIView):
+    '''API View for updaating Assignment'''
+    serializer_class = AssignmentSerializer
+    queryset = Assignment.objects.all()
+
+
+class QuestionCreate(views.APIView):
+    '''API view for creating questions'''
     serializer_class = QuestionSerializer
-    authentication_classes = [SessionAuthentication, BasicAuthentication]
-    permission_classes = [IsAuthenticated]
-
-    def get(self, request, assg_id):
-        context = Question.objects.filter(assignment__id=assg_id)
-        serializer = QuestionSerializer(context, many=True)
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
-
-
-class QuestionCreateView(views.APIView):
-    '''API view for creating questions.'''
-    serializer_class = QuestionSerializer
-    authentication_classes = [SessionAuthentication, BasicAuthentication]
-    permission_classes = [IsAuthenticated]
 
     def post(self, request):
         serializer = QuestionSerializer(data=request.data)
@@ -212,10 +201,20 @@ class QuestionCreateView(views.APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+class QuestionList(generics.ListAPIView):
+    '''API view for listing all questions'''
+    serializer_class = QuestionSerializer
+    queryset = Question.objects.all()
+
+
+class QuestionDetail(generics.RetrieveUpdateDestroyAPIView):
+    '''API View for Updating Question'''
+    serializer_class = QuestionSerializer
+    queryset = Question.objects.all()
+
+
 class RunCode(views.APIView):
     '''API for running code.'''
-    authentication_classes = [SessionAuthentication, BasicAuthentication]
-    permission_classes = [IsAuthenticated]
 
     def post(self, request):
         code = request.data["code"]
@@ -227,39 +226,60 @@ class RunCode(views.APIView):
         return Response(content, status=status.HTTP_200_OK)
 
 
-class SolutionView(views.APIView):
+class SubmissionCreate(generics.CreateAPIView):
     '''API view for submitting solutions.'''
     serializer_class = SolutionSerializer
-    authentication_classes = [SessionAuthentication, BasicAuthentication]
-    permission_classes = [IsAuthenticated]
     parser_classes = (MultiPartParser, FormParser)
 
     def post(self, request):
+
         serializer = SolutionSerializer(data=request.data)
 
         if serializer.is_valid(raise_exception=True):
-            question = request.data['question']
-            assignment = request.data['assignment']
+            c = Classroom.objects.filter(students=request.data["student"])
 
-            file_obj = request.FILES['submission']
+            if c.exists():
+                question = request.data['question']
+                assignment = request.data['assignment']
+                file_obj = request.FILES['submission']
 
-            code = str(file_obj.read().decode())
+                code = str(file_obj.read().decode())
 
-            context, execution_status = submit_code(question, assignment, code)
-
-            serializer.save(status=execution_status)
-
-            return Response(context, status=status.HTTP_201_CREATED)
+                context, execution_status = submit_code(
+                        question, assignment, code
+                    )
+                serializer.save(status=execution_status)
+                return Response(context, status=status.HTTP_201_CREATED)
+            else:
+                return Response(
+                    {"detail": "Student has not joined any classroom yet"},
+                    status=status.HTTP_403_FORBIDDEN
+                    )
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class GetSubmission(views.APIView):
-    '''API View for returning submissions by a student.'''
+class SubmissionList(generics.ListAPIView):
+    '''API View for returning all submissions'''
     serializer_class = SolutionSerializer
-    authentication_classes = [SessionAuthentication, BasicAuthentication]
-    permission_classes = [IsAuthenticated]
+    queryset = Solution.objects.all()
 
-    def get(self, request, question, student):
-        context = Solution.objects.filter(student_id=student, question_id=question).distinct()
-        serializer = SolutionSerializer(context, many=True)
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+class SubmissionDetail(generics.RetrieveUpdateDestroyAPIView):
+    '''API View for returning submissions by a student'''
+    serializer_class = SolutionSerializer
+    queryset = Solution.objects.all()
+
+
+class PlagiarismView(views.APIView):
+    '''API View for running plagiarism service'''
+
+    def post(self, request):
+        try:
+            Assignment.objects.get(pk=request.data["assignment"])
+            results = codesim(request.data["assignment"])
+            return Response(results, status=status.HTTP_200_OK)
+        except Assignment.DoesNotExist:
+            return Response(
+                    {"detail": "Assignment Does Not Exist"},
+                    status=status.HTTP_404_NOT_FOUND
+                )
