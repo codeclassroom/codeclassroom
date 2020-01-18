@@ -1,6 +1,7 @@
-Django==2.2.8
-djangorestframework==3.10.3
+Django==2.2.9
+djangorestframework==3.11.0
 Pillow==6.2.1
 python-dotenv
 coderunner
 django-cors-headers
+plagcheck
