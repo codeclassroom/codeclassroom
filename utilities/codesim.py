@@ -1,6 +1,9 @@
 """All Plagiarism Utilities"""
 import plagcheck
-from app.models import Assignment, Professor, Solution, Question, Classroom, PlagResult
+from app.models import (
+        Assignment, Professor, Solution,
+        Question, Classroom
+    )
 import os
 from typing import List
 
@@ -56,7 +59,9 @@ def codesim(assignment):
         moss_user_id = os.environ['MOSS_ID']
         moss = plagcheck.check(format_lang(lang), moss_user_id)
 
-    submissions = Solution.objects.filter(assignment__id=assignment, question__in=questions)
+    submissions = Solution.objects.filter(
+        assignment__id=assignment, question__in=questions
+    )
 
     for submission in submissions:
         moss.addFile(submission.submission.path)

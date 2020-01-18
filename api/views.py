@@ -245,11 +245,16 @@ class SubmissionCreate(generics.CreateAPIView):
 
                 code = str(file_obj.read().decode())
 
-                context, execution_status = submit_code(question, assignment, code)
+                context, execution_status = submit_code(
+                        question, assignment, code
+                    )
                 serializer.save(status=execution_status)
                 return Response(context, status=status.HTTP_201_CREATED)
             else:
-                return Response({"detail": "Student has not joined any classroom yet"}, status=status.HTTP_403_FORBIDDEN)
+                return Response(
+                    {"detail": "Student has not joined any classroom yet"},
+                    status=status.HTTP_403_FORBIDDEN
+                    )
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -270,8 +275,11 @@ class PlagiarismView(views.APIView):
 
     def post(self, request):
         try:
-            assignment = Assignment.objects.get(pk=request.data["assignment"])
+            Assignment.objects.get(pk=request.data["assignment"])
             results = codesim(request.data["assignment"])
             return Response(results, status=status.HTTP_200_OK)
         except Assignment.DoesNotExist:
-            return Response({"detail": "Assignment Does Not Exist"}, status=status.HTTP_404_NOT_FOUND)
+            return Response(
+                    {"detail": "Assignment Does Not Exist"},
+                    status=status.HTTP_404_NOT_FOUND
+                )

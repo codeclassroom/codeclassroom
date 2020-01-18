@@ -11,10 +11,13 @@ import os
 
 def submission_directory_path(instance, filename):
     """
-    Location: MEDIA_ROOT/submissions/assignments/<assg_id>/<ques_id>_<student_id>
+    Location:
+    MEDIA_ROOT/submissions/assignments/<assg_id>/<ques_id>_<student_id>
     """
     return 'submissions/assignments/{0}/{1}_{2}'.format(
-        instance.assignment.id, instance.question.id, instance.student.id, filename)
+            instance.assignment.id, instance.question.id,
+            instance.student.id, filename
+        )
 
 
 def random_code(length=5):
