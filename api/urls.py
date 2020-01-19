@@ -1,4 +1,4 @@
-from django.urls import path, include
+from django.urls import path
 from .views import (
     index,
     UserLoginView, UserLogoutView,
@@ -8,7 +8,7 @@ from .views import (
     AssignmentList, AssignmentCreate, AssignmentDetail,
     QuestionList, QuestionCreate, QuestionDetail,
     SubmissionCreate, SubmissionList, SubmissionDetail,
-    PlagiarismView, RunCode
+    PlagiarismView, JudgeCode
 )
 
 
@@ -54,7 +54,7 @@ urlpatterns = [
     path('submissions', SubmissionList.as_view(), name='submissions'),
 
     # Utility URLs
-    path('judge', RunCode.as_view(), name='code-judge'),
+    path('judge', JudgeCode.as_view(), name='code-judge'),
     path('codesim/', PlagiarismView.as_view(),
          name='plagiarism-detector')
 

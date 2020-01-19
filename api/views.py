@@ -17,7 +17,7 @@ from app.serializers import (
     ClassroomCreateSerializer, ClassroomJoincodeSerializer, ClassroomSerializer,
     AssignmentSerializer,
     QuestionSerializer,
-    SolutionSerializer,
+    SolutionSerializer, JudgeSerializer
 )
 from utilities.judge import run_code, submit_code
 from utilities.codesim import codesim
@@ -213,15 +213,21 @@ class QuestionDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Question.objects.all()
 
 
-class RunCode(views.APIView):
-    '''API for running code.'''
+class JudgeCode(views.APIView):
+    '''API for Judging Code'''
+    serializer_class = JudgeSerializer
 
     def post(self, request):
-        code = request.data["code"]
-        lang = request.data["language"]
-        question = request.data["question_id"]
+        serializer = JudgeSerializer(data=request.data)
+        if serializer.is_valid():
+            code = request.data["code"]
+            lang = request.data["language"]
 
-        content = run_code(code, lang, question)
+            if request.data["testcases"] != "":
+                content = run_code(code, lang, testcase=request.data["testcases"])
+            elif request.data["question_id"] != "":
+                question = request.data["question_id"]
+                content = run_code(code, lang, question)
 
         return Response(content, status=status.HTTP_200_OK)
 

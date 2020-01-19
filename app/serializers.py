@@ -135,3 +135,10 @@ class SolutionSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         return Solution.objects.create(**validated_data)
+
+
+class JudgeSerializer(serializers.Serializer):
+    code = serializers.CharField(required=True)
+    language = serializers.CharField(required=True)
+    question = serializers.IntegerField(required=False)
+    testcases = serializers.CharField(required=False)
