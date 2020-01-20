@@ -142,3 +142,13 @@ class JudgeSerializer(serializers.Serializer):
     language = serializers.CharField(required=True)
     question = serializers.IntegerField(required=False)
     testcases = serializers.CharField(required=False)
+
+
+class FeedBackEmailSerializer(serializers.Serializer):
+    email = serializers.EmailField(required=False)
+    message = serializers.CharField(required=True)
+
+
+class ReportQuestionSerializer(serializers.Serializer):
+    question = serializers.IntegerField()
+    message = serializers.CharField(required=True)

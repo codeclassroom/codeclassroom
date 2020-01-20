@@ -104,6 +104,21 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
+# Email Settings
+
+EMAIL_USE_LOCALTIME = True
+
+if DEBUG:
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+else:
+    EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+    EMAIL_HOST = 'smtp.gmail.com'
+    EMAIL_USE_TLS = True
+    EMAIL_PORT = 587
+    EMAIL_HOST_USER = os.environ["user_email"]
+    EMAIL_HOST_PASSWORD = os.environ["user_pass"]
+
+
 # Internationalization
 # https://docs.djangoproject.com/en/2.2/topics/i18n/
 
@@ -117,6 +132,10 @@ USE_L10N = True
 
 USE_TZ = True
 
+TIME_FORMAT = [
+    '%I:%M %p',  # 6:22 PM
+    '%I %p'  # 6 PM
+]
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/

@@ -8,7 +8,8 @@ from .views import (
     AssignmentList, AssignmentCreate, AssignmentDetail,
     QuestionList, QuestionCreate, QuestionDetail,
     SubmissionCreate, SubmissionList, SubmissionDetail,
-    PlagiarismView, JudgeCode
+    PlagiarismView, JudgeCode,
+    FeedBackView, ReportQuesiton
 )
 
 
@@ -56,6 +57,8 @@ urlpatterns = [
     # Utility URLs
     path('judge', JudgeCode.as_view(), name='code-judge'),
     path('codesim/', PlagiarismView.as_view(),
-         name='plagiarism-detector')
+         name='plagiarism-detector'),
+    path('email/feedback', FeedBackView.as_view(), name='feedback'),
+    path('email/report', ReportQuesiton.as_view(), name='report-question')
 
 ]

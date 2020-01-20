@@ -17,10 +17,12 @@ from app.serializers import (
     ClassroomCreateSerializer, ClassroomJoincodeSerializer, ClassroomSerializer,
     AssignmentSerializer,
     QuestionSerializer,
-    SolutionSerializer, JudgeSerializer
+    SolutionSerializer, JudgeSerializer,
+    FeedBackEmailSerializer, ReportQuestionSerializer
 )
 from utilities.judge import run_code, submit_code
 from utilities.codesim import codesim
+from utilities.email import feedback ,report
 
 
 @api_view(['GET'])
@@ -289,3 +291,33 @@ class PlagiarismView(views.APIView):
                     {"detail": "Assignment Does Not Exist"},
                     status=status.HTTP_404_NOT_FOUND
                 )
+
+
+class FeedBackView(generics.CreateAPIView):
+    """Feedback for CodeClassroom Website"""
+    serializer_class = FeedBackEmailSerializer
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        email_status = feedback(request.data["email"], request.data["message"])
+        if email_status:
+            return Response(
+                {"detail": "Thanks for your feedback"},
+                status=status.HTTP_202_ACCEPTED
+                )
+        else:
+            return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+class ReportQuesiton(generics.CreateAPIView):
+    serializer_class = ReportQuestionSerializer
+
+    def post(self, request):
+        report_status = report(request.data["question"], request.data["message"])
+        if report_status:
+            return Response(
+                {"detail": "Thanks for your feedback"},
+                status=status.HTTP_202_ACCEPTED
+                )
+        else:
+            return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
