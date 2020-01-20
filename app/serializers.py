@@ -151,4 +151,5 @@ class FeedBackEmailSerializer(serializers.Serializer):
 
 class ReportQuestionSerializer(serializers.Serializer):
     question = serializers.IntegerField()
+    email = serializers.EmailField(required=False)
     message = serializers.CharField(required=True)

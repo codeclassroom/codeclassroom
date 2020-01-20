@@ -313,7 +313,11 @@ class ReportQuesiton(generics.CreateAPIView):
     serializer_class = ReportQuestionSerializer
 
     def post(self, request):
-        report_status = report(request.data["question"], request.data["message"])
+        report_status = report(
+            request.data["question"],
+            request.data["message"],
+            request.data["email"]
+            )
         if report_status:
             return Response(
                 {"detail": "Thanks for your feedback"},
