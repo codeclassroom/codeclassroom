@@ -153,3 +153,10 @@ class ReportQuestionSerializer(serializers.Serializer):
     question = serializers.IntegerField()
     email = serializers.EmailField(required=False)
     message = serializers.CharField(required=True)
+
+
+class PlagiarismReportSerializer(serializers.Serializer):
+    question = serializers.IntegerField(required=True)
+    student_1 = serializers.IntegerField(required=True)
+    student_2 = serializers.IntegerField(required=True)
+    template = serializers.CharField(required=True)

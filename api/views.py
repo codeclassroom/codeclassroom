@@ -18,11 +18,12 @@ from app.serializers import (
     AssignmentSerializer,
     QuestionSerializer,
     SolutionSerializer, JudgeSerializer,
-    FeedBackEmailSerializer, ReportQuestionSerializer
+    FeedBackEmailSerializer, ReportQuestionSerializer,
+    PlagiarismReportSerializer
 )
 from utilities.judge import run_code, submit_code
 from utilities.codesim import codesim
-from utilities.email import feedback ,report
+from utilities.email import feedback, report, plagiarism_report
 
 
 @api_view(['GET'])
@@ -321,6 +322,25 @@ class ReportQuesiton(generics.CreateAPIView):
         if report_status:
             return Response(
                 {"detail": "Thanks for your feedback"},
+                status=status.HTTP_202_ACCEPTED
+                )
+        else:
+            return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+class PlagiarismReport(generics.CreateAPIView):
+    serializer_class = PlagiarismReportSerializer
+
+    def post(self, request):
+        report_status = plagiarism_report(
+            request.data["question"],
+            request.data["student_1"],
+            request.data["student_2"],
+            request.data["template"],
+            )
+        if report_status:
+            return Response(
+                {"detail": "Students have been notified"},
                 status=status.HTTP_202_ACCEPTED
                 )
         else:

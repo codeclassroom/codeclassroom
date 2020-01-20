@@ -1,7 +1,8 @@
 from django.core.mail import send_mail
+from smtplib import SMTPException
 from app.models import (
     Professor, Question, Assignment,
-    Classroom, User
+    Classroom, User, Student
 )
 
 TO_EMAIL = 'varshneybhupesh@gmail.com'
@@ -17,7 +18,7 @@ def feedback(email, message):
             fail_silently=False,
         )
         return True
-    except smtplib.SMTPException:
+    except SMTPException:
         return False
 
 
@@ -60,7 +61,24 @@ def report(question, message, email):
             fail_silently=False,
         )
         return True
-    except smtplib.SMTPException:
+    except SMTPException:
         return False
 
 
+def plagiarism_report(question, student_1, student_2, template):
+    """Accepts User id instead of Student ID"""
+    students = User.objects.filter(
+        pk__in=[student_1, student_2])
+    student_emails = [student.email for student in students]
+
+    try:
+        send_mail(
+            'You submission was suspected for plagiarism',
+            template,
+            TO_EMAIL,
+            student_emails,
+            fail_silently=False,
+        )
+        return True
+    except SMTPException:
+        return False
