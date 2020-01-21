@@ -9,6 +9,7 @@ from rest_framework import generics
 from rest_framework import viewsets
 from rest_framework import status
 from rest_framework.parsers import MultiPartParser, FormParser
+from drf_yasg.utils import swagger_serializer_method
 from app.models import (Professor, Student, Classroom, Assignment, Question, Solution)
 from app.serializers import (
     UserLoginSerializer,
@@ -19,7 +20,7 @@ from app.serializers import (
     QuestionSerializer,
     SolutionSerializer, JudgeSerializer,
     FeedBackEmailSerializer, ReportQuestionSerializer,
-    PlagiarismReportSerializer
+    PlagiarismReportSerializer, PlagiarismSerializer
 )
 from utilities.judge import run_code, submit_code
 from utilities.codesim import codesim
@@ -127,6 +128,7 @@ class ClassroomCreateView(views.APIView):
     '''API view for creating a classroom'''
     serializer_class = ClassroomCreateSerializer
 
+    @swagger_serializer_method(serializer_or_field=ClassroomCreateSerializer)
     def post(self, request):
         serializer = ClassroomCreateSerializer(data=request.data)
 
@@ -136,10 +138,11 @@ class ClassroomCreateView(views.APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class ClassroomJoinView(views.APIView):
+class ClassroomJoinView(generics.CreateAPIView):
     '''API view for joining a classroom'''
     serializer_class = ClassroomJoincodeSerializer
 
+    @swagger_serializer_method(serializer_or_field=ClassroomJoincodeSerializer)
     def post(self, request):
         serializer = ClassroomJoincodeSerializer(data=request.data)
 
@@ -166,10 +169,11 @@ class ClassroomDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Classroom.objects.all()
 
 
-class AssignmentCreate(views.APIView):
+class AssignmentCreate(generics.CreateAPIView):
     '''API view for creating assignments'''
     serializer_class = AssignmentSerializer
 
+    @swagger_serializer_method(serializer_or_field=AssignmentSerializer)
     def post(self, request):
         serializer = AssignmentSerializer(data=request.data)
 
@@ -191,10 +195,11 @@ class AssignmentDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Assignment.objects.all()
 
 
-class QuestionCreate(views.APIView):
+class QuestionCreate(generics.CreateAPIView):
     '''API view for creating questions'''
     serializer_class = QuestionSerializer
 
+    @swagger_serializer_method(serializer_or_field=QuestionSerializer)
     def post(self, request):
         serializer = QuestionSerializer(data=request.data)
 
@@ -216,10 +221,11 @@ class QuestionDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Question.objects.all()
 
 
-class JudgeCode(views.APIView):
+class JudgeCode(generics.CreateAPIView):
     '''API for Judging Code'''
     serializer_class = JudgeSerializer
 
+    @swagger_serializer_method(serializer_or_field=JudgeSerializer)
     def post(self, request):
         serializer = JudgeSerializer(data=request.data)
         if serializer.is_valid():
@@ -240,6 +246,7 @@ class SubmissionCreate(generics.CreateAPIView):
     serializer_class = SolutionSerializer
     parser_classes = (MultiPartParser, FormParser)
 
+    @swagger_serializer_method(serializer_or_field=SolutionSerializer)
     def post(self, request):
 
         serializer = SolutionSerializer(data=request.data)
@@ -279,69 +286,76 @@ class SubmissionDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Solution.objects.all()
 
 
-class PlagiarismView(views.APIView):
-    '''API View for running plagiarism service'''
+class PlagiarismView(generics.CreateAPIView):
+    '''API View for running Plagiarism Service'''
+    serializer_class = PlagiarismSerializer
 
+    @swagger_serializer_method(serializer_or_field=PlagiarismSerializer)
     def post(self, request):
-        try:
-            Assignment.objects.get(pk=request.data["assignment"])
-            results = codesim(request.data["assignment"])
-            return Response(results, status=status.HTTP_200_OK)
-        except Assignment.DoesNotExist:
-            return Response(
-                    {"detail": "Assignment Does Not Exist"},
-                    status=status.HTTP_404_NOT_FOUND
-                )
+        serializer = PlagiarismSerializer(data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            try:
+                Assignment.objects.get(pk=request.data["assignment"])
+                results = codesim(request.data["assignment"])
+                return Response(results, status=status.HTTP_200_OK)
+            except Assignment.DoesNotExist:
+                return Response(
+                        {"detail": "Assignment Does Not Exist"},
+                        status=status.HTTP_404_NOT_FOUND
+                    )
 
 
 class FeedBackView(generics.CreateAPIView):
-    """Feedback for CodeClassroom Website"""
+    """Anonymous Feedback for CodeClassroom Website Creators"""
     serializer_class = FeedBackEmailSerializer
     permission_classes = [AllowAny]
 
+    @swagger_serializer_method(serializer_or_field=FeedBackEmailSerializer)
     def post(self, request):
-        email_status = feedback(request.data["email"], request.data["message"])
-        if email_status:
-            return Response(
-                {"detail": "Thanks for your feedback"},
-                status=status.HTTP_202_ACCEPTED
-                )
+        serializer = FeedBackEmailSerializer(data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            email_status = feedback(serializer.data)
+            if email_status:
+                return Response(
+                    {"detail": "Thanks for your feedback"},
+                    status=status.HTTP_202_ACCEPTED
+                    )
         else:
             return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 class ReportQuesiton(generics.CreateAPIView):
+    """Report Professors for any error/feedback in Question by sending them an email"""
     serializer_class = ReportQuestionSerializer
 
+    @swagger_serializer_method(serializer_or_field=ReportQuestionSerializer)
     def post(self, request):
-        report_status = report(
-            request.data["question"],
-            request.data["message"],
-            request.data["email"]
-            )
-        if report_status:
-            return Response(
-                {"detail": "Thanks for your feedback"},
-                status=status.HTTP_202_ACCEPTED
-                )
+        serializer = ReportQuestionSerializer(data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            report_status = report(serializer.data)
+            if report_status:
+                return Response(
+                    {"detail": "Thanks for your feedback"},
+                    status=status.HTTP_202_ACCEPTED
+                    )
         else:
             return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 class PlagiarismReport(generics.CreateAPIView):
+    """Report Students for plagiarism by sending them an email
+    Accepts User ID instead of Student ID"""
     serializer_class = PlagiarismReportSerializer
 
+    @swagger_serializer_method(serializer_or_field=PlagiarismReportSerializer)
     def post(self, request):
-        report_status = plagiarism_report(
-            request.data["question"],
-            request.data["student_1"],
-            request.data["student_2"],
-            request.data["template"],
-            )
-        if report_status:
-            return Response(
-                {"detail": "Students have been notified"},
-                status=status.HTTP_202_ACCEPTED
-                )
+        serializer = PlagiarismReportSerializer(data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            report_status = plagiarism_report(serializer.data)
+            if report_status:
+                return Response(
+                    {"detail": "Students have been notified"},
+                    status=status.HTTP_202_ACCEPTED
+                    )
         else:
             return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)

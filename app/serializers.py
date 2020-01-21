@@ -137,6 +137,10 @@ class SolutionSerializer(serializers.ModelSerializer):
         return Solution.objects.create(**validated_data)
 
 
+class PlagiarismSerializer(serializers.Serializer):
+    assignment = serializers.IntegerField()
+
+
 class JudgeSerializer(serializers.Serializer):
     code = serializers.CharField(required=True)
     language = serializers.CharField(required=True)

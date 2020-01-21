@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.1.0] - Jan x, 2020
+
+### Added
+- OpenAPI Swagger Documentation, available at `/api`
+- New `PlagiarismSerializer`
+- Email API. Currently available email APIs.
+	- Plagiarism Report (Report Students for plagiarism)
+	- Report Question (Sends e-mail to professor for improving the question with student feedback)
+	- Anonymous Website Feedback (Provide feedback to creators) with option for providing user e-mail.
+- Token Auth
+
+### Removed
+- Old API Documentation end-point `api-docs`.
+
+
 ## [2.0.0] - Jan 18, 2020
 
 ### Added

@@ -11,6 +11,21 @@ from .views import (
     PlagiarismView, JudgeCode,
     FeedBackView, ReportQuesiton, PlagiarismReport
 )
+from drf_yasg.views import get_schema_view
+from drf_yasg import openapi
+from rest_framework import permissions
+
+schema_view = get_schema_view(
+   openapi.Info(
+      title="CodeClassroom API",
+      default_version='v2.1.0',
+      description="A platform for managing programming assignments in colleges & universities.",
+      contact=openapi.Contact(email="varshneybhupes@gmail.com"),
+      license=openapi.License(name="AGPL-3.0"),
+   ),
+   public=True,
+   permission_classes=(permissions.AllowAny,),
+)
 
 
 student_list = StudentViewSet.as_view({'get': 'list'})
@@ -21,7 +36,7 @@ professor_detail = ProfessorViewSet.as_view({'get': 'retrieve'})
 
 
 urlpatterns = [
-    path('', index, name='index'),
+    path('', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     path('signup/professor', ProfessorSignupView.as_view(), name='prof-signup'),
     path('signup/student', StudentSignupView.as_view(), name='student-signup'),
     path('login/', UserLoginView.as_view(), name='login'),
