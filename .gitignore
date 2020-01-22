@@ -107,3 +107,6 @@ venv.bak/
 # Remove all CSV and JSON file
 *.csv
 *.json
+
+# Custom
+sample.py

@@ -7,8 +7,8 @@
   <a href="https://github.com/codeclassroom/codeclassroom/releases">
     <img alt="release" src="https://img.shields.io/github/v/release/codeclassroom/codeclassroom" target="_blank" />
   </a>
-  <a href="https://requires.io/github/codeclassroom/codeclassroom/requirements/?branch=master">
-    <img alt="dependencies" src="https://requires.io/github/codeclassroom/codeclassroom/requirements.svg?branch=master" target="_blank" />
+  <a href="https://github.com/ellerbrock/open-source-badges">
+    <img alt="opensourcelove" src="https://badges.frapsoft.com/os/v1/open-source.png?v=103" target="_blank" />
   </a>
   <a href="https://www.codacy.com/gh/codeclassroom/codeclassroom?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=codeclassroom/codeclassroom&amp;utm_campaign=Badge_Grade">
     <img alt="Codacy" src="https://api.codacy.com/project/badge/Grade/91c4c80af77442d5979eb5253afa3759" target="_blank" />
@@ -55,6 +55,7 @@ python3 manage.py test
 ```bash
 python3 manage.py runserver
 ```
+
 
 ## Change log 📝
 

@@ -1,14 +1,28 @@
-from django.urls import path, include
-from .views import (
-    index,
-    UserLoginView, UserLogoutView,
-    StudentSignupView, StudentViewSet, StudentDetail,
-    ProfessorSignupView, ProfessorViewSet, ProfessorDetail,
-    ClassroomCreateView, ClassroomJoinView, ClassroomList, ClassroomDetail,
-    AssignmentList, AssignmentCreate, AssignmentDetail,
-    QuestionList, QuestionCreate, QuestionDetail,
-    SubmissionCreate, SubmissionList, SubmissionDetail,
-    PlagiarismView, RunCode
+from django.urls import path
+from drf_yasg import openapi
+from drf_yasg.views import get_schema_view
+from rest_framework import permissions
+
+from .views import (AssignmentCreate, AssignmentDetail, AssignmentList,
+                    ClassroomCreateView, ClassroomDetail, ClassroomJoinView,
+                    ClassroomList, FeedBackView, JudgeCode, PlagiarismReport,
+                    PlagiarismView, ProfessorDetail, ProfessorSignupView,
+                    ProfessorViewSet, QuestionCreate, QuestionDetail,
+                    QuestionList, ReportQuesiton, StudentDetail,
+                    StudentSignupView, StudentViewSet, SubmissionCreate,
+                    SubmissionDetail, SubmissionList, UserLoginView,
+                    UserLogoutView)
+
+schema_view = get_schema_view(
+   openapi.Info(
+      title="CodeClassroom API",
+      default_version='v2.1.0',
+      description="A platform for managing programming assignments in colleges & universities.",
+      contact=openapi.Contact(email="varshneybhupes@gmail.com"),
+      license=openapi.License(name="AGPL-3.0"),
+   ),
+   public=True,
+   permission_classes=(permissions.AllowAny,),
 )
 
 
@@ -20,7 +34,7 @@ professor_detail = ProfessorViewSet.as_view({'get': 'retrieve'})
 
 
 urlpatterns = [
-    path('', index, name='index'),
+    path('', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     path('signup/professor', ProfessorSignupView.as_view(), name='prof-signup'),
     path('signup/student', StudentSignupView.as_view(), name='student-signup'),
     path('login/', UserLoginView.as_view(), name='login'),
@@ -54,8 +68,11 @@ urlpatterns = [
     path('submissions', SubmissionList.as_view(), name='submissions'),
 
     # Utility URLs
-    path('judge', RunCode.as_view(), name='code-judge'),
+    path('judge/', JudgeCode.as_view(), name='code-judge'),
     path('codesim/', PlagiarismView.as_view(),
-         name='plagiarism-detector')
+         name='plagiarism-detector'),
+    path('email/feedback', FeedBackView.as_view(), name='feedback'),
+    path('email/report', ReportQuesiton.as_view(), name='report-question'),
+    path('email/plagiarism-report', PlagiarismReport.as_view(), name='report-plagiarism')
 
 ]

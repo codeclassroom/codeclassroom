@@ -135,3 +135,32 @@ class SolutionSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         return Solution.objects.create(**validated_data)
+
+
+class PlagiarismSerializer(serializers.Serializer):
+    assignment = serializers.IntegerField()
+
+
+class JudgeSerializer(serializers.Serializer):
+    code = serializers.CharField(required=True)
+    language = serializers.CharField(required=True)
+    question = serializers.IntegerField(required=False)
+    testcases = serializers.CharField(required=False)
+
+
+class FeedBackEmailSerializer(serializers.Serializer):
+    email = serializers.EmailField(required=False)
+    message = serializers.CharField(required=True)
+
+
+class ReportQuestionSerializer(serializers.Serializer):
+    question = serializers.IntegerField()
+    email = serializers.EmailField(required=False)
+    message = serializers.CharField(required=True)
+
+
+class PlagiarismReportSerializer(serializers.Serializer):
+    question = serializers.IntegerField(required=True)
+    student_1 = serializers.IntegerField(required=True)
+    student_2 = serializers.IntegerField(required=True)
+    template = serializers.CharField(required=True)
