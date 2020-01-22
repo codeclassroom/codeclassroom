@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
-## [2.1.0] - Jan x, 2020
+## [2.1.0] - Jan 22, 2020
 
 ### Added
 - OpenAPI Swagger Documentation, available at `/api`
