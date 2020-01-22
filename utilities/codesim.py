@@ -1,11 +1,10 @@
 """All Plagiarism Utilities"""
-import plagcheck
-from app.models import (
-        Assignment, Professor, Solution,
-        Question, Classroom
-    )
 import os
 from typing import List
+
+import plagcheck
+
+from app.models import Assignment, Classroom, Professor, Question, Solution
 
 
 class moss_data_dict(dict):

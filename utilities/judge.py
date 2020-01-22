@@ -1,6 +1,7 @@
 """All Judge/Code Running Utilities"""
-from app.models import Question, Assignment
 import coderunner
+
+from app.models import Assignment, Question
 
 
 def run_code(code, lang, question=None, testcase=None):

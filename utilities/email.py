@@ -1,21 +1,20 @@
-from django.core.mail import send_mail
 from smtplib import SMTPException
-from app.models import (
-    Professor, Question, Assignment,
-    Classroom, User
-)
 
-TO_EMAIL = 'varshneybhupesh@gmail.com'
+from django.core.mail import send_mail
+
+from app.models import Assignment, Classroom, Professor, Question, User
+
+FROM_EMAIL = 'codeclassroom.contact@gmail.com'
 
 
 def feedback(data: dict):
     try:
-        if "email" in data.keys():
+        if "email" in data:
             send_mail(
                 'User Feedback',
                 data["message"],
                 data["email"],
-                [TO_EMAIL],
+                [FROM_EMAIL],
                 fail_silently=False,
             )
         else:
@@ -23,7 +22,7 @@ def feedback(data: dict):
                 'User Feedback',
                 data["message"],
                 "Anonymous User",
-                [TO_EMAIL],
+                [FROM_EMAIL],
                 fail_silently=False,
             )
         return True
@@ -44,7 +43,7 @@ def report(data: dict):
         pk=professor['professor']).values('user_id')[0]
     professor_email = User.objects.get(pk=user["user_id"]).email
 
-    if "email" in data.keys():
+    if "email" in data:
         full_message = """
         Question titled "{question_title}" has been reported by a user.
         User {email} provided following Feedback on this question:
@@ -66,7 +65,7 @@ def report(data: dict):
         send_mail(
             'Question Feedback',
             full_message,
-            TO_EMAIL,
+            FROM_EMAIL,
             [professor_email],
             fail_silently=False,
         )
@@ -85,7 +84,7 @@ def plagiarism_report(data: dict):
         send_mail(
             'You submission was suspected for plagiarism',
             data["template"],
-            TO_EMAIL,
+            FROM_EMAIL,
             student_emails,
             fail_silently=False,
         )

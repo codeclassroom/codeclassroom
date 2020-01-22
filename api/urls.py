@@ -1,19 +1,17 @@
 from django.urls import path
-from .views import (
-    index,
-    UserLoginView, UserLogoutView,
-    StudentSignupView, StudentViewSet, StudentDetail,
-    ProfessorSignupView, ProfessorViewSet, ProfessorDetail,
-    ClassroomCreateView, ClassroomJoinView, ClassroomList, ClassroomDetail,
-    AssignmentList, AssignmentCreate, AssignmentDetail,
-    QuestionList, QuestionCreate, QuestionDetail,
-    SubmissionCreate, SubmissionList, SubmissionDetail,
-    PlagiarismView, JudgeCode,
-    FeedBackView, ReportQuesiton, PlagiarismReport
-)
-from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
+from drf_yasg.views import get_schema_view
 from rest_framework import permissions
+
+from .views import (AssignmentCreate, AssignmentDetail, AssignmentList,
+                    ClassroomCreateView, ClassroomDetail, ClassroomJoinView,
+                    ClassroomList, FeedBackView, JudgeCode, PlagiarismReport,
+                    PlagiarismView, ProfessorDetail, ProfessorSignupView,
+                    ProfessorViewSet, QuestionCreate, QuestionDetail,
+                    QuestionList, ReportQuesiton, StudentDetail,
+                    StudentSignupView, StudentViewSet, SubmissionCreate,
+                    SubmissionDetail, SubmissionList, UserLoginView,
+                    UserLogoutView)
 
 schema_view = get_schema_view(
    openapi.Info(

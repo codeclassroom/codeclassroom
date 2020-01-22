@@ -1,30 +1,26 @@
 '''API views.'''
 from django.contrib.auth import authenticate, login, logout
-from rest_framework.permissions import AllowAny
+from drf_yasg.utils import swagger_serializer_method
+from rest_framework import generics, status, views, viewsets
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework import views
+from rest_framework.parsers import FormParser, MultiPartParser
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
-from rest_framework import generics
-from rest_framework import viewsets
-from rest_framework import status
-from rest_framework.parsers import MultiPartParser, FormParser
-from drf_yasg.utils import swagger_serializer_method
-from app.models import (Professor, Student, Classroom, Assignment, Question, Solution)
-from app.serializers import (
-    UserLoginSerializer,
-    ProfessorSignupSerializer, ProfessorSerializer,
-    StudentSignupSerializer, StudentSerializer,
-    ClassroomCreateSerializer, ClassroomJoincodeSerializer, ClassroomSerializer,
-    AssignmentSerializer,
-    QuestionSerializer,
-    SolutionSerializer, JudgeSerializer,
-    FeedBackEmailSerializer, ReportQuestionSerializer,
-    PlagiarismReportSerializer, PlagiarismSerializer
-)
-from utilities.judge import run_code, submit_code
+
+from app.models import (Assignment, Classroom, Professor, Question, Solution,
+                        Student)
+from app.serializers import (AssignmentSerializer, ClassroomCreateSerializer,
+                             ClassroomJoincodeSerializer, ClassroomSerializer,
+                             FeedBackEmailSerializer, JudgeSerializer,
+                             PlagiarismReportSerializer, PlagiarismSerializer,
+                             ProfessorSerializer, ProfessorSignupSerializer,
+                             QuestionSerializer, ReportQuestionSerializer,
+                             SolutionSerializer, StudentSerializer,
+                             StudentSignupSerializer, UserLoginSerializer)
 from utilities.codesim import codesim
-from utilities.email import feedback, report, plagiarism_report
+from utilities.email import feedback, plagiarism_report, report
+from utilities.judge import run_code, submit_code
 
 
 @api_view(['GET'])
