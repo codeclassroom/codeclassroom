@@ -56,6 +56,7 @@ python3 manage.py test
 python3 manage.py runserver
 ```
 
+
 ## Change log 📝
 
 Changelog can be found in [CHANGELOG.md](https://github.com/codeclassroom/codeclassroom/blob/master/CHANGELOG.md).
