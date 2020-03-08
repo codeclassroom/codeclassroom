@@ -1,0 +1,28 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" type="text/css" href="{% static 'app/style.css' %}">
+  {% if title %}
+  <title>CodeClassroom - {{ title }}</title>
+  {% else %}
+  <title>CodeClassroom</title>
+  {% endif %}
+</head>
+<body>
+  <h1><a href="{% url 'app:index' %}">CodeClassroom</a></h1>
+  {% block content %}
+  {% block messages %}
+  {% if messages %}
+  <ul class="messages">
+    {% for message in messages %}
+    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+  {% endblock messages %}
+  {% endblock content %}
+  {% block js %}
+  {% endblock js %}
+</body>
+</html>

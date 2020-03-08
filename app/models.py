@@ -34,7 +34,7 @@ class Institution(models.Model):
 
 
 class Professor(models.Model):
-    '''Assuming a professor can create multiple classrooms and each classroom can have 
+    '''Assuming a professor can create multiple classrooms and each classroom can have
     multiple assignments. if a classroom is deleted, all of the assignments of that class will
     delete automatically
     '''
@@ -52,7 +52,7 @@ class Student(models.Model):
     profile_pic = models.ImageField(upload_to='StudentProfilePic', blank=True, null=True)
     institution = models.ForeignKey(to=Institution, blank=True, null=True, on_delete=models.CASCADE)
     course = models.CharField(max_length=50, blank=True)
-    roll_no = models.IntegerField()
+    roll_no = models.IntegerField(blank=True, null=True)  # setting to blankable, nullable temporarily
 
     def __str__(self):
         return self.user.username

@@ -1,0 +1,1 @@
+(() => console.log('Signup ready!'))();

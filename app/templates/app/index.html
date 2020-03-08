@@ -1,0 +1,14 @@
+{% extends 'app/base.html' %}
+{% load static %}
+{% block content %}
+{% if request.user.is_authenticated %}
+<a href="{% url 'app:logout' %}">Logout</a>
+<p>{{ request.user.username }} is logged in.</p>
+{% else %}
+<a href="{% url 'app:login' %}">Login</a>
+<a href="{% url 'app:signup' %}">Sign-up</a>
+{% endif %}
+{% endblock content %}
+{% block js %}
+<script type="text/javascript" src="{% static 'app/index.js' %}"></script>
+{% endblock js %}

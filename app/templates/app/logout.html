@@ -1,0 +1,9 @@
+{% extends 'app/base.html' %}
+{% load static %}
+{% block content %}
+<h2>Logged out.</h2>
+<a href="{% url 'app:login' %}">Login again</a>
+{% endblock content %}
+{% block js %}
+<script type="text/javascript" src="{% static 'app/logout.js' %}"></script>
+{% endblock js %}
