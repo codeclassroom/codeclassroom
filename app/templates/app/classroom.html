@@ -1,0 +1,18 @@
+{% extends 'app/dashboard.html' %}
+{% load static %}
+{% block dashboard %}
+{% if classroom %}
+<a href="{% url 'app:edit-classroom' pk %}">Edit Classroom</a>
+<p>Classroom: {{ classroom.title }}</p>
+<p>Professor: {{ classroom.professor.user.username }} </p>
+<p>Created on: {{ classroom.created_date }}</p>
+<p>Join Code: {{ classroom.join_code }}</p>
+{% if students %}
+<ol>
+{% for student in students %}
+  <li>{{ student.user.username }}</li>
+{% endfor %}
+</ol>
+{% endif %}
+{% endif %}
+{% endblock dashboard %}

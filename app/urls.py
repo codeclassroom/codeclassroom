@@ -1,4 +1,5 @@
 from django.contrib.auth import views as auth_views
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
 from django.urls import path, reverse_lazy
 from . import views
@@ -15,7 +16,15 @@ urlpatterns = [
             'next': reverse_lazy('app:index'),
         },
     ), name='login'),
-    path('logout/', auth_views.LogoutView.as_view(
+    path('logout/', login_required(auth_views.LogoutView.as_view(
         template_name='app/logout.html',
-    ), name='logout'),
+        extra_context={
+            'title': 'Logout'
+        }
+    ), login_url=reverse_lazy('app:login')), name='logout'),
+    path('dashboard/', views.dashboard, name='dashboard'),
+    path('classroom/create/', views.create_classroom, name='create-classroom'),
+    path('classroom/<int:pk>/', views.classroom, name='view-classroom'),
+    path('classroom/edit/<int:pk>/', views.edit_classroom, name='edit-classroom'),
+
 ]
