@@ -1,0 +1,18 @@
+{% extends 'app/dashboard.html' %}
+{% load static %}
+{% block dashboard %}
+{% if assignment %}
+<a href="{% url 'app:edit-assignment' classroom_pk assignment.id %}">Edit Assignment</a>
+<p>Assignment: {{ assignment.title }}</p>
+<p>Created on: {{ assignment.created_date }}</p>
+<p>Deadline: {{ assignment.deadline }}</p>
+<p>Language of focus: {{ assignment.language }}</p>
+{% if questions %}
+<ol>
+  {% for question in questions %}
+  <li>{{ question.title }} (for {{ question.marks }} marks)</li>
+  {% endfor %}
+</ol>
+{% endif %}
+{% endif %}
+{% endblock dashboard %}

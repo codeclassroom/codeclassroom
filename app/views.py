@@ -6,8 +6,13 @@ from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.urls import reverse, reverse_lazy
 from django.views.generic import ListView
-from .models import Professor, Student, Classroom
-from .forms import SignupForm, ClassroomCreateForm, ClassroomEditForm
+from .models import (
+    Professor, Student, Classroom, Assignment
+)
+from .forms import (
+    SignupForm, ClassroomCreateForm, ClassroomEditForm,
+    AssignmentCreateForm, AssignmentEditForm,
+)
 
 
 def index(request):
@@ -39,6 +44,7 @@ def signup(request):
 
 @login_required(login_url=reverse_lazy('app:login'))
 def dashboard(request):
+    '''View that will be shown once a user logs in.'''
     context = { 'title' : 'Dashboard' }
 
     user = request.user
@@ -96,17 +102,20 @@ def create_classroom(request):
 
 @login_required(login_url=reverse_lazy('app:login'))
 def classroom(request, pk):
+    '''View that shows classroom info such as the students, assignments etc.'''
     classroom = Classroom.objects.filter(pk=pk).first()
 
     if classroom is None:
         return HttpResponse('Not a valid classroom.')
 
     students = classroom.students.all()
+    assignments = classroom.assignment_set.all()
     context = {
-        'title' : 'Edit {classroom}'.format(classroom=classroom.title),
+        'title' : classroom.title,
         'pk' : pk,
         'classroom' : classroom,
         'students' : students,
+        'assignments' : assignments,
     }
 
     return render(request, 'app/classroom.html', context)
@@ -155,6 +164,130 @@ def edit_classroom(request, pk):
             context['form'] = form
             return render(request, 'app/edit-classroom.html', context)
 
+
+@login_required(login_url=reverse_lazy('app:login'))
+def create_assignment(request, classroom_pk):
+    context = { 'title' : 'Create Assignment' , 'classroom_pk' : classroom_pk }
+    professor = Professor.objects.filter(user=request.user).first()
+
+    if professor is None:
+        return HttpResponse('Not allowed.')
+
+    classroom = Classroom.objects.filter(pk=classroom_pk).first()
+
+    if classroom is None:
+        return HttpResponse('Invalid classroom.')
+
+    if request.method == 'GET':
+        context['form'] = AssignmentCreateForm(
+            classroom=classroom,
+            auto_id=True,
+        )
+        return render(request, 'app/create-assignment.html', context)
+
+    elif request.method == 'POST':
+        form = AssignmentCreateForm(
+            request.POST,
+            classroom=classroom,
+            auto_id=True,
+        )
+
+        if form.is_valid():
+            form.save()
+
+            messages.success(request, 'Assignment Created!')
+            return redirect(reverse('app:view-classroom', kwargs={
+                'pk' : classroom.id,
+            }))
+
+        else:
+            context['form'] = form
+            return render(request, 'app/create-assignment.html', context)
+
+
+@login_required(login_url=reverse_lazy('app:login'))
+def assignment(request, classroom_pk, pk):
+    '''View to show info about assignment and list out the questions.'''
+    professor = Professor.objects.filter(user=request.user).first()
+
+    if professor is None:
+        return HttpResponse('Not allowed.')
+
+    classroom = Classroom.objects.filter(pk=classroom_pk).first()
+
+    if classroom is None:
+        return HttpResponse('No valid classroom.')
+
+    assignment = Assignment.objects.filter(pk=pk).first()
+
+    if assignment is None:
+        return HttpResponse('No valid assignment.')
+
+    questions = assignment.question_set.all()
+
+    context = {
+        'title' : '{classroom} - {assignment}'.format(
+            classroom=classroom,
+            assignment=assignment,
+        ),
+        'classroom_pk' : classroom_pk,
+        'assignment' : assignment,
+        'questions' : questions,
+    }
+
+    return render(request, 'app/assignment.html', context)
+
+
+@login_required(login_url=reverse_lazy('app:login'))
+def edit_assignment(request, classroom_pk, pk):
+    professor = Professor.objects.filter(user=request.user).first()
+
+    if professor is None:
+        return HttpResponse('Not allowed.')
+
+    classroom = Classroom.objects.filter(pk=classroom_pk).first()
+
+    if classroom is None:
+        return HttpResponse('No valid classroom.')
+
+    assignment = Assignment.objects.filter(pk=pk).first()
+
+    if assignment is None:
+        return HttpResponse('No valid assignment.')
+
+    context = {
+        'title' : 'Edit {assignment} of {classroom}'.format(
+            assignment=assignment,
+            classroom=classroom,
+        ),
+        'assignment' : assignment,
+    }
+    if request.method == 'GET':
+        context['form'] = AssignmentEditForm(
+            instance=assignment,
+            auto_id=True,
+        )
+        return render(request, 'app/edit-assignment.html', context)
+
+    elif request.method == 'POST':
+        form = AssignmentEditForm(
+            request.POST,
+            instance=assignment,
+            auto_id=True,
+        )
+
+        if form.is_valid():
+            form.save()
+
+            messages.success(request, 'Assignment Updated!')
+            return redirect(reverse('app:view-assignment', kwargs={
+                'classroom_pk' : classroom_pk,
+                'pk' : assignment.id,
+            }))
+
+        else:
+            context['form'] = form
+            return render(request, 'app/edit-assignment.html', context)
 
 def docs(request):
 	return render(request, 'docs.html')

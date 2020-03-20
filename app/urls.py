@@ -25,6 +25,8 @@ urlpatterns = [
     path('dashboard/', views.dashboard, name='dashboard'),
     path('classroom/create/', views.create_classroom, name='create-classroom'),
     path('classroom/<int:pk>/', views.classroom, name='view-classroom'),
-    path('classroom/edit/<int:pk>/', views.edit_classroom, name='edit-classroom'),
-
+    path('classroom/<int:pk>/edit/', views.edit_classroom, name='edit-classroom'),
+    path('classroom/<int:classroom_pk>/assignment/create/', views.create_assignment, name='create-assignment'),
+    path('classroom/<int:classroom_pk>/assignment/<int:pk>/', views.assignment, name='view-assignment'),
+    path('classroom/<int:classroom_pk>/assignment/<int:pk>/edit/', views.edit_assignment, name='edit-assignment'),
 ]

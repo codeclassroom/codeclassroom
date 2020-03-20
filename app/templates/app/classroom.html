@@ -8,10 +8,20 @@
 <p>Created on: {{ classroom.created_date }}</p>
 <p>Join Code: {{ classroom.join_code }}</p>
 {% if students %}
+<p>Students:</p>
 <ol>
 {% for student in students %}
   <li>{{ student.user.username }}</li>
 {% endfor %}
+</ol>
+{% endif %}
+<a href="{% url 'app:create-assignment' pk %}">Create Assignment</a>
+{% if assignments %}
+<p>Assignments:</p>
+<ol>
+  {% for assignment in assignments %}
+  <li><a href="{% url 'app:view-assignment' pk assignment.id %}">{{ assignment.title }} - Language : {{ assignment.language }}</a></li>
+  {% endfor %}
 </ol>
 {% endif %}
 {% endif %}

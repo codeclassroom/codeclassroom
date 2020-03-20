@@ -3,6 +3,8 @@
 <html>
 <head>
   <link rel="stylesheet" type="text/css" href="{% static 'app/style.css' %}">
+  {% block link %}
+  {% endblock link %}
   {% if title %}
   <title>CodeClassroom - {{ title }}</title>
   {% else %}

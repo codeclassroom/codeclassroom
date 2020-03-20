@@ -1,0 +1,24 @@
+{% extends 'app/base.html' %}
+{% load static %}
+{% block link %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+{% endblock link %}
+{% block content %}
+<form action="{% url 'app:edit-assignment' assignment.classroom.id assignment.id %}" method="POST">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <input type="submit" name="submit" value="Update Assignment">
+</form>
+{% endblock content %}
+{% block js %}
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script type="text/javascript">
+  (() => console.log('Edit Assignment ready!'))();
+
+  flatpickr('#deadline', {
+    enableTime : true,
+    enableSeconds : true,
+    dateFormat : "Y-m-d H:i:S",
+  });
+</script>
+{% endblock js %}
