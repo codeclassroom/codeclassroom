@@ -1,0 +1,9 @@
+{% extends 'app/base.html' %}
+{% load static %}
+{% block content %}
+<form action="{% url 'app:edit-question' classroom_pk assignment_pk pk %}" method="POST">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <input type="submit" name="submit" value="Update Question">
+</form>
+{% endblock content %}

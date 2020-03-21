@@ -1,0 +1,17 @@
+{% extends 'app/dashboard.html' %}
+{% load static %}
+{% block dashboard %}
+{% if question %}
+<a href="{% url 'app:edit-question' classroom_pk assignment_pk question.id %}">Edit Question</a>
+<p>Question: {{ question.title }}</p>
+<p>Created on: {{ question.created_date }}</p>
+<p>Description: {{ question.description }}</p>
+<p>Sample Input:</p>
+<p>{{ question.sample_input|linebreaksbr }}</p>
+<p>Sample Output:</p>
+<p>{{ question.sample_output|linebreaksbr }}</p>
+<p>Marks: {{ question.marks }}</p>
+<p>Draft: {{ question.draft }}</p>
+<p>Check for plagiarism: {{ question.check_plagiarism }}</p>
+{% endif %}
+{% endblock dashboard %}

@@ -7,11 +7,12 @@ from django.shortcuts import redirect, render
 from django.urls import reverse, reverse_lazy
 from django.views.generic import ListView
 from .models import (
-    Professor, Student, Classroom, Assignment
+    Professor, Student, Classroom, Assignment, Question
 )
 from .forms import (
     SignupForm, ClassroomCreateForm, ClassroomEditForm,
-    AssignmentCreateForm, AssignmentEditForm,
+    AssignmentCreateForm, AssignmentEditForm, QuestionCreateForm,
+    QuestionEditForm,
 )
 
 
@@ -288,6 +289,160 @@ def edit_assignment(request, classroom_pk, pk):
         else:
             context['form'] = form
             return render(request, 'app/edit-assignment.html', context)
+
+
+@login_required(login_url=reverse_lazy('app:login'))
+def create_question(request, classroom_pk, pk):
+    professor = Professor.objects.filter(user=request.user).first()
+
+    if professor is None:
+        return HttpResponse('Not allowed.')
+
+    classroom = Classroom.objects.filter(pk=classroom_pk).first()
+
+    if classroom is None:
+        return HttpResponse('No valid classroom.')
+
+    assignment = Assignment.objects.filter(pk=pk).first()
+
+    if assignment is None:
+        return HttpResponse('No valid assignment.')
+
+    context = {
+        'title' : '{classroom} - {assignment} - Add question'.format(
+            classroom=classroom,
+            assignment=assignment,
+        ),
+        'classroom_pk' : classroom_pk,
+        'assignment_pk' : assignment.id,
+    }
+
+    if request.method == 'GET':
+        context['form'] = QuestionCreateForm(
+            assignment=assignment,
+            auto_id=True,
+        )
+
+        return render(request, 'app/create-question.html', context)
+
+    elif request.method == 'POST':
+        form = QuestionCreateForm(
+            request.POST,
+            assignment=assignment,
+            auto_id=True,
+        )
+
+        if form.is_valid():
+            form.save()
+
+            messages.success(request, 'Question added!')
+            return redirect(reverse('app:view-assignment', kwargs={
+                'classroom_pk' : classroom_pk,
+                'pk' : assignment.id
+            }))
+
+        else:
+            context['form'] = form
+            return render(request, 'app/create-question.html', context)
+
+
+@login_required(login_url=reverse_lazy('app:login'))
+def question(request, classroom_pk, assignment_pk, pk):
+    professor = Professor.objects.filter(user=request.user).first()
+
+    if professor is None:
+        return HttpResponse('Not allowed.')
+
+    classroom = Classroom.objects.filter(pk=classroom_pk).first()
+
+    if classroom is None:
+        return HttpResponse('No valid classroom.')
+
+    assignment = Assignment.objects.filter(pk=assignment_pk).first()
+
+    if assignment is None:
+        return HttpResponse('No valid assignment.')
+
+    question = Question.objects.filter(pk=pk).first()
+
+    if question is None:
+        return HttpResponse('No valid question.')
+
+    context = {
+        'title' : '{classroom} - {assignment} - {question}'.format(
+            classroom=classroom,
+            assignment=assignment,
+            question=question.title,
+        ),
+        'classroom_pk' : classroom_pk,
+        'assignment_pk' : assignment_pk,
+        'question' : question,
+    }
+
+    return render(request, 'app/question.html', context)
+
+
+@login_required(login_url=reverse_lazy('app:login'))
+def edit_question(request, classroom_pk, assignment_pk, pk):
+    professor = Professor.objects.filter(user=request.user).first()
+
+    if professor is None:
+        return HttpResponse('Not allowed.')
+
+    classroom = Classroom.objects.filter(pk=classroom_pk).first()
+
+    if classroom is None:
+        return HttpResponse('No valid classroom.')
+
+    assignment = Assignment.objects.filter(pk=assignment_pk).first()
+
+    if assignment is None:
+        return HttpResponse('No valid assignment.')
+
+    question = Question.objects.filter(pk=pk).first()
+
+    if question is None:
+        return HttpResponse('No valid question.')
+
+    context = {
+        'title' : 'Edit Question - {question} - {assignment} - {classroom}'.format(
+            classroom=classroom,
+            assignment=assignment,
+            question=question.title,
+        ),
+        'classroom_pk' : classroom_pk,
+        'assignment_pk' : assignment_pk,
+        'pk' : question.id,
+    }
+    if request.method == 'GET':
+        context['form'] = QuestionEditForm(
+            instance=question,
+            auto_id=True,
+        )
+
+        return render(request, 'app/edit-question.html', context)
+
+    elif request.method == 'POST':
+        form = QuestionEditForm(
+            request.POST,
+            instance=question,
+            auto_id=True,
+        )
+
+        if form.is_valid():
+            form.save()
+
+            messages.success(request, 'Question Updated!')
+            return redirect(reverse('app:view-question', kwargs={
+                'classroom_pk' : classroom_pk,
+                'assignment_pk' : assignment_pk,
+                'pk' : question.id,
+            }))
+
+        else:
+            context['form'] = form
+
+            return render(request, 'app/edit-question.html', context)
 
 def docs(request):
 	return render(request, 'docs.html')

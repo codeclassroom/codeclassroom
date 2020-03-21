@@ -7,10 +7,11 @@
 <p>Created on: {{ assignment.created_date }}</p>
 <p>Deadline: {{ assignment.deadline }}</p>
 <p>Language of focus: {{ assignment.language }}</p>
+<a href="{% url 'app:create-question' classroom_pk assignment.id %}">Add a question</a>
 {% if questions %}
 <ol>
   {% for question in questions %}
-  <li>{{ question.title }} (for {{ question.marks }} marks)</li>
+  <li><a href="{% url 'app:view-question' classroom_pk assignment.id question.id %}">{{ question.title }} (for {{ question.marks }} marks)</a></li>
   {% endfor %}
 </ol>
 {% endif %}

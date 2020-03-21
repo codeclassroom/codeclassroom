@@ -3,7 +3,7 @@ from django.contrib.auth.password_validation import validate_password
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django import forms
-from .models import Professor, Student, Classroom, Assignment
+from .models import Professor, Student, Classroom, Assignment, Question
 
 
 class SignupForm(UserCreationForm):
@@ -158,4 +158,46 @@ class AssignmentEditForm(forms.ModelForm):
             'title',
             'deadline',
             'language',
+        )
+
+
+class QuestionCreateForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        self.assignment = kwargs.pop('assignment')
+        super().__init__(*args, **kwargs)
+
+    def save(self, commit=True):
+        question = super().save(commit=False)
+
+        question.assignment = self.assignment
+
+        if commit:
+            question.save()
+
+        return question
+
+    class Meta:
+        model = Question
+        fields = (
+            'title',
+            'description',
+            'sample_input',
+            'sample_output',
+            'marks',
+            'draft',
+            'check_plagiarism',
+        )
+
+
+class QuestionEditForm(forms.ModelForm):
+    class Meta:
+        model = Question
+        fields = (
+            'title',
+            'description',
+            'sample_input',
+            'sample_output',
+            'marks',
+            'draft',
+            'check_plagiarism',
         )
