@@ -2,7 +2,9 @@
 {% load static %}
 {% block dashboard %}
 {% if classroom %}
+{% if professor %}
 <a href="{% url 'app:edit-classroom' pk %}">Edit Classroom</a>
+{% endif %}
 <p>Classroom: {{ classroom.title }}</p>
 <p>Professor: {{ classroom.professor.user.username }} </p>
 <p>Created on: {{ classroom.created_date }}</p>
@@ -15,7 +17,9 @@
 {% endfor %}
 </ol>
 {% endif %}
+{% if professor %}
 <a href="{% url 'app:create-assignment' pk %}">Create Assignment</a>
+{% endif %}
 {% if assignments %}
 <p>Assignments:</p>
 <ol>

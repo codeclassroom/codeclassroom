@@ -2,7 +2,9 @@
 {% load static %}
 {% block dashboard %}
 {% if question %}
+{% if professor %}
 <a href="{% url 'app:edit-question' classroom_pk assignment_pk question.id %}">Edit Question</a>
+{% endif %}
 <p>Question: {{ question.title }}</p>
 <p>Created on: {{ question.created_date }}</p>
 <p>Description: {{ question.description }}</p>
@@ -11,7 +13,9 @@
 <p>Sample Output:</p>
 <p>{{ question.sample_output|linebreaksbr }}</p>
 <p>Marks: {{ question.marks }}</p>
+{% if professor %}
 <p>Draft: {{ question.draft }}</p>
 <p>Check for plagiarism: {{ question.check_plagiarism }}</p>
+{% endif %}
 {% endif %}
 {% endblock dashboard %}

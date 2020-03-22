@@ -89,6 +89,10 @@ class ClassroomCreateForm(forms.ModelForm):
         )
 
 
+class ClassroomJoinForm(forms.Form):
+    join_code = forms.CharField(max_length=5)
+
+
 class ClassroomEditForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         self.professor = kwargs.pop('professor')

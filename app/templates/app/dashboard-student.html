@@ -3,12 +3,12 @@
 {% block dashboard %}
 {% if student %}
 <p>{{ request.user.username }} is a student.</p>
-<a href="">Join a Classroom</a>
+<a href="{% url 'app:join-classroom' %}">Join a Classroom</a>
 {% if classrooms %}
 Your classrooms:
 <ul>
   {% for classroom in classrooms %}
-  <li>{{ classroom.title }}</li>
+  <li><a href="{% url 'app:view-classroom' classroom.id %}">{{ classroom.title }}</a></li>
   {% endfor %}
 </ul>
 {% endif %}

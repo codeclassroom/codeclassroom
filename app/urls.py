@@ -24,6 +24,7 @@ urlpatterns = [
     ), login_url=reverse_lazy('app:login')), name='logout'),
     path('dashboard/', views.dashboard, name='dashboard'),
     path('classroom/create/', views.create_classroom, name='create-classroom'),
+    path('classroom/join/', views.join_classroom, name='join-classroom'),
     path('classroom/<int:pk>/', views.classroom, name='view-classroom'),
     path('classroom/<int:pk>/edit/', views.edit_classroom, name='edit-classroom'),
     path('classroom/<int:classroom_pk>/assignment/create/', views.create_assignment, name='create-assignment'),
