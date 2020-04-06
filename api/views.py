@@ -228,7 +228,7 @@ class JudgeCode(generics.CreateAPIView):
             code = request.data["code"]
             lang = request.data["language"]
 
-            if request.data["testcases"] != "":
+            if "testcases" in request.data:
                 content = run_code(code, lang, testcase=request.data["testcases"])
             elif request.data["question_id"] != "":
                 question = request.data["question_id"]

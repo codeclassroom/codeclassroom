@@ -1,9 +1,9 @@
 {% extends 'app/base.html' %}
 {% load static %}
 {% block content %}
-<a href="{% url 'app:login' %}">Login</a>
-<a href="{% url 'app:signup' %}">Sign-up</a>
+	<a href="{% url 'app:login' %}">Login</a>
+	<a href="{% url 'app:signup' %}">Sign-up</a>
 {% endblock content %}
 {% block js %}
-<script type="text/javascript" src="{% static 'app/index.js' %}"></script>
+	<script type="text/javascript" src="{% static 'app/index.js' %}"></script>
 {% endblock js %}

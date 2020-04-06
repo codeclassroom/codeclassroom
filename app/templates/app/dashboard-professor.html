@@ -1,16 +1,16 @@
 {% extends 'app/dashboard.html' %}
 {% load static %}
 {% block dashboard %}
-{% if professor %}
-<p>{{ request.user.username }} is a professor.</p>
-<a href="{% url 'app:create-classroom' %}">Create a Classroom</a>
-{% if classrooms %}
-Your classrooms:
-<ul>
-  {% for classroom in classrooms %}
-  <li><a href="{% url 'app:view-classroom' classroom.id %}">{{ classroom.title }}</a></li>
-  {% endfor %}
-</ul>
-{% endif %}
-{% endif %}
+	{% if professor %}
+		<p>{{ request.user.username }} is a professor.</p>
+		<a href="{% url 'app:create-classroom' %}">Create a Classroom</a>
+		{% if classrooms %}
+			Your classrooms:
+			<ul>
+				{% for classroom in classrooms %}
+					<li><a href="{% url 'app:view-classroom' classroom.id %}">{{ classroom.title }}</a></li>
+				{% endfor %}
+			</ul>
+		{% endif %}
+	{% endif %}
 {% endblock dashboard %}

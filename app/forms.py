@@ -15,7 +15,8 @@ class SignupForm(UserCreationForm):
         (STUDENT, 'Student',),
     )
 
-    user_type = forms.ChoiceField(required=True, choices=USER_TYPE_CHOICE, widget=forms.RadioSelect)
+    user_type = forms.ChoiceField(
+        required=True, choices=USER_TYPE_CHOICE, widget=forms.RadioSelect)
 
     def save(self, commit=True):
         # save user and get the type of user
@@ -47,6 +48,7 @@ class SignupForm(UserCreationForm):
 
 
 class ClassroomCreateForm(forms.ModelForm):
+
     def __init__(self, *args, **kwargs):
         # getting the professor to be associated with the classroom
         self.professor = kwargs.pop('professor')
@@ -54,7 +56,8 @@ class ClassroomCreateForm(forms.ModelForm):
 
         super().__init__(*args, **kwargs)
 
-        # adding professor field with initial value as the professor passed to constructor
+        # adding professor field with initial value as the professor passed to
+        # constructor
         self.fields['professor'] = forms.ModelChoiceField(
             queryset=Professor.objects.filter(
                 institution=institution,
@@ -75,7 +78,8 @@ class ClassroomCreateForm(forms.ModelForm):
         classroom = super().save(commit=False)
         classroom.professor = self.professor  # setting classroom's professor
 
-        # saving the classroom, setting the students and returning the classroom instance
+        # saving the classroom, setting the students and returning the
+        # classroom instance
         if commit:
             classroom.save()
             classroom.students.set(self.cleaned_data['students'])
@@ -94,6 +98,7 @@ class ClassroomJoinForm(forms.Form):
 
 
 class ClassroomEditForm(forms.ModelForm):
+
     def __init__(self, *args, **kwargs):
         self.professor = kwargs.pop('professor')
         # getting the classroom instance passed to the constructor
@@ -130,6 +135,7 @@ class ClassroomEditForm(forms.ModelForm):
 
 
 class AssignmentCreateForm(forms.ModelForm):
+
     def __init__(self, *args, **kwargs):
         # getting the classroom to be associated with the assignment
         self.classroom = kwargs.pop('classroom')
@@ -156,6 +162,7 @@ class AssignmentCreateForm(forms.ModelForm):
 
 
 class AssignmentEditForm(forms.ModelForm):
+
     class Meta:
         model = Assignment
         fields = (
@@ -166,6 +173,7 @@ class AssignmentEditForm(forms.ModelForm):
 
 
 class QuestionCreateForm(forms.ModelForm):
+
     def __init__(self, *args, **kwargs):
         self.assignment = kwargs.pop('assignment')
         super().__init__(*args, **kwargs)
@@ -194,6 +202,7 @@ class QuestionCreateForm(forms.ModelForm):
 
 
 class QuestionEditForm(forms.ModelForm):
+
     class Meta:
         model = Question
         fields = (

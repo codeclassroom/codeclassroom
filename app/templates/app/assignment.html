@@ -1,25 +1,25 @@
 {% extends 'app/dashboard.html' %}
 {% load static %}
 {% block dashboard %}
-{% if assignment %}
-{% if professor %}
-<a href="{% url 'app:edit-assignment' classroom_pk assignment.id %}">Edit Assignment</a>
-{% endif %}
-<p>Assignment: {{ assignment.title }}</p>
-<p>Created on: {{ assignment.created_date }}</p>
-<p>Deadline: {{ assignment.deadline }}</p>
-<p>Language of focus: {{ assignment.language }}</p>
-{% if professor %}
-<a href="{% url 'app:create-question' classroom_pk assignment.id %}">Add a question</a>
-{% endif %}
-{% if questions %}
-<ol>
-  {% for question in questions %}
-  <li><a href="{% url 'app:view-question' classroom_pk assignment.id question.id %}">{{ question.title }} (for {{ question.marks }} marks)</a></li>
-  {% endfor %}
-</ol>
-{% else %}
-<p>No questions yet!</p>
-{% endif %}
-{% endif %}
+	{% if assignment %}
+		{% if professor %}
+			<a href="{% url 'app:edit-assignment' classroom_pk assignment.id %}">Edit Assignment</a>
+		{% endif %}
+		<p>Assignment: {{ assignment.title }}</p>
+		<p>Created on: {{ assignment.created_date }}</p>
+		<p>Deadline: {{ assignment.deadline }}</p>
+		<p>Language of focus: {{ assignment.language }}</p>
+		{% if professor %}
+			<a href="{% url 'app:create-question' classroom_pk assignment.id %}">Add a question</a>
+		{% endif %}
+		{% if questions %}
+			<ol>
+				{% for question in questions %}
+					<li><a href="{% url 'app:view-question' classroom_pk assignment.id question.id %}">{{ question.title }} (for {{ question.marks }} marks)</a></li>
+				{% endfor %}
+			</ol>
+		{% else %}
+			<p>No questions yet!</p>
+		{% endif %}
+	{% endif %}
 {% endblock dashboard %}

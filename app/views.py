@@ -24,7 +24,7 @@ def index(request):
 
 
 def signup(request):
-    context = { 'title' : 'Signup' }
+    context = {'title': 'Signup'}
 
     if request.method == 'POST':
         form = SignupForm(request.POST)
@@ -46,7 +46,7 @@ def signup(request):
 @login_required(login_url=reverse_lazy('app:login'))
 def dashboard(request):
     '''View that will be shown once a user logs in.'''
-    context = { 'title' : 'Dashboard' }
+    context = {'title': 'Dashboard'}
 
     user = request.user
 
@@ -56,7 +56,8 @@ def dashboard(request):
 
         if professor is not None:
             context['professor'] = professor
-            context['classrooms'] = Classroom.objects.filter(professor=professor)
+            context['classrooms'] = Classroom.objects.filter(
+                professor=professor)
             return render(request, 'app/dashboard-professor.html', context)
 
         elif student is not None:
@@ -70,7 +71,7 @@ def dashboard(request):
 
 @login_required(login_url=reverse_lazy('app:login'))
 def create_classroom(request):
-    context = { 'title' : 'Create Classroom' }
+    context = {'title': 'Create Classroom'}
     professor = Professor.objects.filter(user=request.user).first()
 
     if professor is None:
@@ -109,7 +110,7 @@ def join_classroom(request):
         return HttpResponse('Not allowed.')
 
     context = {
-        'title' : 'Join a Classroom',
+        'title': 'Join a Classroom',
     }
 
     if request.method == 'GET':
@@ -167,11 +168,11 @@ def classroom(request, pk):
     students = classroom.students.all()
     assignments = classroom.assignment_set.all()
     context = {
-        'title' : classroom.title,
-        'pk' : pk,
-        'classroom' : classroom,
-        'students' : students,
-        'assignments' : assignments,
+        'title': classroom.title,
+        'pk': pk,
+        'classroom': classroom,
+        'students': students,
+        'assignments': assignments,
     }
 
     if professor is not None:
@@ -190,7 +191,7 @@ def edit_classroom(request, pk):
     if classroom is None:
         return HttpResponse('Not a valid classroom.')
 
-    context = { 'title' : 'Edit {classroom}'.format(classroom=classroom.title), }
+    context = {'title': 'Edit {classroom}'.format(classroom=classroom.title), }
     professor = Professor.objects.filter(user=request.user).first()
 
     if professor is None:
@@ -229,7 +230,7 @@ def edit_classroom(request, pk):
 
 @login_required(login_url=reverse_lazy('app:login'))
 def create_assignment(request, classroom_pk):
-    context = { 'title' : 'Create Assignment' , 'classroom_pk' : classroom_pk }
+    context = {'title': 'Create Assignment', 'classroom_pk': classroom_pk}
     professor = Professor.objects.filter(user=request.user).first()
 
     if professor is None:
@@ -259,7 +260,7 @@ def create_assignment(request, classroom_pk):
 
             messages.success(request, 'Assignment Created!')
             return redirect(reverse('app:view-classroom', kwargs={
-                'pk' : classroom.id,
+                'pk': classroom.id,
             }))
 
         else:
@@ -293,13 +294,13 @@ def assignment(request, classroom_pk, pk):
         questions = assignment.question_set.filter(draft=False)
 
     context = {
-        'title' : '{classroom} - {assignment}'.format(
+        'title': '{classroom} - {assignment}'.format(
             classroom=classroom,
             assignment=assignment,
         ),
-        'classroom_pk' : classroom_pk,
-        'assignment' : assignment,
-        'questions' : questions,
+        'classroom_pk': classroom_pk,
+        'assignment': assignment,
+        'questions': questions,
     }
 
     if professor is not None:
@@ -329,11 +330,11 @@ def edit_assignment(request, classroom_pk, pk):
         return HttpResponse('No valid assignment.')
 
     context = {
-        'title' : 'Edit {assignment} of {classroom}'.format(
+        'title': 'Edit {assignment} of {classroom}'.format(
             assignment=assignment,
             classroom=classroom,
         ),
-        'assignment' : assignment,
+        'assignment': assignment,
     }
     if request.method == 'GET':
         context['form'] = AssignmentEditForm(
@@ -354,8 +355,8 @@ def edit_assignment(request, classroom_pk, pk):
 
             messages.success(request, 'Assignment Updated!')
             return redirect(reverse('app:view-assignment', kwargs={
-                'classroom_pk' : classroom_pk,
-                'pk' : assignment.id,
+                'classroom_pk': classroom_pk,
+                'pk': assignment.id,
             }))
 
         else:
@@ -381,12 +382,12 @@ def create_question(request, classroom_pk, pk):
         return HttpResponse('No valid assignment.')
 
     context = {
-        'title' : '{classroom} - {assignment} - Add question'.format(
+        'title': '{classroom} - {assignment} - Add question'.format(
             classroom=classroom,
             assignment=assignment,
         ),
-        'classroom_pk' : classroom_pk,
-        'assignment_pk' : assignment.id,
+        'classroom_pk': classroom_pk,
+        'assignment_pk': assignment.id,
     }
 
     if request.method == 'GET':
@@ -409,8 +410,8 @@ def create_question(request, classroom_pk, pk):
 
             messages.success(request, 'Question added!')
             return redirect(reverse('app:view-assignment', kwargs={
-                'classroom_pk' : classroom_pk,
-                'pk' : assignment.id
+                'classroom_pk': classroom_pk,
+                'pk': assignment.id
             }))
 
         else:
@@ -442,14 +443,15 @@ def question(request, classroom_pk, assignment_pk, pk):
         return HttpResponse('No valid question.')
 
     context = {
-        'title' : '{classroom} - {assignment} - {question}'.format(
+        'title': '{classroom} - {assignment} - {question}'.format(
             classroom=classroom,
             assignment=assignment,
             question=question.title,
         ),
-        'classroom_pk' : classroom_pk,
-        'assignment_pk' : assignment_pk,
-        'question' : question,
+        'classroom_pk': classroom_pk,
+        'assignment_pk': assignment_pk,
+        'question': question,
+        'assignment': assignment
     }
 
     if professor is not None:
@@ -484,14 +486,14 @@ def edit_question(request, classroom_pk, assignment_pk, pk):
         return HttpResponse('No valid question.')
 
     context = {
-        'title' : 'Edit Question - {question} - {assignment} - {classroom}'.format(
+        'title': 'Edit Question - {question} - {assignment} - {classroom}'.format(
             classroom=classroom,
             assignment=assignment,
             question=question.title,
         ),
-        'classroom_pk' : classroom_pk,
-        'assignment_pk' : assignment_pk,
-        'pk' : question.id,
+        'classroom_pk': classroom_pk,
+        'assignment_pk': assignment_pk,
+        'pk': question.id,
     }
     if request.method == 'GET':
         context['form'] = QuestionEditForm(
@@ -513,9 +515,9 @@ def edit_question(request, classroom_pk, assignment_pk, pk):
 
             messages.success(request, 'Question Updated!')
             return redirect(reverse('app:view-question', kwargs={
-                'classroom_pk' : classroom_pk,
-                'assignment_pk' : assignment_pk,
-                'pk' : question.id,
+                'classroom_pk': classroom_pk,
+                'assignment_pk': assignment_pk,
+                'pk': question.id,
             }))
 
         else:
@@ -523,5 +525,6 @@ def edit_question(request, classroom_pk, assignment_pk, pk):
 
             return render(request, 'app/edit-question.html', context)
 
+
 def docs(request):
-	return render(request, 'docs.html')
+    return render(request, 'docs.html')

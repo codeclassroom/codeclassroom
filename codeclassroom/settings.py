@@ -45,7 +45,9 @@ MIDDLEWARE = [
 ]
 
 CORS_ORIGIN_ALLOW_ALL = True
-
+# CSRF_TRUSTED_ORIGINS = [
+#     '127.0.0.1'
+# ]
 ROOT_URLCONF = 'codeclassroom.urls'
 
 TEMPLATES = [
@@ -80,11 +82,11 @@ REST_FRAMEWORK = {
 
 SWAGGER_SETTINGS = {
     'SECURITY_DEFINITIONS': {
-         'DRF Token': {
-           'type': 'apiKey',
-           'name': 'Authorization',
-           'in': 'header'
-         }
+        'DRF Token': {
+            'type': 'apiKey',
+            'name': 'Authorization',
+            'in': 'header'
+        }
     },
     'LOGIN_URL': 'login',
     'LOGOUT_URL': 'logout',
