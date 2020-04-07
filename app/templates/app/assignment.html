@@ -1,25 +1,32 @@
 {% extends 'app/dashboard.html' %}
 {% load static %}
 {% block dashboard %}
-	{% if assignment %}
-		{% if professor %}
-			<a href="{% url 'app:edit-assignment' classroom_pk assignment.id %}">Edit Assignment</a>
-		{% endif %}
-		<p>Assignment: {{ assignment.title }}</p>
-		<p>Created on: {{ assignment.created_date }}</p>
-		<p>Deadline: {{ assignment.deadline }}</p>
-		<p>Language of focus: {{ assignment.language }}</p>
-		{% if professor %}
-			<a href="{% url 'app:create-question' classroom_pk assignment.id %}">Add a question</a>
-		{% endif %}
-		{% if questions %}
-			<ol>
-				{% for question in questions %}
-					<li><a href="{% url 'app:view-question' classroom_pk assignment.id question.id %}">{{ question.title }} (for {{ question.marks }} marks)</a></li>
-				{% endfor %}
-			</ol>
-		{% else %}
-			<p>No questions yet!</p>
-		{% endif %}
-	{% endif %}
-{% endblock dashboard %}
+	<div class="row">
+		<div class="col s3 indigo lighten-4">
+			<!-- navigation panel -->
+			{% if assignment %}
+				{% if professor %}
+					<a href="{% url 'app:edit-assignment' classroom_pk assignment.id %}">Edit Assignment</a>
+				{% endif %}
+				<p>Assignment: {{ assignment.title }}</p>
+				<p>Created on: {{ assignment.created_date }}</p>
+				<p>Deadline: {{ assignment.deadline }}</p>
+				<p>Language: {{ assignment.language }}</p>
+				{% if professor %}
+					<a href="{% url 'app:create-question' classroom_pk assignment.id %}">Add a question</a>
+				{% endif %}
+				{% if questions %}
+					<ol>
+						{% for question in questions %}
+							<li><a href="{% url 'app:view-question' classroom_pk assignment.id question.id %}">{{ question.title }} ({{ question.marks }} marks)</a></li>
+						{% endfor %}
+					</ol>
+				{% else %}
+					<p>No questions yet!</p>
+				{% endif %}
+			{% endif %}
+		</div>
+		<div class="col s9 orange lighten-5">
+			This is the side panel
+		</div>
+	{% endblock dashboard %}

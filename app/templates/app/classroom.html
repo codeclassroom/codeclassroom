@@ -1,32 +1,41 @@
 {% extends 'app/dashboard.html' %}
 {% load static %}
 {% block dashboard %}
-	{% if classroom %}
-		{% if professor %}
-			<a href="{% url 'app:edit-classroom' pk %}">Edit Classroom</a>
-		{% endif %}
-		<p>Classroom: {{ classroom.title }}</p>
-		<p>Professor: {{ classroom.professor.user.username }} </p>
-		<p>Created on: {{ classroom.created_date }}</p>
-		<p>Join Code: {{ classroom.join_code }}</p>
-		{% if students %}
-			<p>Students:</p>
-			<ol>
-				{% for student in students %}
-					<li>{{ student.user.username }}</li>
-				{% endfor %}
-			</ol>
-		{% endif %}
-		{% if professor %}
-			<a href="{% url 'app:create-assignment' pk %}">Create Assignment</a>
-		{% endif %}
-		{% if assignments %}
-			<p>Assignments:</p>
-			<ol>
-				{% for assignment in assignments %}
-					<li><a href="{% url 'app:view-assignment' pk assignment.id %}">{{ assignment.title }} - Language : {{ assignment.language }}</a></li>
-				{% endfor %}
-			</ol>
-		{% endif %}
-	{% endif %}
+	<div class="row">
+		<div class="col s3 indigo lighten-4">
+			<!-- navigation panel -->
+			{% if classroom %}
+				{% if professor %}
+					<a href="{% url 'app:edit-classroom' pk %}">Edit Classroom</a>
+				{% endif %}
+				<p>Classroom: {{ classroom.title }}</p>
+				<p>Professor: {{ classroom.professor.user.username }} </p>
+				<p>Created on: {{ classroom.created_date }}</p>
+				<p>Join Code: {{ classroom.join_code }}</p>
+				{% if students %}
+					<p>Students:</p>
+					<ol>
+						{% for student in students %}
+							<li>{{ student.user.username }}</li>
+						{% endfor %}
+					</ol>
+				{% endif %}
+				{% if professor %}
+					<a href="{% url 'app:create-assignment' pk %}">Create Assignment</a>
+				{% endif %}
+				{% if assignments %}
+					<p>Assignments:</p>
+					<ol>
+						{% for assignment in assignments %}
+							<li><a href="{% url 'app:view-assignment' pk assignment.id %}">{{ assignment.title }} - Language : {{ assignment.language }}</a></li>
+						{% endfor %}
+					</ol>
+				{% endif %}
+			{% endif %}
+		</div>
+		<div class="col s9 orange lighten-5">
+			This is the side panel
+		</div>
+	</div>
+	
 {% endblock dashboard %}

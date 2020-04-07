@@ -7,9 +7,12 @@
 	<form action="{% url 'app:login' %}" method="POST">
 		{% csrf_token %}
 		{{ form.as_p }}
-		<input type="submit" name="submit" value="Login">
+		<button class="btn waves-effect waves-light" type="submit" type="submit" name="submit" value="Login">Login
+		<i class="material-icons right">send</i>
+		</button>
 		<input type="hidden" name="next" value="{{ next }}">
 	</form>
+	<a class="btn waves-effect waves-light" href="{% url 'app:signup' %}">Sign-up</a>
 {% endblock content %}
 {% block js %}
 	<script type="text/javascript" src="{% static 'app/login.js' %}"></script>

@@ -1,8 +1,20 @@
 {% load static %}
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
-    <link rel="stylesheet" type="text/css" href="{% static 'app/style.css' %}">
+    <meta charset="utf-8" />
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,height=device-height, initial-scale=1.0, shrink-to-fit=yes">
+    <!-- redirect http resources to https, hopefully! -->
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+    <!-- CSS -->
+    <link type="text/css" rel="stylesheet" href="{% static 'app/css/materialize.min.css' %}"  media="screen,projection"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'app/css/style.css' %}">
+    <!-- Scripts -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet" media="screen" />
+    <script defer src="https://use.fontawesome.com/releases/v4.7.0/js/all.js"></script>
     {% block link %}
     {% endblock link %}
     {% if title %}
@@ -12,7 +24,21 @@
     {% endif %}
   </head>
   <body>
-    <h1><a href="{% url 'app:index' %}">CodeClassroom</a></h1>
+    <nav>
+      <div class="nav-wrapper">
+        
+        <a data-position="bottom" data-tooltip="defe" href="{% url 'app:index' %}" class="brand-logo tooltipped">
+          CodeClassroom
+        </a>
+        <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+        <ul class="right hide-on-med-and-down">
+          <li><a href="/">Home</a></li>
+          <li><a href="/">About</a></li>
+          <li><a href="/">FAQ</a></li>
+          <li><a href="{% url 'app:login' %}">Login</a></li>
+        </ul>
+      </div>
+    </nav>
     {% block content %}
       {% block messages %}
         {% if messages %}
@@ -26,7 +52,8 @@
     {% endblock content %}
     {% block js %}
     {% endblock js %}
-    <script type="text/javascript" src="{% static 'app/script.js' %}">
-    </script>
+    <script defer type="text/javascript" src="{% static 'app/script.js' %}"></script>
+    <script type="text/javascript" src="{% static 'app/js/materialize.min.js' %}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/darkmode-js@1.5.5/lib/darkmode-js.min.js"></script>
   </body>
 </html>

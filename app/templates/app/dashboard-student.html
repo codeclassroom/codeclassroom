@@ -1,16 +1,26 @@
 {% extends 'app/dashboard.html' %}
 {% load static %}
 {% block dashboard %}
+	<!-- Page Layout here -->
 	{% if student %}
-		<p>{{ request.user.username }} is a student.</p>
-		<a href="{% url 'app:join-classroom' %}">Join a Classroom</a>
-		{% if classrooms %}
-			Your classrooms:
-			<ul>
-				{% for classroom in classrooms %}
-					<li><a href="{% url 'app:view-classroom' classroom.id %}">{{ classroom.title }}</a></li>
-				{% endfor %}
-			</ul>
-		{% endif %}
+		<div class="row">
+			<div class="col s3 indigo lighten-4">
+				<!-- navigation panel -->
+				<a class="btn waves-effect waves-light"  href="{% url 'app:join-classroom' %}">Join a Classroom</a>
+				<div class="container">
+				{% if classrooms %}
+					<h5>Your Classrooms</h5>
+					<ul>
+						{% for classroom in classrooms %}
+							<li><a href="{% url 'app:view-classroom' classroom.id %}">{{ classroom.title }}</a></li>
+						{% endfor %}
+					</ul>
+				{% endif %}
+				</div>
+			</div>
+			<div class="col s9 orange lighten-5">
+				This is the side panel
+			</div>
+		</div>
 	{% endif %}
 {% endblock dashboard %}
