@@ -4,15 +4,24 @@
 	{% block messages %}
 		{{ block.super }}
 	{% endblock messages %}
-	<form action="{% url 'app:login' %}" method="POST">
-		{% csrf_token %}
-		{{ form.as_p }}
-		<button class="btn waves-effect waves-light" type="submit" type="submit" name="submit" value="Login">Login
-		<i class="material-icons right">send</i>
-		</button>
-		<input type="hidden" name="next" value="{{ next }}">
-	</form>
-	<a class="btn waves-effect waves-light" href="{% url 'app:signup' %}">Sign-up</a>
+	<div class="container">
+		<div class="card darken-1 z-depth-5">
+			<div class="card-content white-text">
+				<form action="{% url 'app:login' %}" method="POST">
+					{% csrf_token %}
+					{{ form.as_p }}
+					<button class="btn waves-effect waves-light" type="submit" type="submit" name="submit" value="Login">Login
+					<i class="material-icons right">send</i>
+					</button>
+					<input type="hidden" name="next" value="{{ next }}">
+				</form>
+			</div>
+		</div><br>
+	</div>
+	<div class="container center">
+		<h5>Not on CodeClassroom yet !</h5>
+		<a class="btn waves-effect waves-light" href="{% url 'app:signup' %}">Sign-up</a>
+	</div>
 {% endblock content %}
 {% block js %}
 	<script type="text/javascript" src="{% static 'app/login.js' %}"></script>

@@ -1,15 +1,15 @@
-{% extends 'app/base.html' %}
+{% extends 'app/dashboard-professor.html' %}
 {% load static %}
 {% block link %}
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 {% endblock link %}
-{% block content %}
+{% block dashboard %}
 	<form action="{% url 'app:create-assignment' classroom_pk %}" method="POST">
 		{% csrf_token %}
 		{{ form.as_p }}
-		<input type="submit" name="submit" value="Create Assignment">
+		<button class="btn waves-effect waves-light" type="submit" name="submit" value="Create Assignment">Create Assignment</button>
 	</form>
-{% endblock content %}
+{% endblock dashboard %}
 {% block js %}
 	<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 	<script type="text/javascript">

@@ -4,25 +4,35 @@
 	{% block messages %}
 		{{ block.super }}
 	{% endblock messages %}
-	<form action="{% url 'app:signup' %}" method="POST">
-		{% csrf_token %}
-		
-		{% for field in form.visible_fields %}
-			<div class="form-group">
-				{{ field.label_tag }}
-				{{ field }}
-				{% if field.help_text %}
-					<small class="form-text text-muted">{{ field.help_text }}</small>
-				{% endif %}
-				{% if field.user_type %}
-					<p>heeelooo</p>
-				{% endif %}
+	<div class="container">
+		<div class="card darken-1 z-depth-5">
+			<div class="card-content">
+				<form action="{% url 'app:signup' %}" method="POST">
+					{% csrf_token %}
+					
+					{% for field in form.visible_fields %}
+						<div class="form-group">
+							{{ field.label_tag }}
+							{{ field }}
+							{% if field.help_text %}
+								<small class="form-text text-muted">{{ field.help_text }}</small>
+							{% endif %}
+							{% if field.user_type %}
+								<p>heeelooo</p>
+							{% endif %}
+						</div>
+					{% endfor %}
+					<button class="btn waves-effect waves-light" type="submit" type="submit" name="submit" value="Create Account">Signup
+					<i class="material-icons right">send</i>
+					</button>
+				</form>
 			</div>
-		{% endfor %}
-		<button class="btn waves-effect waves-light" type="submit" type="submit" name="submit" value="Create Account">Create Account
-		<i class="material-icons right">send</i>
-		</button>
-	</form>
+		</div><br>
+	</div>
+	<div class="container center">
+		<h4>Already have an account ?</h4>
+		<a class="btn waves-effect waves-light" href="{% url 'app:login' %}">Login</a>
+	</div>
 {% endblock content %}
 {% block js %}
 	<script type="text/javascript" src="{% static 'app/signup.js' %}"></script>

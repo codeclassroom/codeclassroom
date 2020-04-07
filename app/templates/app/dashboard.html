@@ -3,11 +3,26 @@
 {% block content %}
 	{{ block.super }}
 	{% if request.user.is_authenticated %}
-		<a href="{% url 'app:logout' %}">Logout</a>
-		<p>{{ request.user.username }} is logged in.</p>
+		<!-- <p>{{ request.user.username }} is logged in.</p> -->
 	{% endif %}
-	{% block dashboard %}
-	{% endblock dashboard %}
+	<div class="row">
+		<div class="col s3 indigo lighten-4">
+			<!-- navigation panel -->
+			<div class="container">
+				<ul>
+					<li><h5>Welcome {{ request.user.username }}
+					</h5></li>
+					<li><a href=""><h4>Classrooms</h4></a></li>
+					<li><a href=""><h4>Assignments</h4></a></li>
+					<li><a href="{% url 'app:logout' %}"><h6>Logout</h6></a></li>
+				</ul>
+			</div>
+		</div>
+		<div class="col s9 orange lighten-5">
+			{% block dashboard %}
+			{% endblock dashboard %}
+		</div>
+	</div>
 {% endblock content %}
 {% block js %}
 	<script type="text/javascript" src="{% static 'app/dashboard.js' %}"></script>

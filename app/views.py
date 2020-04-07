@@ -17,10 +17,15 @@ from .forms import (
 
 
 def index(request):
-    if request.user.is_authenticated:
-        return redirect(reverse('app:dashboard'))
-
     return render(request, 'app/index.html')
+
+
+def about(request):
+    return render(request, 'app/about.html')
+
+
+def faq(request):
+    return render(request, 'app/faq.html')
 
 
 def signup(request):

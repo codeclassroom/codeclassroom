@@ -1,49 +1,50 @@
 {% extends 'app/dashboard.html' %}
 {% load static %}
 {% block dashboard %}
-	<div class="row">
-		<div class="col s3 indigo lighten-4">
-			<!-- navigation panel -->
-			{% if question %}
-				{% if professor %}
-					<a href="{% url 'app:edit-question' classroom_pk assignment_pk question.id %}">Edit Question</a>
-				{% endif %}
-			{% endif %}
-			{% if professor %}
-				<p>Draft: {{ question.draft }}</p>
-				<p>Check for plagiarism: {{ question.check_plagiarism }}</p>
-			{% endif %}
-			{% if assignment %}
-				{% if professor %}
-					<a href="{% url 'app:edit-assignment' classroom_pk assignment.id %}">Edit Assignment</a>
-				{% endif %}
-				<p>Assignment: {{ assignment.title }}</p>
-				<p>Created on: {{ assignment.created_date }}</p>
-				<p>Deadline: {{ assignment.deadline }}</p>
-				<p>Language: {{ assignment.language }}</p>
-				{% if professor %}
-					<a href="{% url 'app:create-question' classroom_pk assignment.id %}">Add a question</a>
-				{% endif %}
-			{% endif %}
-		</div>
-		<div class="col s9 orange lighten-5">
-			<h2>{{ question.title }}</h2>
-			<p>Created on: {{ question.created_date }}</p>
-			<p class="flow-text">{{ question.description }}</p>
-			<h4>Sample Input</h4>
-			<pre>{{ question.sample_input|linebreaksbr }}</pre>
-			<h4>Sample Output:</h4>
-			<pre>{{ question.sample_output|linebreaksbr }}</pre>
-			<p>Marks: {{ question.marks }}</p>
-			{% if student %}
-				<textarea id="editor"></textarea>
-				<br>
-				<button class="btn waves-effect waves-light" onclick="judge_code(
-				'{{ question.id }}', '{{ assignment.language }}')">Run</button>
-				<!-- <button>Submit</button> -->
-				<div id="execution-status"></div>
-			{% endif %}
-		</div>
+
+{% if question %}
+	{% if professor %}
+		<a class="btn waves-effect waves-light" href="{% url 'app:edit-question' classroom_pk assignment_pk question.id %}">Edit Question</a>
+	{% endif %}
+{% endif %}
+{% if professor %}
+	<p>Draft: {{ question.draft }}</p>
+	<p>Check for plagiarism: {{ question.check_plagiarism }}</p>
+{% endif %}
+
+<h2>{{ question.title }}</h2>
+<p>Created on: {{ question.created_date }}</p>
+<p class="flow-text">{{ question.description }}</p>
+<p id="language">{{ assignment.language }}</p>
+<h4>Sample Input</h4>
+<div class="card darken-1">
+	<div class="card-content">
+		<pre>{{ question.sample_input|linebreaksbr }}</pre>
 	</div>
-	
+</div>
+<h4>Sample Output</h4>
+<div class="card darken-1">
+	<div class="card-content">
+		<pre>{{ question.sample_output|linebreaksbr }}</pre>
+	</div>
+</div>
+<p>Marks: {{ question.marks }}</p>
+{% if student %}
+<textarea id="editor"></textarea>
+<select style="display: inline;" onchange="selectTheme()" id="theme-select">
+	<option selected="">default</option>
+	<option>abcdef</option>
+	<option>base16-light</option>
+	<option>blackboard</option>
+	<option>cobalt</option>
+	<option>colorforth</option>
+	<option>dracula</option>
+	<option>monokai</option>
+</select>
+<br>
+<button class="btn waves-effect waves-light" onclick="judge_code(
+'{{ question.id }}', '{{ assignment.language }}')">Run</button>
+<!-- <button>Submit</button> -->
+<div id="execution-status"></div>
+{% endif %}
 {% endblock dashboard %}
