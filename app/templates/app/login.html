@@ -5,11 +5,13 @@
 		{{ block.super }}
 	{% endblock messages %}
 	<div class="container">
-		<div class="card darken-1 z-depth-5">
+		<div class="card darken-1 z-depth-5 center">
+			<img src="{% static 'app/images/login.png'%}">
 			<div class="card-content white-text">
 				<form action="{% url 'app:login' %}" method="POST">
 					{% csrf_token %}
-					{{ form.as_p }}
+					<label for="username" class="">Username:</label> <input type="text" name="username" autofocus="" required="" id="username">
+					<label for="password">Password:</label> <input type="password" name="password" required="" id="password">
 					<button class="btn waves-effect waves-light" type="submit" type="submit" name="submit" value="Login">Login
 					<i class="material-icons right">send</i>
 					</button>

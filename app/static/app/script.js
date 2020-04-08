@@ -15,17 +15,17 @@ function getCookie(name) {
 }
 
 function judge_code(question, lang) {
-    console.log(question);
-    console.log(lang);
-    const code = document.getElementById("editor");
+    const code_value = editor.getValue();
     let data = {
-        code: code.value,
+        code: code_value,
         language: lang,
         question_id: question
     };
-    if (code !== null) {
+    if (code_value !== null) {
         const execution_status = document.getElementById("execution-status");
-        execution_status.innerHTML = "Running Code ...";
+        const msg = document.getElementById("message");
+        const op = document.getElementById("output");
+        execution_status.innerHTML = "Processing ...";
         const fetchPromise = fetch('/api/judge/', {
             method: 'POST',
             credentials: 'same-origin',
@@ -39,9 +39,20 @@ function judge_code(question, lang) {
         fetchPromise.then(response => {
             return response.json();
         }).then(execution => {
-            console.log("api work");
             console.log(execution);
+            if (execution["status"] == "Wrong Answer"){
+                execution_status.innerHTML = execution["status"] + ":(";
+                execution_status.style.color = "red";
+                op.innerHTML = execution["output"];
+            }
+            else if (execution["status"] == "Accepted"){
+                execution_status.innerHTML = execution["status"] + "👍";
+                execution_status.style.color = "green";
+                op.innerHTML = execution["output"];
+            }
             execution_status.innerHTML = execution["status"];
+            op.innerHTML = execution["output"];
+            msg.innerHTML = execution["message"];
         });
     }
 }

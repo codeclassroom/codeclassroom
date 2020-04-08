@@ -11,6 +11,7 @@
     <!-- CSS -->
     <link type="text/css" rel="stylesheet" href="{% static 'app/css/materialize.min.css' %}"  media="screen,projection"/>
     <link rel="stylesheet" type="text/css" href="{% static 'app/css/style.css' %}">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'app/css/codemirror.css' %}">
     <!-- Scripts -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -39,7 +40,8 @@
               <li><a href="{% url 'app:dashboard' %}">Dashboard</a></li>
               <li><a href="{% url 'app:logout' %}">Logout</a></li>
             {% else %}
-              <li><a href="{% url 'app:login' %}">Login</a></li>
+              <li><a href="{% url 'app:login' %}">
+              Login</a></li>
             {% endif %}
           </ul>
         </div>
@@ -78,27 +80,28 @@
     <script src="{% static 'app/js/mode/python/python.js'%}"></script>
     <script src="{% static 'app/js/mode/shell/shell.js'%}"></script>
     <script>
-    var code_editor = document.getElementById("editor");
-        function getMode () {
-          const lang = document.getElementById("language").innerHTML;
-      var c_like_langs = ["C", "C++", "Java"]
-      if (lang == "Python3"){
-        mode = "python"
-      }
-      else if (c_like_langs.includes(lang)){
-        mode = "clike"
-      }
-      else if (lang == "Bash"){
-        mode = "shell"
-      }
-      return mode
+    function getMode () {
+        const lang = document.getElementById("language").innerHTML;
+        var c_like_langs = ["C", "C++", "Java"]
+        if (lang == "Python3"){
+          mode = "python"
+        }
+        else if (c_like_langs.includes(lang)){
+          mode = "clike"
+        }
+        else if (lang == "Bash"){
+          mode = "shell"
+        }
+        return mode
     }
+    var code_editor = document.getElementById("editor");
     if (code_editor !== null){
-    var editor = CodeMirror.fromTextArea(code_editor, {
-      lineNumbers: true,
-      styleActiveLine: true,
-      matchBrackets: true,
-      mode: getMode();
+      console.log("here");
+      var editor = CodeMirror.fromTextArea(code_editor, {
+        lineNumbers: true,
+        styleActiveLine: true,
+        matchBrackets: true,
+        mode: getMode()
       });
     }
     function selectTheme(){
