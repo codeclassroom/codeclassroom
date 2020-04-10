@@ -1,10 +1,32 @@
 from django.contrib.auth import views as auth_views
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
-from django.urls import path, reverse_lazy
+from django.urls import path, reverse_lazy, include
 from . import views
 
 app_name = 'app'
+
+question_pattterns = [
+    path('create/', views.create_question, name='create-question'),
+    path('<int:pk>/', views.question, name='view-question'),
+    path('<int:pk>/edit/', views.edit_question, name='edit-question'),
+]
+
+assignment_patterns = [
+    path('create/', views.create_assignment, name='create-assignment'),
+    path('<int:pk>/', views.assignment, name='view-assignment'),
+    path('<int:pk>/edit/', views.edit_assignment, name='edit-assignment'),
+    path('<int:assignment_pk>/question/', include(question_pattterns)),
+]
+
+classroom_patterns = [
+    path('create/', views.create_classroom, name='create-classroom'),
+    path('join/', views.join_classroom, name='join-classroom'),
+    path('<int:pk>/', views.classroom, name='view-classroom'),
+    path('<int:pk>/edit/', views.edit_classroom, name='edit-classroom'),
+    path('<int:classroom_pk>/assignment/', include(assignment_patterns)),
+]
+
 urlpatterns = [
     path('', views.index, name='index'),
     path('signup/', views.signup, name='signup'),
@@ -23,14 +45,5 @@ urlpatterns = [
         }
     ), login_url=reverse_lazy('app:login')), name='logout'),
     path('dashboard/', views.dashboard, name='dashboard'),
-    path('classroom/create/', views.create_classroom, name='create-classroom'),
-    path('classroom/join/', views.join_classroom, name='join-classroom'),
-    path('classroom/<int:pk>/', views.classroom, name='view-classroom'),
-    path('classroom/<int:pk>/edit/', views.edit_classroom, name='edit-classroom'),
-    path('classroom/<int:classroom_pk>/assignment/create/', views.create_assignment, name='create-assignment'),
-    path('classroom/<int:classroom_pk>/assignment/<int:pk>/', views.assignment, name='view-assignment'),
-    path('classroom/<int:classroom_pk>/assignment/<int:pk>/edit/', views.edit_assignment, name='edit-assignment'),
-    path('classroom/<int:classroom_pk>/assignment/<int:pk>/question/create/', views.create_question, name='create-question'),
-    path('classroom/<int:classroom_pk>/assignment/<int:assignment_pk>/question/<int:pk>/', views.question, name='view-question'),
-    path('classroom/<int:classroom_pk>/assignment/<int:assignment_pk>/question/<int:pk>/edit/', views.edit_question, name='edit-question'),
+    path('classroom/', include(classroom_patterns)),
 ]
