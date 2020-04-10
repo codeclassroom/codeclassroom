@@ -1,67 +1,66 @@
 {% extends 'app/dashboard.html' %}
 {% load static %}
 {% block dashboard %}
-
-{% if question %}
-	{% if professor %}
-		<a class="btn waves-effect waves-light" href="{% url 'app:edit-question' classroom_pk assignment_pk question.id %}">Edit Question</a>
+	{% if question %}
+		{% if professor %}
+			<a class="btn waves-effect waves-light" href="{% url 'app:edit-question' assignment_pk question.id %}">Edit Question</a>
+			<p>Draft: {{ question.draft }}</p>
+			<p>Check for plagiarism: {{ question.check_plagiarism }}</p>
+		{% endif %}
+		<h2>{{ question.title }}</h2>
+		<p>Created on: {{ question.created_date }}</p>
+		<span style="color: white;" class="badge blue">{{ question.marks }} marks</span>
+		<p class="flow-text">{{ question.description }}</p>
+		<p id="language">{{ assignment.language }}</p>
+		<h4>Sample Input</h4>
+		<div class="card">
+			<div class="card-content">
+			<pre>{{ question.sample_input|linebreaksbr }}</pre>
+		</div>
+	</div>
+	<h4>Sample Output</h4>
+	<div class="card">
+		<div class="card-content">
+			<pre>{{ question.sample_output|linebreaksbr }}</pre>
+		</div>
+	</div>
 	{% endif %}
-{% endif %}
-{% if professor %}
-	<p>Draft: {{ question.draft }}</p>
-	<p>Check for plagiarism: {{ question.check_plagiarism }}</p>
-{% endif %}
 
-<h2>{{ question.title }}</h2>
-<p>Created on: {{ question.created_date }}</p>
-<span style="color: white;" class="badge blue">{{ question.marks }} marks</span>
-<p class="flow-text">{{ question.description }}</p>
-<p id="language">{{ assignment.language }}</p>
-<h4>Sample Input</h4>
-<div class="card darken-1">
-	<div class="card-content">
-		<pre>{{ question.sample_input|linebreaksbr }}</pre>
-	</div>
-</div>
-<h4>Sample Output</h4>
-<div class="card darken-1">
-	<div class="card-content">
-		<pre>{{ question.sample_output|linebreaksbr }}</pre>
-	</div>
-</div>
+	<!--Display the IDE -->
+	{% if student %}
 
-{% if student %}
+		<div class="card z-depth-3">
+			<div class="card-content">
+				<select style="display: inline;">
+					<option disabled selected="{{ assignment.language }}">{{ assignment.language }}</option>
+				</select>
+				<p>Select Theme</p>
+				<select style="display: inline;" onchange="selectTheme()" id="theme-select">
+					<option selected="">default</option>
+					<option>abcdef</option>
+					<option>base16-light</option>
+					<option>blackboard</option>
+					<option>cobalt</option>
+					<option>colorforth</option>
+					<option>dracula</option>
+					<option>monokai</option>
+				</select>
+				<textarea id="editor"></textarea>
+			</div>
+		</div>
+		<br>
+		<button class="btn waves-effect waves-light" onclick="judge_code(
+		'{{ question.id }}', '{{ assignment.language }}')">Run</button>
+		<button class="btn waves-effect waves-light" onclick="submit_code(
+		{{ question.id }}, {{ student.id }}, {{ assignment.id }})">Submit</button>
+		<!-- <button>Submit</button> -->
+		<div class="card container">
+			<h4 class="z-depth-2" id="execution-status"></h4>
+			<div id="execution">
+				<div id="message"></div>
+				<div id="output"></div>
+			</div>
+		</div>
+	{% endif %}
 
-<p>Select Theme</p>
-<select style="display: inline;" onchange="selectTheme()" id="theme-select">
-	<option selected="">default</option>
-	<option>abcdef</option>
-	<option>base16-light</option>
-	<option>blackboard</option>
-	<option>cobalt</option>
-	<option>colorforth</option>
-	<option>dracula</option>
-	<option>monokai</option>
-</select>
-
-<div class="card darken-1 z-depth-3">
-	<div class="card-content">
-		<textarea id="editor"></textarea>
-	</div>
-</div>
-
-<br>
-<button class="btn waves-effect waves-light" onclick="judge_code(
-'{{ question.id }}', '{{ assignment.language }}')">Run</button>
-<!-- <button>Submit</button> -->
-
-<div class="card container">
-<h4 class="z-depth-2" id="execution-status"></h4>
-<div id="execution">
-	<div id="message"></div>
-	<div id="output"></div>
-</div>	
-</div>
-
-{% endif %}
 {% endblock dashboard %}

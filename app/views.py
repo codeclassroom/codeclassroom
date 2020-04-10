@@ -274,24 +274,15 @@ def create_assignment(request):
 
 @login_required(login_url=reverse_lazy('app:login'))
 def assignment(request, pk):
-    print("came here")
     '''View to show info about assignment and list out the questions.'''
     professor = Professor.objects.filter(user=request.user).first()
     student = Student.objects.filter(user=request.user).first()
-
-    # if professor is None:
-    #     return HttpResponse('Not allowed.')
 
     if professor is not None:
         class_room = Classroom.objects.filter(professor=professor).first()
 
     elif student is not None:
-        class_room = Classroom.objects.filter(students__in=student).first()
-
-    #classroom = Classroom.objects.filter(pk=classroom_pk).first()
-
-    # if classroom is None:
-    #     return HttpResponse('No valid classroom.')
+        class_room = Classroom.objects.filter(students__user__username=student).first()
 
     assignment = Assignment.objects.filter(classroom=class_room).first()
 
@@ -311,7 +302,7 @@ def assignment(request, pk):
         ),
         'assignment': assignment,
         'classroom': class_room,
-        #'questions': questions
+        'questions': questions
     }
 
     if professor is not None:
@@ -428,17 +419,9 @@ def create_question(request, pk):
 
 
 @login_required(login_url=reverse_lazy('app:login'))
-def question(request, classroom_pk, assignment_pk, pk):
+def question(request, assignment_pk, pk):
     professor = Professor.objects.filter(user=request.user).first()
     student = Student.objects.filter(user=request.user).first()
-
-    # if professor is None:
-    #     return HttpResponse('Not allowed.')
-
-    classroom = Classroom.objects.filter(pk=classroom_pk).first()
-
-    if classroom is None:
-        return HttpResponse('No valid classroom.')
 
     assignment = Assignment.objects.filter(pk=assignment_pk).first()
 
@@ -451,15 +434,14 @@ def question(request, classroom_pk, assignment_pk, pk):
         return HttpResponse('No valid question.')
 
     context = {
-        'title': '{classroom} - {assignment} - {question}'.format(
-            classroom=classroom,
+        'title': '{question} - {assignment}'.format(
             assignment=assignment,
             question=question.title,
         ),
-        'classroom_pk': classroom_pk,
         'assignment_pk': assignment_pk,
         'question': question,
-        'assignment': assignment
+        'assignment': assignment,
+        'student': student
     }
 
     if professor is not None:
@@ -472,16 +454,11 @@ def question(request, classroom_pk, assignment_pk, pk):
 
 
 @login_required(login_url=reverse_lazy('app:login'))
-def edit_question(request, classroom_pk, assignment_pk, pk):
+def edit_question(request, assignment_pk, pk):
     professor = Professor.objects.filter(user=request.user).first()
 
     if professor is None:
         return HttpResponse('Not allowed.')
-
-    classroom = Classroom.objects.filter(pk=classroom_pk).first()
-
-    if classroom is None:
-        return HttpResponse('No valid classroom.')
 
     assignment = Assignment.objects.filter(pk=assignment_pk).first()
 
@@ -494,12 +471,8 @@ def edit_question(request, classroom_pk, assignment_pk, pk):
         return HttpResponse('No valid question.')
 
     context = {
-        'title': 'Edit Question - {question} - {assignment} - {classroom}'.format(
-            classroom=classroom,
-            assignment=assignment,
-            question=question.title,
-        ),
-        'classroom_pk': classroom_pk,
+        'title': 'Edit Question',
+        #'classroom_pk': classroom_pk,
         'assignment_pk': assignment_pk,
         'pk': question.id,
     }
@@ -523,7 +496,6 @@ def edit_question(request, classroom_pk, assignment_pk, pk):
 
             messages.success(request, 'Question Updated!')
             return redirect(reverse('app:view-question', kwargs={
-                'classroom_pk': classroom_pk,
                 'assignment_pk': assignment_pk,
                 'pk': question.id,
             }))
@@ -552,7 +524,7 @@ def all_classrooms(request):
         }
 
     elif student is not None:
-        query_class = Classroom.objects.filter(students__in=professor)
+        query_class = Classroom.objects.filter(students__user__username=student)
         context = {
             'classrooms': query_class
         }
@@ -571,14 +543,16 @@ def all_assignments(request):
         class_room = Classroom.objects.filter(professor=professor).first()
         assignments = Assignment.objects.filter(classroom=class_room)
         context = {
+            'title': 'Assignments',
             'assignments': assignments,
             'professor': professor
         }
 
     elif student is not None:
-        class_room = Classroom.objects.filter(students__in=student).first()
+        class_room = Classroom.objects.filter(students__user__username=student).first()
         assignments = Assignment.objects.filter(classroom=class_room)
         context = {
+            'title': 'Assignments',
             'assignments': assignments
         }
 

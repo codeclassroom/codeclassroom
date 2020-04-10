@@ -17,7 +17,7 @@ def run_code(code, lang, question=None, testcase=None):
         if standard_input != "":
             r = coderunner.code(code, lang, standard_input, expected_output, False)
         else:
-            r = coderunner.code(code, lang, expected_output, False)
+            r = coderunner.code(code, lang, output=expected_output, path=False)
     else:
         r = coderunner.code(code, lang, inp=testcase, path=False)
 

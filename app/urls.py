@@ -37,6 +37,6 @@ urlpatterns = [
     path('dashboard/assignment/<int:pk>/edit/', views.edit_assignment, name='edit-assignment'),
 
     path('dashboard/assignment/<int:pk>/question/create/', views.create_question, name='create-question'),
-    path('classroom/<int:classroom_pk>/assignment/<int:assignment_pk>/question/<int:pk>/', views.question, name='view-question'),
-    path('classroom/<int:classroom_pk>/assignment/<int:assignment_pk>/question/<int:pk>/edit/', views.edit_question, name='edit-question'),
+    path('dashboard/assignment/<int:assignment_pk>/question/<int:pk>/', views.question, name='view-question'),
+    path('dashboard/assignment/<int:assignment_pk>/question/<int:pk>/edit/', views.edit_question, name='edit-question'),
 ]
