@@ -5,3 +5,27 @@ label {
     font-size: 1rem !important;
     color: #817d7d !important;
 }
+input#user_type_0 {
+	opacity: 100%;
+	position: inherit;
+}
+input#user_type_1 {
+	opacity: 100%;
+	position: inherit;
+}
+select#students {
+	display: block;
+}
+select#language {
+	display: block;
+}
+input#draft {
+	position: inherit;
+	opacity: 100;
+	pointer-events: auto;
+}
+input#check_plagiarism {
+	position: inherit;
+	opacity: 100;
+	pointer-events: auto;
+}

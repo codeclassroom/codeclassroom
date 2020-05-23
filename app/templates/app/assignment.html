@@ -3,7 +3,7 @@
 {% block dashboard %}
 	{% if assignment %}
 		{% if professor %}
-		<div class="container">
+		<div class="container center">
 			<a class="btn waves-effect waves-light" href="{% url 'app:edit-assignment' assignment.id %}">Edit Assignment</a>
 			<a class="btn waves-effect waves-light" href="{% url 'app:create-question' assignment.id %}">Add a question</a>
 		</div>
@@ -45,7 +45,7 @@
 				</tbody>
 			</table>
 			{% else %}
-				<p>No questions yet!</p>
+				<h4 align="center">No questions yet!</h4>
 			{% endif %}
 			{% elif assignments %}
 			<div class="container">

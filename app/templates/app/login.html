@@ -10,8 +10,8 @@
 			<div class="card-content white-text">
 				<form action="{% url 'app:login' %}" method="POST">
 					{% csrf_token %}
-					<label for="username" class="">Username:</label> <input type="text" name="username" autofocus="" required="" id="username">
-					<label for="password">Password:</label> <input type="password" name="password" required="" id="password">
+					<label for="username" class="left">Username:</label> <input type="text" name="username" autofocus="" required="" id="username">
+					<label for="password" class="left">Password:</label> <input type="password" name="password" required="" id="password">
 					<button class="btn waves-effect waves-light" type="submit" type="submit" name="submit" value="Login">Login
 					<i class="material-icons right">send</i>
 					</button>

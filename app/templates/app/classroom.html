@@ -2,7 +2,11 @@
 {% load static %}
 {% block dashboard %}
 	{% if classroom %}
-		{% if professor %}
+	<div class="container">
+		<div class="card center">
+			<div class="card-content white-text">
+			</div>
+					{% if professor %}
 			<a class="btn waves-effect waves-light" href="{% url 'app:edit-classroom' pk %}">Edit Classroom</a>
 		{% endif %}
 		<p>Classroom: {{ classroom.title }}</p>
@@ -32,5 +36,8 @@
 				</div>
 			{% endfor %}
 		</div>
+		</div>
+	</div>
+
 	{% endif %}
 {% endblock dashboard %}
