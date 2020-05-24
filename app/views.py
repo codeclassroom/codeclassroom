@@ -17,7 +17,7 @@ from .forms import (
 
 
 def index(request):
-    return render(request, 'app/index.html')
+    return render(request, 'app/cc-index.html')
 
 
 def about(request):

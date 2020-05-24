@@ -1,0 +1,45 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" type="text/css" href="{% static 'app/css/index.css' %}">
+  <title>CODE CLASSROOM</title>
+</head>
+<body>
+  <header>
+    <h1>
+      <a href="{% url 'app:index' %}">CODE CLASSROOM</a>
+    </h1>
+    <nav>
+      <ul>
+        <li>
+          <a href="{% url 'app:about' %}">About Us</a>
+        </li>
+        <li>
+          <a href="#">Contact</a>
+        </li>
+        <li>
+          <a href="#">Help</a>
+        </li>
+      </ul>
+    </nav>
+  </header>
+  <main>
+    <section id="cta">
+      <!-- Call to action section -->
+      <h2>A great place for all your programming assignments!</h2>
+      <strong>Real Education. Real Results.</strong>
+      <div>
+        <span class="bar"></span>
+        <p>A platform for the management of programming assignments in universities and schools.</p>
+      </div>
+    </section>
+    <aside id="login-sign-up">
+      <a href="{% url 'app:login' %}">Login</a>
+      <a class="button" href="{% url 'app:signup' %}">Sign-Up</a>
+    </aside>
+  </main>
+</body>
+</html>
