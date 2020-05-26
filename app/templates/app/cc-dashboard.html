@@ -1,0 +1,77 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" type="text/css" href="{% static 'app/css/base.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'app/css/dashboard.css' %}">
+  <title>CodeClassroom - Dashboard</title>
+</head>
+<body>
+  <header>
+    <h1>
+      <a href="{% url 'app:index' %}">Code Classroom</a>
+    </h1>
+    <nav>
+      <ul>
+        <li>
+          <a href="#">Profile</a>
+        </li>
+        <li>
+          <a href="#">Notifications</a>
+        </li>
+        <li>
+          <a href="#">Settings</a>
+        </li>
+      </ul>
+    </nav>
+  </header>
+  <aside>
+    <figure>
+      <img src="https://via.placeholder.com/150" width="125" height="125">
+      <figcaption>{{ request.user.username }}</figcaption>
+    </figure>
+    <nav>
+      <ul>
+        <li>
+          <a href="{% url 'app:dashboard' %}">Classrooms</a>
+        </li>
+        <li>
+          <a href="#">Assignments</a>
+        </li>
+        <li>
+          <a href="#">Projects</a>
+        </li>
+        <li>
+          <a href="#">Contact Us</a>
+        </li>
+        <li>
+          <a href="#">Help</a>
+        </li>
+      </ul>
+    </nav>
+  </aside>
+  <main>
+    <h2>Welcome to Code Classroom!</h2>
+    <ul>
+      {% for classroom in classrooms %}
+      <li>
+        <div class="classroom">
+          <h3>{{ classroom.title }}</h3>
+          <p>{{ classroom.professor }}</p>
+        </div>
+      </li>
+      {% empty %}
+      <h3>No classrooms yet!</h3>
+      {% endfor %}
+  </main>
+  {% if professor %}
+  <div id="add">
+    <svg>
+      <path d="M 8.7568897,17.38827 H 17.261354 V 8.782562 0.17685486 h 2.733578 2.733576 V 8.782562 17.38827 h 8.504463 8.504462 v 2.632336 2.632335 h -8.504462 -8.504463 v 8.504466 8.504465 H 19.994932 17.261354 V 31.157407 22.652941 H 8.7568897 0.25242584 V 20.020606 17.38827 Z M 0.1511788,17.287028 H 39.838679 v 5.467157 H 0.15117853 Z M 22.829753,0.07561026 V 39.76311 H 17.160112 V 0.07561026 Z"/>
+    </svg>
+  </div>
+  {% endif %}
+</body>
+</html>

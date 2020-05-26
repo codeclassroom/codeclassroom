@@ -7,7 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,height=device-height, initial-scale=1.0, shrink-to-fit=yes">
     <!-- redirect http resources to https, hopefully! -->
-    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+    <!-- <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests"> -->
     <!-- CSS -->
     <link type="text/css" rel="stylesheet" href="{% static 'app/css/materialize.min.css' %}" media="screen,projection"/>
     <link rel="stylesheet" type="text/css" href="{% static 'app/css/style.css' %}">
@@ -47,7 +47,7 @@
         </div>
       </nav>
     </div>
-    
+
     {% block content %}
       {% block messages %}
         {% if messages %}

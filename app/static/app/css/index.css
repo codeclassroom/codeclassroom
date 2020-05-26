@@ -1,28 +1,17 @@
-/* reset style */
-*, ::before, ::after {
-  padding: 0;
-  margin: 0;
-  box-sizing: border-box;
-}
-:root {
-  font-family: Verdana, Geneva, sans-serif;
-  font-size: 16px;
-}
-body {
-  background-color: #fff;
-}
-a {
-  color: #000;
-  text-decoration: none;
-}
 header {
   margin: 2rem 4rem;
   display: flex;
   justify-content: space-between;
 }
+
+header > h1 {
+  text-transform: uppercase;
+}
+
 header > nav {
   width: 500px;
 }
+
 header > nav > ul {
   list-style-type: none;
   height: 100%;
@@ -30,42 +19,47 @@ header > nav > ul {
   justify-content: space-evenly;
   align-items: center;
 }
+
 main {
   margin: 5rem 10rem;
   height: 50vh;
   display: flex;
   justify-content: space-between;
 }
+
 #cta {
   width: 500px;
   display: flex;
   justify-content: flex-end;
   flex-direction: column;
 }
+
 #cta > h2 {
   line-height: 2.4rem;
   flex-basis: 2.8em;
   font-size: 2rem;
 }
+
 #cta > strong {
   padding: 0.5rem 0;
 }
-.bar {
-  height: 100%;
-  width: 3px;
-  background-color: #000;
-  float: left;
-  margin-right: 1rem;
+
+#cta > p {
+  border-left: 3px solid #000;
+  padding-left: 1rem;
 }
+
 #login-sign-up {
   width: 200px;
   height: 2.5em;
   display: flex;
   justify-content: space-evenly;
 }
+
 #login-sign-up > a:first-child {
   padding: 0.5rem;
 }
+
 .button {
   padding: 0.5rem 1.5rem;
   border: 1px solid #000;

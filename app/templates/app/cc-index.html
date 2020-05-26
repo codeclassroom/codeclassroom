@@ -4,13 +4,14 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" type="text/css" href="{% static 'app/css/base.css' %}">
   <link rel="stylesheet" type="text/css" href="{% static 'app/css/index.css' %}">
   <title>CODE CLASSROOM</title>
 </head>
 <body>
   <header>
     <h1>
-      <a href="{% url 'app:index' %}">CODE CLASSROOM</a>
+      <a href="{% url 'app:index' %}">Code Classroom</a>
     </h1>
     <nav>
       <ul>
@@ -31,10 +32,7 @@
       <!-- Call to action section -->
       <h2>A great place for all your programming assignments!</h2>
       <strong>Real Education. Real Results.</strong>
-      <div>
-        <span class="bar"></span>
-        <p>A platform for the management of programming assignments in universities and schools.</p>
-      </div>
+      <p>A platform for the management of programming assignments in universities and schools.</p>
     </section>
     <aside id="login-sign-up">
       <a href="{% url 'app:login' %}">Login</a>

@@ -17,6 +17,9 @@ from .forms import (
 
 
 def index(request):
+    if request.user.is_authenticated:
+        return redirect('app:dashboard')
+
     return render(request, 'app/cc-index.html')
 
 
@@ -63,12 +66,12 @@ def dashboard(request):
             context['professor'] = professor
             context['classrooms'] = Classroom.objects.filter(
                 professor=professor)
-            return render(request, 'app/dashboard-professor.html', context)
+            return render(request, 'app/cc-dashboard.html', context)
 
         elif student is not None:
             context['student'] = student
             context['classrooms'] = student.classroom_set.all()
-            return render(request, 'app/dashboard-student.html', context)
+            return render(request, 'app/cc-dashboard.html', context)
 
         else:
             return redirect(reverse('app:login'))
