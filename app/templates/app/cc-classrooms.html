@@ -1,0 +1,37 @@
+{% extends 'app/cc-base-dashboard.html' %}
+{% load static %}
+{% block link %}
+<link rel="stylesheet" type="text/css" href="{% static 'app/css/classrooms.css' %}">
+{% endblock link %}
+{% block content %}
+<h2>Welcome to Code Classroom!</h2>
+<ul>
+  {% for classroom in classrooms %}
+  <li>
+    <a href="{% url 'app:classroom' classroom.pk %}">
+      <div class="classroom">
+        <h3>{{ classroom.title }}</h3>
+        <p>{{ classroom.professor }}</p>
+      </div>
+    </a>
+  </li>
+  {% empty %}
+  <h3>No classrooms yet!</h3>
+  {% endfor %}
+</ul>
+{% endblock content %}
+{% block form %}
+<!-- TODO: add join classroom form for students -->
+<form method="POST" action="{% url 'app:classrooms' %}">
+  {% csrf_token %}
+  {{ form }}
+  <input type="submit" name="submit" value="Create New Classroom">
+</form>
+{% endblock form %}
+{% block js %}
+{{ block.super }}
+<script type="text/javascript">
+  // show form on clicking add button
+  document.querySelector('#add').addEventListener('click', (e) => document.querySelector('form').classList.toggle('show'));
+</script>
+{% endblock js %}

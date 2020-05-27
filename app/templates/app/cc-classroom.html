@@ -1,0 +1,31 @@
+{% extends 'app/cc-base-dashboard.html' %}
+{% load static %}
+{% block link %}
+{% endblock link %}
+{% block content %}
+<h2>{{ classroom.title }}</h2>
+<h3>Assignments</h3>
+<ul>
+  {% for assignment in assignments %}
+  <li>
+    <div>
+      <h3>{{ assignment.title }}</h3>
+      <p>{{ assignment.deadline }}</p>
+      <p>{{ assignment.language }}</p>
+    </div>
+  </li>
+  {% empty %}
+  <h3>No assignments yet!</h3>
+  {% endfor %}
+</ul>
+<h3>Students</h3>
+<ul>
+  {% for student in students %}
+  <li>
+    {{ student.user.username }}
+  </li>
+  {% empty %}
+  <h3>No students yet!</h3>
+  {% endfor %}
+</ul>
+{% endblock content %}

@@ -1,0 +1,35 @@
+main > ul {
+  list-style-type: none;
+  padding: 2rem;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: 2rem;
+  width: 850px;
+}
+
+/* classroom card */
+.classroom {
+  border: 1px solid #000;
+  border-radius: 10px;
+  padding: 2rem;
+}
+
+.classroom > h3 {
+  padding-bottom: 1rem;
+}
+
+form {
+  display: none;
+}
+
+form.show {
+  display: grid;
+  grid-gap: 0.5rem;
+  border: 1px solid #000;
+  position: absolute;
+  right: 35%;
+  bottom: 20%;
+  border-radius: 5px;
+  padding: 2rem;
+  background-color: #fff;
+}

@@ -1,0 +1,31 @@
+{% extends 'app/cc-base-dashboard.html' %}
+{% load static %}
+{% block link %}
+<link rel="stylesheet" type="text/css" href="{% static 'app/css/assignments.css' %}">
+{% endblock link %}
+{% block content %}
+<h2>Assignments</h2>
+<table>
+  <thead>
+    <th>Classroom</th>
+    <th>Name</th>
+    <th>Language</th>
+  </thead>
+  <tbody>
+    {% for assignment in assignments %}
+    <tr>
+      <td>{{ assignment.classroom.title }}</td>
+      <td>{{ assignment.title }}</td>
+      <td>{{ assignment.language }}</td>
+    </tr>
+    {% empty %}
+    <td>No assignments yet!</td>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock content %}
+{% block form %}
+{% endblock form %}
+{% block js %}
+{{ block.super }}
+{% endblock js %}

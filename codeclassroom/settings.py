@@ -166,3 +166,10 @@ STATIC_URL = '/static/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 MEDIA_URL = '/media/'
+
+
+# Login URLS
+
+LOGIN_URL = 'app:login'
+
+LOGIN_REDIRECT_URL = 'app:classrooms'

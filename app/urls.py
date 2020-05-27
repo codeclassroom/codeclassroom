@@ -13,18 +13,19 @@ urlpatterns = [
         extra_context={
             'title': 'Login',
             'form': AuthenticationForm(auto_id=True),
-            'next': reverse_lazy('app:index'),
         },
     ), name='login'),
     path('logout/', login_required(auth_views.LogoutView.as_view(
         template_name='app/logout.html',
         extra_context={
             'title': 'Logout'
-        }
-    ), login_url=reverse_lazy('app:login')), name='logout'),
-    path('dashboard/', views.dashboard, name='dashboard'),
+        },
+    )), name='logout'),
     path('about/', views.about, name='about'),
     path('faq/', views.faq, name='faq'),
+    path('classrooms/', views.classrooms, name='classrooms'),
+    path('classrooms/<int:pk>', views.classroom, name='classroom'),
+    path('assignments/', views.assignments, name='assignments'),
     path('dashboard/classrooms/', views.all_classrooms, name='all-classrooms'),
     path('dashboard/classroom/create/', views.create_classroom, name='create-classroom'),
     path('dashboard/classroom/join/', views.join_classroom, name='join-classroom'),

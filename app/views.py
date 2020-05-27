@@ -18,7 +18,7 @@ from .forms import (
 
 def index(request):
     if request.user.is_authenticated:
-        return redirect('app:dashboard')
+        return redirect('app:classrooms')
 
     return render(request, 'app/cc-index.html')
 
@@ -51,14 +51,39 @@ def signup(request):
         return render(request, 'app/signup.html', context)
 
 
-@login_required(login_url=reverse_lazy('app:login'))
+@login_required
 def dashboard(request):
     '''View that will be shown once a user logs in.'''
     context = {'title': 'Dashboard'}
 
     user = request.user
 
-    if user.is_authenticated:
+    professor = Professor.objects.filter(user=user).first()
+    student = Student.objects.filter(user=user).first()
+
+    if professor is not None:
+        context['professor'] = professor
+        context['classrooms'] = Classroom.objects.filter(
+            professor=professor)
+
+    elif student is not None:
+        context['student'] = student
+        context['classrooms'] = student.classroom_set.all()
+
+    return render(request, 'app/cc-dashboard.html', context)
+
+
+@login_required
+def classrooms(request):
+    '''
+    View to list out classrooms and also handle classroom creation.
+
+    Default view users will redirect to after logging in.
+    '''
+    context = {'title': 'Classrooms'}
+    user = request.user
+
+    if request.method == 'GET':
         professor = Professor.objects.filter(user=user).first()
         student = Student.objects.filter(user=user).first()
 
@@ -66,15 +91,31 @@ def dashboard(request):
             context['professor'] = professor
             context['classrooms'] = Classroom.objects.filter(
                 professor=professor)
-            return render(request, 'app/cc-dashboard.html', context)
+            context['form'] = ClassroomCreateForm(professor=professor, auto_id=True)
 
         elif student is not None:
             context['student'] = student
             context['classrooms'] = student.classroom_set.all()
-            return render(request, 'app/cc-dashboard.html', context)
+
+    elif request.method == 'POST':
+        professor = Professor.objects.filter(user=user).first()
+
+        if professor is None:
+            return HttpResponse('Not a professor!')
+
+        form = ClassroomCreateForm(request.POST, professor=professor, auto_id=True)
+
+        if form.is_valid():
+            form.save()
+
+            messages.success(request, 'Classroom Created!')
+
+            return redirect('app:classrooms')
 
         else:
-            return redirect(reverse('app:login'))
+            context['form'] = form
+
+    return render(request, 'app/cc-classrooms.html', context)
 
 
 @login_required(login_url=reverse_lazy('app:login'))
@@ -162,9 +203,10 @@ def join_classroom(request):
             return render(request, 'app/join-classroom', context)
 
 
-@login_required(login_url=reverse_lazy('app:login'))
+# TODO: add edit classroom functionality to this view
+@login_required
 def classroom(request, pk):
-    '''View that shows classroom info such as the students, assignments etc.'''
+    '''View to show classroom info such as the students, assignments etc.'''
     classroom = Classroom.objects.filter(pk=pk).first()
 
     if classroom is None:
@@ -180,6 +222,7 @@ def classroom(request, pk):
         'pk': pk,
         'classroom': classroom,
         'students': students,
+        'assignments': assignments,
     }
 
     if professor is not None:
@@ -188,7 +231,7 @@ def classroom(request, pk):
     elif student is not None:
         context['student'] = student
 
-    return render(request, 'app/classroom.html', context)
+    return render(request, 'app/cc-classroom.html', context)
 
 
 @login_required(login_url=reverse_lazy('app:login'))
@@ -233,6 +276,40 @@ def edit_classroom(request, pk):
         else:
             context['form'] = form
             return render(request, 'app/edit-classroom.html', context)
+
+
+# TODO: add create assignment functionality to view
+@login_required
+def assignments(request):
+    '''View to list out assignments and also handle assignment creation.'''
+    context = {'title': 'Assignments'}
+
+    if request.method == 'GET':
+        professor = Professor.objects.filter(user=request.user).first()
+        student = Student.objects.filter(user=request.user)
+        # .first()
+
+        if professor is not None:
+            context['professor'] = professor
+            classrooms = Classroom.objects.filter(professor=professor)
+
+        elif student is not None:
+            context['student'] = student
+            classrooms = Classroom.objects.filter(students__in=student)
+
+        print(classrooms)
+
+        assignments_list = []
+
+        for classroom in classrooms:
+            for assignment in classroom.assignment_set.all():
+                assignments_list.append(assignment)
+
+        print(assignments_list)
+
+        context['assignments'] = assignments_list
+
+    return render(request, 'app/cc-assignments.html', context)
 
 
 @login_required(login_url=reverse_lazy('app:login'))

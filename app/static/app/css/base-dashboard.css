@@ -68,27 +68,7 @@ main {
   position: relative;
 }
 
-main > ul {
-  list-style-type: none;
-  padding: 2rem;
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  grid-gap: 2rem;
-  width: 850px;
-}
-
-/* classroom card */
-.classroom {
-  border: 1px solid #000;
-  border-radius: 10px;
-  padding: 2rem;
-}
-
-.classroom > h3 {
-  padding-bottom: 1rem;
-}
-
-/* add classroom button */
+/* add button */
 #add {
   border: 2px solid #000;
   border-radius: 50%;
@@ -102,7 +82,7 @@ main > ul {
   cursor: pointer;
 }
 
-/* add classroom button "+" sign */
+/* add button "+" sign */
 #add > svg {
   width: 100%;
   height: 100%;

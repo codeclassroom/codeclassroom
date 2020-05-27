@@ -5,8 +5,10 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" type="text/css" href="{% static 'app/css/base.css' %}">
-  <link rel="stylesheet" type="text/css" href="{% static 'app/css/dashboard.css' %}">
-  <title>CodeClassroom - Dashboard</title>
+  <link rel="stylesheet" type="text/css" href="{% static 'app/css/base-dashboard.css' %}">
+  {% block link %}
+  {% endblock link %}
+  <title>CodeClassroom - {{ title }}</title>
 </head>
 <body>
   <header>
@@ -35,10 +37,10 @@
     <nav>
       <ul>
         <li>
-          <a href="{% url 'app:dashboard' %}">Classrooms</a>
+          <a href="{% url 'app:classrooms' %}">Classrooms</a>
         </li>
         <li>
-          <a href="#">Assignments</a>
+          <a href="{% url 'app:assignments' %}">Assignments</a>
         </li>
         <li>
           <a href="#">Projects</a>
@@ -53,18 +55,8 @@
     </nav>
   </aside>
   <main>
-    <h2>Welcome to Code Classroom!</h2>
-    <ul>
-      {% for classroom in classrooms %}
-      <li>
-        <div class="classroom">
-          <h3>{{ classroom.title }}</h3>
-          <p>{{ classroom.professor }}</p>
-        </div>
-      </li>
-      {% empty %}
-      <h3>No classrooms yet!</h3>
-      {% endfor %}
+    {% block content %}
+    {% endblock content %}
   </main>
   {% if professor %}
   <div id="add">
@@ -72,6 +64,20 @@
       <path d="M 8.7568897,17.38827 H 17.261354 V 8.782562 0.17685486 h 2.733578 2.733576 V 8.782562 17.38827 h 8.504463 8.504462 v 2.632336 2.632335 h -8.504462 -8.504463 v 8.504466 8.504465 H 19.994932 17.261354 V 31.157407 22.652941 H 8.7568897 0.25242584 V 20.020606 17.38827 Z M 0.1511788,17.287028 H 39.838679 v 5.467157 H 0.15117853 Z M 22.829753,0.07561026 V 39.76311 H 17.160112 V 0.07561026 Z"/>
     </svg>
   </div>
+  {% block form %}
+  {% endblock form %}
   {% endif %}
+  {% block js %}
+  <script type="text/javascript">
+    const navLinks = document.querySelectorAll('aside > nav > ul > li > a');
+    const windowLink = window.location.href;
+    for (navLink of navLinks) {
+      if (windowLink.includes(navLink.href)) {
+        navLink.style.fontWeight = 'bold';
+        break;
+      }
+    }
+  </script>
+  {% endblock js %}
 </body>
 </html>
