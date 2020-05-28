@@ -1,3 +1,5 @@
+@charset 'UTF-8';
+
 main > ul {
   list-style-type: none;
   padding: 2rem;

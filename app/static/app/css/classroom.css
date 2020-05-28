@@ -1,0 +1,24 @@
+@charset 'UTF-8';
+
+#classroom {
+  margin: 1rem 0;
+}
+
+#assignments {
+  margin: 1rem;
+}
+
+#assignments ul {
+  list-style-type: none;
+}
+
+.assignment {
+  border-radius: 5px;
+  border: 1px solid #000;
+  margin: 1rem;
+  padding: 1rem;
+}
+
+#students {
+  margin: 1rem;
+}

@@ -1,0 +1,43 @@
+@charset 'UTF-8';
+
+#assignments {
+  margin: 1rem;
+  width: 60%;
+}
+
+#header {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1rem;
+}
+
+#header > strong {
+  text-align: center;
+}
+
+#body {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1rem;
+}
+
+#body > div {
+  grid-column: span 3;
+}
+
+#body > div > p {
+  text-align: center;
+}
+
+#body > strong {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.assignment {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  border: 1px solid #000;
+  margin: 1rem;
+  padding: 1rem;
+  border-radius: 5px;
+}

@@ -1,3 +1,6 @@
+@charset 'UTF-8';
+@import url('base.css');
+
 body {
   height: 100vh;
   display: grid;
@@ -53,6 +56,7 @@ aside > nav > ul {
 }
 
 aside > figure > img {
+  border: 1px solid gray;
   border-radius: 50%;
   max-width: 125px;
 }

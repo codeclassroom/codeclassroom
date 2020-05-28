@@ -1,3 +1,9 @@
+@charset 'UTF-8';
+@font-face {
+	font-family: 'SF Pro Display Regular';
+	src: url('FontsFree-Net-SFProDisplay-Regular.ttf');
+}
+
 /* reset style */
 *, ::before, ::after {
   padding: 0;
@@ -7,7 +13,7 @@
 
 /* root styling */
 :root {
-  font-family: Verdana, Geneva, sans-serif;
+  font-family: 'SF Pro Display Regular', Verdana, Geneva, sans-serif;
   font-size: 16px;
 }
 

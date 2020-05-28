@@ -5,24 +5,25 @@
 {% endblock link %}
 {% block content %}
 <h2>Assignments</h2>
-<table>
-  <thead>
-    <th>Classroom</th>
-    <th>Name</th>
-    <th>Language</th>
-  </thead>
-  <tbody>
+<section id="assignments">
+  <section id="header">
+    <strong>Classroom</strong>
+    <strong>Name</strong>
+    <strong>Language</strong>
+  </section>
+  <section id="body">
     {% for assignment in assignments %}
-    <tr>
-      <td>{{ assignment.classroom.title }}</td>
-      <td>{{ assignment.title }}</td>
-      <td>{{ assignment.language }}</td>
-    </tr>
+    <div class="assignment">
+      <p>{{ assignment.classroom.title }}</p>
+      <p>{{ assignment.title }}</p>
+      <p>{{ assignment.language }}</p>
+    </div>
+    <strong>:</strong>
     {% empty %}
-    <td>No assignments yet!</td>
+    <p>No assignments yet!</p>
     {% endfor %}
-  </tbody>
-</table>
+  </section>
+</section>
 {% endblock content %}
 {% block form %}
 {% endblock form %}

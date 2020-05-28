@@ -52,28 +52,6 @@ def signup(request):
 
 
 @login_required
-def dashboard(request):
-    '''View that will be shown once a user logs in.'''
-    context = {'title': 'Dashboard'}
-
-    user = request.user
-
-    professor = Professor.objects.filter(user=user).first()
-    student = Student.objects.filter(user=user).first()
-
-    if professor is not None:
-        context['professor'] = professor
-        context['classrooms'] = Classroom.objects.filter(
-            professor=professor)
-
-    elif student is not None:
-        context['student'] = student
-        context['classrooms'] = student.classroom_set.all()
-
-    return render(request, 'app/cc-dashboard.html', context)
-
-
-@login_required
 def classrooms(request):
     '''
     View to list out classrooms and also handle classroom creation.
@@ -116,39 +94,6 @@ def classrooms(request):
             context['form'] = form
 
     return render(request, 'app/cc-classrooms.html', context)
-
-
-@login_required(login_url=reverse_lazy('app:login'))
-def create_classroom(request):
-    context = {'title': 'Create Classroom'}
-    professor = Professor.objects.filter(user=request.user).first()
-
-    if professor is None:
-        return HttpResponse('Not allowed.')
-
-    if request.method == 'GET':
-        context['form'] = ClassroomCreateForm(
-            professor=professor,
-            auto_id=True,
-        )
-        return render(request, 'app/create-classroom.html', context)
-
-    elif request.method == 'POST':
-        form = ClassroomCreateForm(
-            request.POST,
-            professor=professor,
-            auto_id=True,
-        )
-
-        if form.is_valid():
-            form.save()
-
-            messages.success(request, 'Classroom Created!')
-            return redirect(reverse('app:dashboard'))
-
-        else:
-            context['form'] = form
-            return render(request, 'app/create-classroom.html', context)
 
 
 @login_required(login_url=reverse_lazy('app:login'))
@@ -287,25 +232,14 @@ def assignments(request):
     if request.method == 'GET':
         professor = Professor.objects.filter(user=request.user).first()
         student = Student.objects.filter(user=request.user)
-        # .first()
 
         if professor is not None:
             context['professor'] = professor
-            classrooms = Classroom.objects.filter(professor=professor)
+            assignments_list = Assignment.objects.filter(classroom__professor=professor)
 
         elif student is not None:
             context['student'] = student
-            classrooms = Classroom.objects.filter(students__in=student)
-
-        print(classrooms)
-
-        assignments_list = []
-
-        for classroom in classrooms:
-            for assignment in classroom.assignment_set.all():
-                assignments_list.append(assignment)
-
-        print(assignments_list)
+            assignments_list = Assignment.objects.filter(classroom__students__in=student)
 
         context['assignments'] = assignments_list
 

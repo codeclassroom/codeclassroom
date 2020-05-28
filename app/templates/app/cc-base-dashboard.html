@@ -4,7 +4,6 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" type="text/css" href="{% static 'app/css/base.css' %}">
   <link rel="stylesheet" type="text/css" href="{% static 'app/css/base-dashboard.css' %}">
   {% block link %}
   {% endblock link %}
@@ -31,7 +30,7 @@
   </header>
   <aside>
     <figure>
-      <img src="https://via.placeholder.com/150" width="125" height="125">
+      <img src="https://via.placeholder.com/125" width="125" height="125">
       <figcaption>{{ request.user.username }}</figcaption>
     </figure>
     <nav>
