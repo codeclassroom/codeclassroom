@@ -161,6 +161,17 @@ class AssignmentCreateForm(forms.ModelForm):
         )
 
 
+class NewAssignmentCreateForm(forms.ModelForm):
+    class Meta:
+        model = Assignment
+        fields = (
+            'title',
+            'classroom',
+            'deadline',
+            'language',
+        )
+
+
 class AssignmentEditForm(forms.ModelForm):
 
     class Meta:

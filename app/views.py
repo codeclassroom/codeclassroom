@@ -11,7 +11,7 @@ from .models import (
 )
 from .forms import (
     SignupForm, ClassroomCreateForm, ClassroomJoinForm, ClassroomEditForm,
-    AssignmentCreateForm, AssignmentEditForm, QuestionCreateForm,
+    NewAssignmentCreateForm, AssignmentCreateForm, AssignmentEditForm, QuestionCreateForm,
     QuestionEditForm,
 )
 
@@ -69,7 +69,8 @@ def classrooms(request):
             context['professor'] = professor
             context['classrooms'] = Classroom.objects.filter(
                 professor=professor)
-            context['form'] = ClassroomCreateForm(professor=professor, auto_id=True)
+            context['form'] = ClassroomCreateForm(
+                professor=professor, auto_id=True)
 
         elif student is not None:
             context['student'] = student
@@ -81,7 +82,8 @@ def classrooms(request):
         if professor is None:
             return HttpResponse('Not a professor!')
 
-        form = ClassroomCreateForm(request.POST, professor=professor, auto_id=True)
+        form = ClassroomCreateForm(
+            request.POST, professor=professor, auto_id=True)
 
         if form.is_valid():
             form.save()
@@ -235,13 +237,16 @@ def assignments(request):
 
         if professor is not None:
             context['professor'] = professor
-            assignments_list = Assignment.objects.filter(classroom__professor=professor)
+            assignments_list = Assignment.objects.filter(
+                classroom__professor=professor)
 
         elif student is not None:
             context['student'] = student
-            assignments_list = Assignment.objects.filter(classroom__students__in=student)
+            assignments_list = Assignment.objects.filter(
+                classroom__students__in=student)
 
         context['assignments'] = assignments_list
+        context['form'] = NewAssignmentCreateForm(auto_id=True)
 
     return render(request, 'app/cc-assignments.html', context)
 
@@ -296,7 +301,8 @@ def assignment(request, pk):
         class_room = Classroom.objects.filter(professor=professor).first()
 
     elif student is not None:
-        class_room = Classroom.objects.filter(students__user__username=student).first()
+        class_room = Classroom.objects.filter(
+            students__user__username=student).first()
 
     assignment = Assignment.objects.filter(classroom=class_room).first()
 
@@ -486,7 +492,7 @@ def edit_question(request, assignment_pk, pk):
 
     context = {
         'title': 'Edit Question',
-        #'classroom_pk': classroom_pk,
+        # 'classroom_pk': classroom_pk,
         'assignment_pk': assignment_pk,
         'pk': question.id,
     }
@@ -538,7 +544,8 @@ def all_classrooms(request):
         }
 
     elif student is not None:
-        query_class = Classroom.objects.filter(students__user__username=student)
+        query_class = Classroom.objects.filter(
+            students__user__username=student)
         context = {
             'classrooms': query_class
         }
@@ -563,7 +570,8 @@ def all_assignments(request):
         }
 
     elif student is not None:
-        class_room = Classroom.objects.filter(students__user__username=student).first()
+        class_room = Classroom.objects.filter(
+            students__user__username=student).first()
         assignments = Assignment.objects.filter(classroom=class_room)
         context = {
             'title': 'Assignments',

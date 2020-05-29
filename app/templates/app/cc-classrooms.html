@@ -28,10 +28,3 @@
   <input type="submit" name="submit" value="Create New Classroom">
 </form>
 {% endblock form %}
-{% block js %}
-{{ block.super }}
-<script type="text/javascript">
-  // show form on clicking add button
-  document.querySelector('#add').addEventListener('click', (e) => document.querySelector('form').classList.toggle('show'));
-</script>
-{% endblock js %}

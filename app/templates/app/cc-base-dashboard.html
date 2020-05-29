@@ -60,14 +60,22 @@
   {% if professor %}
   <div id="add">
     <svg>
-      <path d="M 8.7568897,17.38827 H 17.261354 V 8.782562 0.17685486 h 2.733578 2.733576 V 8.782562 17.38827 h 8.504463 8.504462 v 2.632336 2.632335 h -8.504462 -8.504463 v 8.504466 8.504465 H 19.994932 17.261354 V 31.157407 22.652941 H 8.7568897 0.25242584 V 20.020606 17.38827 Z M 0.1511788,17.287028 H 39.838679 v 5.467157 H 0.15117853 Z M 22.829753,0.07561026 V 39.76311 H 17.160112 V 0.07561026 Z"/>
+      <use href="#plus-sign"/>
     </svg>
   </div>
   {% block form %}
   {% endblock form %}
   {% endif %}
+  {% block svg %}
+  <svg style="display: none;">
+    <defs>
+      <path id="plus-sign" d="M 8.7568897,17.38827 H 17.261354 V 8.782562 0.17685486 h 2.733578 2.733576 V 8.782562 17.38827 h 8.504463 8.504462 v 2.632336 2.632335 h -8.504462 -8.504463 v 8.504466 8.504465 H 19.994932 17.261354 V 31.157407 22.652941 H 8.7568897 0.25242584 V 20.020606 17.38827 Z M 0.1511788,17.287028 H 39.838679 v 5.467157 H 0.15117853 Z M 22.829753,0.07561026 V 39.76311 H 17.160112 V 0.07561026 Z"></path>
+    </defs>
+  </svg>
+  {% endblock svg %}
   {% block js %}
   <script type="text/javascript">
+    // make appropriate sidebar navlink bold
     const navLinks = document.querySelectorAll('aside > nav > ul > li > a');
     const windowLink = window.location.href;
     for (navLink of navLinks) {
@@ -76,6 +84,8 @@
         break;
       }
     }
+    // show form on clicking add button
+    document.querySelector('#add').addEventListener('click', (e) => document.querySelector('form').classList.toggle('show'));
   </script>
   {% endblock js %}
 </body>

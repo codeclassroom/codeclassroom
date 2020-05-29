@@ -7,18 +7,25 @@
 <h2>Assignments</h2>
 <section id="assignments">
   <section id="header">
-    <strong>Classroom</strong>
     <strong>Name</strong>
+    <strong>Classroom</strong>
     <strong>Language</strong>
   </section>
   <section id="body">
+    <!-- TODO: add triple dot SVG -->
     {% for assignment in assignments %}
     <div class="assignment">
-      <p>{{ assignment.classroom.title }}</p>
       <p>{{ assignment.title }}</p>
+      <p>{{ assignment.classroom.title }}</p>
       <p>{{ assignment.language }}</p>
     </div>
+    {% if professor %}
     <strong>:</strong>
+    <div class="actions">
+      <a href="#">Edit</a>
+      <a href="#">Delete</a>
+    </div>
+    {% endif %}
     {% empty %}
     <p>No assignments yet!</p>
     {% endfor %}
@@ -26,7 +33,32 @@
 </section>
 {% endblock content %}
 {% block form %}
+<form method="POST" action="{% url 'app:assignments' %}">
+  {% csrf_token %}
+  {{ form }}
+  <input type="submit" name="submit" value="Create New Assignment">
+</form>
 {% endblock form %}
+{% block svg %}
+{{ block.super }}
+{% endblock svg %}
 {% block js %}
 {{ block.super }}
+{% if professor %}
+<script type="text/javascript">
+  const optionButtons = document.querySelectorAll('#body > strong');
+  for (optionButton of optionButtons) {
+    const actions = optionButton.nextElementSibling;
+    optionButton.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (!actions.style.display) {
+        actions.style.display = 'flex';
+
+      } else {
+        actions.style.display = '';
+      }
+    });
+  }
+</script>
+{% endif %}
 {% endblock js %}
