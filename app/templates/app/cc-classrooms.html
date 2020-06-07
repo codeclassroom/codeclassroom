@@ -5,6 +5,9 @@
 {% endblock link %}
 {% block content %}
 <h2>Welcome to Code Classroom!</h2>
+{% block messages %}
+{{ block.super }}
+{% endblock messages %}
 <ul>
   {% for classroom in classrooms %}
   <li>

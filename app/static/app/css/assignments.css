@@ -19,12 +19,10 @@
   grid-template-columns: var(--columns);
 }
 
-#body > .assignment {
+#body > a {
   grid-column: span 3;
-}
-
-#body > .assignment > p {
   text-align: center;
+  margin: 1rem;
 }
 
 #body > strong {
@@ -38,7 +36,6 @@
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   border: 1px solid #000;
-  margin: 1rem;
   padding: 1rem;
   border-radius: 5px;
 }

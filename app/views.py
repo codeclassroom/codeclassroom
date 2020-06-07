@@ -58,28 +58,28 @@ def classrooms(request):
 
     Default view users will redirect to after logging in.
     '''
-    context = {'title': 'Classrooms'}
+    context = {'title': 'Classrooms', 'active_link': 'classrooms'}
     user = request.user
 
     if request.method == 'GET':
         professor = Professor.objects.filter(user=user).first()
         student = Student.objects.filter(user=user).first()
 
-        if professor is not None:
+        if professor:
             context['professor'] = professor
             context['classrooms'] = Classroom.objects.filter(
                 professor=professor)
             context['form'] = ClassroomCreateForm(
                 professor=professor, auto_id=True)
 
-        elif student is not None:
+        elif student:
             context['student'] = student
             context['classrooms'] = student.classroom_set.all()
 
     elif request.method == 'POST':
         professor = Professor.objects.filter(user=user).first()
 
-        if professor is None:
+        if not professor:
             return HttpResponse('Not a professor!')
 
         form = ClassroomCreateForm(
@@ -156,7 +156,7 @@ def classroom(request, pk):
     '''View to show classroom info such as the students, assignments etc.'''
     classroom = Classroom.objects.filter(pk=pk).first()
 
-    if classroom is None:
+    if not classroom:
         return HttpResponse('Not a valid classroom.')
 
     professor = Professor.objects.filter(user=request.user).first()
@@ -166,16 +166,16 @@ def classroom(request, pk):
     assignments = classroom.assignment_set.all()
     context = {
         'title': classroom.title,
-        'pk': pk,
+        'active_link': 'classrooms',
         'classroom': classroom,
         'students': students,
         'assignments': assignments,
     }
 
-    if professor is not None:
+    if professor:
         context['professor'] = professor
 
-    elif student is not None:
+    elif student:
         context['student'] = student
 
     return render(request, 'app/cc-classroom.html', context)
@@ -229,18 +229,18 @@ def edit_classroom(request, pk):
 @login_required
 def assignments(request):
     '''View to list out assignments and also handle assignment creation.'''
-    context = {'title': 'Assignments'}
+    context = {'title': 'Assignments', 'active_link': 'assignments'}
 
     if request.method == 'GET':
         professor = Professor.objects.filter(user=request.user).first()
         student = Student.objects.filter(user=request.user)
 
-        if professor is not None:
+        if professor:
             context['professor'] = professor
             assignments_list = Assignment.objects.filter(
                 classroom__professor=professor)
 
-        elif student is not None:
+        elif student:
             context['student'] = student
             assignments_list = Assignment.objects.filter(
                 classroom__students__in=student)
@@ -291,47 +291,31 @@ def create_assignment(request):
             return render(request, 'app/create-assignment.html', context)
 
 
-@login_required(login_url=reverse_lazy('app:login'))
+@login_required
 def assignment(request, pk):
     '''View to show info about assignment and list out the questions.'''
+    assignment = Assignment.objects.filter(pk=pk).first()
+
+    if not assignment:
+        return HttpResponse('No valid assignment.')
+
+    context = {'title': assignment.title, 'active_link': 'assignments'}
+
     professor = Professor.objects.filter(user=request.user).first()
     student = Student.objects.filter(user=request.user).first()
 
-    if professor is not None:
-        class_room = Classroom.objects.filter(professor=professor).first()
-
-    elif student is not None:
-        class_room = Classroom.objects.filter(
-            students__user__username=student).first()
-
-    assignment = Assignment.objects.filter(classroom=class_room).first()
-
-    if assignment is None:
-        return HttpResponse('No valid assignment.')
-
     if professor:
         questions = assignment.question_set.all()
-
-    if student:
-        questions = assignment.question_set.filter(draft=False)
-
-    context = {
-        'title': '{classroom} - {assignment}'.format(
-            classroom=class_room,
-            assignment=assignment,
-        ),
-        'assignment': assignment,
-        'classroom': class_room,
-        'questions': questions
-    }
-
-    if professor is not None:
         context['professor'] = professor
 
-    elif student is not None:
+    elif student:
+        questions = assignment.question_set.filter(draft=False)
         context['student'] = student
 
-    return render(request, 'app/assignment.html', context)
+    context['assignment'] = assignment
+    context['questions']  = questions
+
+    return render(request, 'app/cc-assignment.html', context)
 
 
 @login_required(login_url=reverse_lazy('app:login'))
@@ -438,39 +422,29 @@ def create_question(request, pk):
             return render(request, 'app/create-question.html', context)
 
 
-@login_required(login_url=reverse_lazy('app:login'))
-def question(request, assignment_pk, pk):
+@login_required
+def question(request, pk):
+    question = Question.objects.filter(pk=pk).first()
+
+    if not question:
+        return HttpResponse('Invalid question!')
+
+    context = {
+        'title': question.title,
+        'active_link': 'assignments',
+        'question': question
+    }
+
     professor = Professor.objects.filter(user=request.user).first()
     student = Student.objects.filter(user=request.user).first()
 
-    assignment = Assignment.objects.filter(pk=assignment_pk).first()
-
-    if assignment is None:
-        return HttpResponse('No valid assignment.')
-
-    question = Question.objects.filter(pk=pk).first()
-
-    if question is None:
-        return HttpResponse('No valid question.')
-
-    context = {
-        'title': '{question} - {assignment}'.format(
-            assignment=assignment,
-            question=question.title,
-        ),
-        'assignment_pk': assignment_pk,
-        'question': question,
-        'assignment': assignment,
-        'student': student
-    }
-
-    if professor is not None:
+    if professor:
         context['professor'] = professor
 
-    elif student is not None:
+    elif student:
         context['student'] = student
 
-    return render(request, 'app/question.html', context)
+    return render(request, 'app/cc-question.html', context)
 
 
 @login_required(login_url=reverse_lazy('app:login'))

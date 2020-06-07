@@ -36,10 +36,10 @@
     <nav>
       <ul>
         <li>
-          <a href="{% url 'app:classrooms' %}">Classrooms</a>
+          <a href="{% url 'app:classrooms' %}"{% if active_link == 'classrooms' %}style="font-weight: bold;"{% endif %}>Classrooms</a>
         </li>
         <li>
-          <a href="{% url 'app:assignments' %}">Assignments</a>
+          <a href="{% url 'app:assignments' %}"{% if active_link == 'assignments' %}style="font-weight: bold;"{% endif %}>Assignments</a>
         </li>
         <li>
           <a href="#">Projects</a>
@@ -55,6 +55,16 @@
   </aside>
   <main>
     {% block content %}
+    {# flash messages to be handled by child templates inside content block #}
+    {% block messages %}
+    {% if messages %}
+    <ul class="messages">
+      {% for message in messages %}
+      <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+    {% endblock messages %}
     {% endblock content %}
   </main>
   {% if professor %}
@@ -74,19 +84,12 @@
   </svg>
   {% endblock svg %}
   {% block js %}
+  {% if form %}
   <script type="text/javascript">
-    // make appropriate sidebar navlink bold
-    const navLinks = document.querySelectorAll('aside > nav > ul > li > a');
-    const windowLink = window.location.href;
-    for (navLink of navLinks) {
-      if (windowLink.includes(navLink.href)) {
-        navLink.style.fontWeight = 'bold';
-        break;
-      }
-    }
     // show form on clicking add button
     document.querySelector('#add').addEventListener('click', (e) => document.querySelector('form').classList.toggle('show'));
   </script>
+  {% endif %}
   {% endblock js %}
 </body>
 </html>

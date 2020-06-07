@@ -1,0 +1,33 @@
+{% extends 'app/cc-base-dashboard.html' %}
+{% load static %}
+{% block link %}
+<link rel="stylesheet" type="text/css" href="{% static 'app/css/assignment.css' %}">
+{% endblock link %}
+{% block content %}
+<h2>{{ assignment.title }}</h2>
+<ul>
+  {% for question in questions %}
+  <li>
+    <a href="{% url 'app:question' question.pk %}">
+      <div>
+        <h3>{{ question.title }}</h3>
+        <p>Marks: {{ question.marks }}</p>
+        {% if professor %}
+        <p>Marked as draft: {{ question.draft }}</p>
+        {% endif %}
+      </div>
+    </a>
+  </li>
+  {% empty %}
+  <h3>No questions yet!</h3>
+  {% endfor %}
+</ul>
+{% endblock content %}
+{% block form %}
+{% endblock form %}
+{% block svg %}
+{{ block.super }}
+{% endblock svg %}
+{% block js %}
+{{ block.super }}
+{% endblock js %}

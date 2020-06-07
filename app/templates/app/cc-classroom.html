@@ -14,11 +14,13 @@
   <ul>
     {% for assignment in assignments %}
     <li>
-      <div class="assignment">
-        <h3>{{ assignment.title }}</h3>
-        <p>Deadline: {{ assignment.deadline }}</p>
-        <p>Language of focus: {{ assignment.language }}</p>
-      </div>
+      <a href="{% url 'app:assignment' assignment.pk %}">
+        <div class="assignment">
+          <h3>{{ assignment.title }}</h3>
+          <p>Deadline: {{ assignment.deadline }}</p>
+          <p>Language of focus: {{ assignment.language }}</p>
+        </div>
+      </a>
     </li>
     {% empty %}
     <h3>No assignments yet!</h3>

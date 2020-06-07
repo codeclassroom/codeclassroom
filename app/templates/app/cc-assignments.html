@@ -14,11 +14,13 @@
   <section id="body">
     <!-- TODO: add triple dot SVG -->
     {% for assignment in assignments %}
-    <div class="assignment">
-      <p>{{ assignment.title }}</p>
-      <p>{{ assignment.classroom.title }}</p>
-      <p>{{ assignment.language }}</p>
-    </div>
+    <a href="{% url 'app:assignment' assignment.pk %}">
+      <div class="assignment">
+        <p>{{ assignment.title }}</p>
+        <p>{{ assignment.classroom.title }}</p>
+        <p>{{ assignment.language }}</p>
+      </div>
+    </a>
     {% if professor %}
     <strong>:</strong>
     <div class="actions">
