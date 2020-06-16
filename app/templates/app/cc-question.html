@@ -5,15 +5,25 @@
 {% endblock link %}
 {% block content %}
 <h2>{{ question.title }}</h2>
-<div>
-  <h3>Question</h3>
-  <p>{{ question.description }}</p>
-  <h3>Marks</h3>
-  <p>{{ question.marks }}</p>
-  <h3>Input Format</h3>
-  <p>{{ question.sample_input|linebreaksbr }}</p>
-  <h3>Output Format</h3>
-  <p>{{ question.sample_output }}</p>
+<div id="question">
+  <section>
+    <h3>Question</h3>
+    <p>{{ question.description }}</p>
+  </section>
+  <section>
+    <h3>Sample Input</h3>
+    <p>
+      {% if question.sample_input %}
+      {{ question.sample_input|linebreaksbr }}
+      {% else %}
+      No input.
+      {% endif %}
+    </p>
+  </section>
+  <section>
+    <h3>Sample Output</h3>
+    <p>{{ question.sample_output|linebreaksbr }}</p>
+  </section>
   {% if professor %}
   <h4>Marked for draft</h4>
   <p>{{ question.draft }}</p>
@@ -21,7 +31,7 @@
 </div>
 {# IDE goes here #}
 {% if student %}
-<div>IDE goes here!</div>
+<div id="IDE">IDE goes here!</div>
 {% endif %}
 {% endblock content %}
 {% block form %}

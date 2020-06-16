@@ -22,3 +22,17 @@
 #students {
   margin: 1rem;
 }
+
+#students > ol {
+  margin: 1rem;
+}
+
+#students > ol > li::marker {
+  margin-right: 0.5rem;
+}
+
+#students > ol > li {
+  padding: 0.6rem;
+  border: 1px solid #000;
+  border-radius: 5px;
+}

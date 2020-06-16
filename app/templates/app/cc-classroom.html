@@ -2,13 +2,19 @@
 {% load static %}
 {% block link %}
 <link rel="stylesheet" type="text/css" href="{% static 'app/css/classroom.css' %}">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 {% endblock link %}
 {% block content %}
 <section id="classroom">
   <h2>{{ classroom.title }}</h2>
+  {% if student %}
   <p>Professor: {{ classroom.professor }}</p>
+  {% endif %}
   <em>Join Code: {{ classroom.join_code }}</em>
 </section>
+{% block messages %}
+{{ block.super }}
+{% endblock messages %}
 <section id="assignments">
   <h3>Assignments</h3>
   <ul>
@@ -40,3 +46,21 @@
   </ol>
 </section>
 {% endblock content %}
+{% block form %}
+<form action="{% url 'app:classroom' classroom.pk %}" method="POST">
+  {% csrf_token %}
+  {{ form }}
+  <input type="submit" value="Add Assignment">
+</form>
+{% endblock form %}
+{% block js %}
+{{ block.super }}
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script type="text/javascript">
+  flatpickr('#deadline', {
+  enableTime : true,
+  enableSeconds : true,
+  dateFormat : "Y-m-d H:i:S",
+  });
+</script>
+{% endblock js %}

@@ -23,11 +23,13 @@ urlpatterns = [
     )), name='logout'),
     path('about/', views.about, name='about'),
     path('faq/', views.faq, name='faq'),
+
     path('classrooms/', views.classrooms, name='classrooms'),
     path('classrooms/<int:pk>', views.classroom, name='classroom'),
     path('assignments/', views.assignments, name='assignments'),
     path('assignment/<int:pk>', views.assignment, name='assignment'),
     path('question/<int:pk>', views.question, name='question'),
+
     path('dashboard/classroom/join/', views.join_classroom, name='join-classroom'),
     path('dashboard/classroom/<int:pk>/', views.classroom, name='view-classroom'),
     path('dashboard/classroom/<int:pk>/edit/', views.edit_classroom, name='edit-classroom'),

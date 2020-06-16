@@ -1,3 +1,11 @@
+'''
+app's views to handle web-app requests.
+
+Context variables to note:
+title -- text that will go inside the title tag in this format: (CodeClassroom - {title})
+active_link -- specifies which link in the sidebar shall be highlighted (see cc-base-dashboard.html)
+'''
+
 from pprint import pprint
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -11,8 +19,8 @@ from .models import (
 )
 from .forms import (
     SignupForm, ClassroomCreateForm, ClassroomJoinForm, ClassroomEditForm,
-    NewAssignmentCreateForm, AssignmentCreateForm, AssignmentEditForm, QuestionCreateForm,
-    QuestionEditForm,
+    NewAssignmentCreateForm, AssignmentCreateForm, AssignmentEditForm,
+    QuestionCreateForm, QuestionEditForm,
 )
 
 
@@ -150,33 +158,57 @@ def join_classroom(request):
             return render(request, 'app/join-classroom', context)
 
 
-# TODO: add edit classroom functionality to this view
+# TODO: add edit, delete classroom functionality to this view
 @login_required
 def classroom(request, pk):
-    '''View to show classroom info such as the students, assignments etc.'''
+    '''
+    View to show classroom info such as the students, assignments etc.
+
+    Also handles assignment creation (easy to get related classroom from pk).
+    '''
     classroom = Classroom.objects.filter(pk=pk).first()
 
     if not classroom:
         return HttpResponse('Not a valid classroom.')
 
-    professor = Professor.objects.filter(user=request.user).first()
-    student = Student.objects.filter(user=request.user).first()
+    if request.method == 'GET':
+        professor = Professor.objects.filter(user=request.user).first()
+        student = Student.objects.filter(user=request.user).first()
 
-    students = classroom.students.all()
-    assignments = classroom.assignment_set.all()
-    context = {
-        'title': classroom.title,
-        'active_link': 'classrooms',
-        'classroom': classroom,
-        'students': students,
-        'assignments': assignments,
-    }
+        students = classroom.students.all()
+        assignments = classroom.assignment_set.all()
+        context = {
+            'title': classroom.title,
+            'active_link': 'classrooms',
+            'classroom': classroom,
+            'students': students,
+            'assignments': assignments,
+        }
 
-    if professor:
-        context['professor'] = professor
+        if professor:
+            context['professor'] = professor
+            context['form'] = AssignmentCreateForm(
+                classroom=classroom, auto_id=True)
 
-    elif student:
-        context['student'] = student
+        elif student:
+            context['student'] = student
+
+    # creating assignment for related classroom
+    elif request.method == 'POST':
+        form = AssignmentCreateForm(
+            request.POST,
+            classroom=classroom,
+            auto_id=True,
+        )
+
+        if form.is_valid():
+            form.save()
+
+            messages.success(request, 'Assignment Created!')
+            return redirect('app:classroom', pk=classroom.pk)
+
+        else:
+            context['form'] = form
 
     return render(request, 'app/cc-classroom.html', context)
 
@@ -228,7 +260,7 @@ def edit_classroom(request, pk):
 # TODO: add create assignment functionality to view
 @login_required
 def assignments(request):
-    '''View to list out assignments and also handle assignment creation.'''
+    '''View to list out assignments ~~and also handle assignment creation~~.'''
     context = {'title': 'Assignments', 'active_link': 'assignments'}
 
     if request.method == 'GET':
@@ -248,7 +280,27 @@ def assignments(request):
         context['assignments'] = assignments_list
         context['form'] = NewAssignmentCreateForm(auto_id=True)
 
-    return render(request, 'app/cc-assignments.html', context)
+        return render(request, 'app/cc-assignments.html', context)
+
+    # POST request from cc-classroom.html
+    elif request.method == 'POST':
+        form = AssignmentCreateForm(
+            request.POST,
+            classroom=classroom,
+            auto_id=True,
+        )
+
+        if form.is_valid():
+            form.save()
+
+            messages.success(request, 'Assignment Created!')
+            return redirect(reverse('app:classroom', kwargs={
+                'pk': classroom.id,
+            }))
+
+        else:
+            context['form'] = form
+            return render(request, 'app/cc-classroom.html', context)
 
 
 @login_required(login_url=reverse_lazy('app:login'))
@@ -293,27 +345,48 @@ def create_assignment(request):
 
 @login_required
 def assignment(request, pk):
-    '''View to show info about assignment and list out the questions.'''
+    '''
+    View to show info about assignment and list out the questions.
+
+    Also handles question creation.
+    '''
     assignment = Assignment.objects.filter(pk=pk).first()
 
     if not assignment:
         return HttpResponse('No valid assignment.')
 
-    context = {'title': assignment.title, 'active_link': 'assignments'}
+    if request.method == 'GET':
+        context = {'title': assignment.title, 'active_link': 'assignments'}
 
-    professor = Professor.objects.filter(user=request.user).first()
-    student = Student.objects.filter(user=request.user).first()
+        professor = Professor.objects.filter(user=request.user).first()
+        student = Student.objects.filter(user=request.user).first()
 
-    if professor:
-        questions = assignment.question_set.all()
-        context['professor'] = professor
+        if professor:
+            questions = assignment.question_set.all()
+            context['professor'] = professor
+            context['form'] = QuestionCreateForm(
+                assignment=assignment, auto_id=True)
 
-    elif student:
-        questions = assignment.question_set.filter(draft=False)
-        context['student'] = student
+        elif student:
+            questions = assignment.question_set.filter(draft=False)
+            context['student'] = student
 
-    context['assignment'] = assignment
-    context['questions']  = questions
+        context['assignment'] = assignment
+        context['questions'] = questions
+
+    # creating question
+    elif request.method == 'POST':
+        form = QuestionCreateForm(
+            request.POST, assignment=assignment, auto_id=True)
+
+        if form.is_valid():
+            form.save()
+
+            messages.success(request, 'Question added!')
+            return redirect('app:assignment', pk=assignment.pk)
+
+        else:
+            context['form'] = form
 
     return render(request, 'app/cc-assignment.html', context)
 

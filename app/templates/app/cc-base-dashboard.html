@@ -36,10 +36,10 @@
     <nav>
       <ul>
         <li>
-          <a href="{% url 'app:classrooms' %}"{% if active_link == 'classrooms' %}style="font-weight: bold;"{% endif %}>Classrooms</a>
+          <a href="{% url 'app:classrooms' %}"{% if active_link == 'classrooms' %} style="font-weight: bold;"{% endif %}>Classrooms</a>
         </li>
         <li>
-          <a href="{% url 'app:assignments' %}"{% if active_link == 'assignments' %}style="font-weight: bold;"{% endif %}>Assignments</a>
+          <a href="{% url 'app:assignments' %}"{% if active_link == 'assignments' %} style="font-weight: bold;"{% endif %}>Assignments</a>
         </li>
         <li>
           <a href="#">Projects</a>

@@ -1,0 +1,30 @@
+@charset 'UTF-8';
+
+#question {
+  margin: 1rem;
+  padding: 1rem;
+  border: 1px solid #000;
+  border-radius: 5px;
+}
+
+#question > section {
+  margin: 1rem;
+}
+
+#question > section > h3 {
+  margin-bottom: 0.5rem;
+}
+
+#question > section > p {
+  padding: 1rem;
+  border: 1px solid #000;
+  border-radius: 5px;
+}
+
+#IDE {
+  margin: 1rem;
+  background-color: #cecece;
+  border-radius: 5px;
+  padding: 1rem;
+  min-height: 30vh;
+}

@@ -19,19 +19,3 @@ main > ul {
 .classroom > h3 {
   padding-bottom: 1rem;
 }
-
-form {
-  display: none;
-}
-
-form.show {
-  display: grid;
-  grid-gap: 0.5rem;
-  border: 1px solid #000;
-  position: absolute;
-  right: 35%;
-  bottom: 20%;
-  border-radius: 5px;
-  padding: 2rem;
-  background-color: #fff;
-}

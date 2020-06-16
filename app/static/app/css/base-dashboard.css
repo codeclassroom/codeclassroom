@@ -72,11 +72,28 @@ main {
   position: relative;
 }
 
+/* form styling */
+form {
+  display: none;
+}
+
+form.show {
+  display: grid;
+  grid-gap: 0.5rem;
+  border: 1px solid #000;
+  position: absolute;
+  right: 35%;
+  bottom: 20%;
+  border-radius: 5px;
+  padding: 2rem;
+  background-color: #fff;
+}
+
 /* add button */
 #add {
   border: 2px solid #000;
+  background-color: #fff;
   border-radius: 50%;
-  content: "\002B";
   position: absolute;
   right: 5%;
   bottom: 5%;

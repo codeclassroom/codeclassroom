@@ -2,32 +2,94 @@
 {% load static %}
 {% block link %}
 <link rel="stylesheet" type="text/css" href="{% static 'app/css/assignment.css' %}">
+{% if student %}
+{# change columns #}
+<style type="text/css">
+  #questions {
+    --columns: repeat(2, 1fr);
+  }
+
+  #body > a {
+    grid-column: span 2;
+  }
+
+  .question {
+    grid-template-columns: repeat(2, 1fr);
+  }
+</style>
+{% endif %}
+<style type="text/css">
+  form.show {
+    grid-template-columns: max-content 1fr;
+    bottom: unset;
+    right: 25%;
+    top: 25%;
+  }
+  form > textarea {
+    height: 60px;
+    width: 100%;
+    resize: none;
+  }
+</style>
 {% endblock link %}
 {% block content %}
-<h2>{{ assignment.title }}</h2>
-<ul>
-  {% for question in questions %}
-  <li>
+<section id="assignment">
+  <h2>{{ assignment.title }}</h2>
+  <p>Language of focus: {{ assignment.language }}</p>
+  <p>Deadline: {{ assignment.deadline }}</p>
+</section>
+{% block messages %}
+{{ block.super }}
+{% endblock messages %}
+<section id="questions">
+  {% if questions %}
+  <section id="header">
+    <strong>Title</strong>
+    <strong>Marks</strong>
+    {% if professor %}
+    <strong>Draft</strong>
+    <strong>Check for Plagiarism</strong>
+    {% endif %}
+  </section>
+  {% endif %}
+  <section id="body">
+    {% for question in questions %}
     <a href="{% url 'app:question' question.pk %}">
-      <div>
-        <h3>{{ question.title }}</h3>
-        <p>Marks: {{ question.marks }}</p>
+      <div class="question">
+        <p>{{ question.title }}</p>
+        <p>{{ question.marks }}</p>
         {% if professor %}
-        <p>Marked as draft: {{ question.draft }}</p>
+        <p>{{ question.draft }}</p>
+        <p>{{ question.check_plagiarism }}</p>
         {% endif %}
       </div>
     </a>
-  </li>
-  {% empty %}
-  <h3>No questions yet!</h3>
-  {% endfor %}
-</ul>
+    {% empty %}
+    <p>No questions yet!</p>
+    {% endfor %}
+  </section>
+</section>
 {% endblock content %}
+{% if professor %}
 {% block form %}
+<!-- TODO: think about actions values -->
+<form action="{% url 'app:assignment' assignment.pk %}" method="POST">
+  {% csrf_token %}
+  {{ form }}
+  <input type="submit" name="Submit" value="Add Question">
+</form>
 {% endblock form %}
-{% block svg %}
-{{ block.super }}
-{% endblock svg %}
 {% block js %}
 {{ block.super }}
+<script type="text/javascript">
+  // runs the first time form is shown
+  document.querySelector('#add').addEventListener('click', function onClickOnce(event) {
+    const draft = document.querySelectorAll('label[for="draft"], #draft');
+    for (item of draft) {
+      item.style.marginTop = '1rem';
+    }
+    document.querySelector('#add').removeEventListener('click', onClickOnce);
+  });
+</script>
 {% endblock js %}
+{% endif %}

@@ -1,8 +1,10 @@
 @charset 'UTF-8';
 
-#assignments {
+/* copy-pasted styles from assignments.css */
+
+#questions {
   margin: 1rem;
-  --columns: repeat(3, 1fr) 1rem 0.5fr;
+  --columns: repeat(4, 1fr);
 }
 
 #header {
@@ -20,7 +22,7 @@
 }
 
 #body > a {
-  grid-column: span 3;
+  grid-column: span 4;
   text-align: center;
   margin: 1rem;
 }
@@ -32,20 +34,10 @@
   cursor: pointer;
 }
 
-.assignment {
+.question {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   border: 1px solid #000;
   padding: 1rem;
   border-radius: 5px;
-}
-
-.actions {
-  border: 1px solid #000;
-  border-radius: 5px;
-  margin: 0.5rem;
-  display: none;
-  flex-direction: column;
-  justify-content: space-evenly;
-  align-items: center;
 }
