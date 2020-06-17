@@ -17,16 +17,17 @@ function getCookie(name) {
 function judge_code(question, lang) {
     let code_value = editor.getValue();
     console.log(code_value);
-    let data = {
-        code: code_value,
-        language: lang,
-        question_id: question
-    };
     if (code_value !== null) {
-        const execution_status = document.getElementById("execution-status");
+        let data = {
+            code: code_value,
+            language: lang,
+            question_id: question
+        };
+        const execution_status = document.getElementById("execution");
         const msg = document.getElementById("message");
         const op = document.getElementById("output");
-        execution_status.innerHTML = "Processing ...";
+        execution_status.style.display = 'block';
+        msg.innerHTML = "Processing ...";
         const fetchPromise = fetch('/api/judge/', {
             method: 'POST',
             credentials: 'same-origin',
@@ -42,13 +43,13 @@ function judge_code(question, lang) {
         }).then(execution => {
             console.log(execution);
             if (execution["status"] == "Wrong Answer"){
-                execution_status.innerHTML = execution["status"] + ":(";
-                execution_status.style.color = "red";
+                msg.innerHTML = execution["status"] + "😢";
+                msg.style.color = "red";
                 op.innerHTML = execution["output"];
             }
             else if (execution["status"] == "Accepted"){
-                execution_status.innerHTML = execution["status"] + "👍";
-                execution_status.style.color = "green";
+                msg.innerHTML = execution["status"] + "👍";
+                msg.style.color = "green";
                 op.innerHTML = execution["output"];
             }
             execution_status.innerHTML = execution["status"];

@@ -5,6 +5,9 @@
 {% endblock link %}
 {% block content %}
 <h2>{{ question.title }}</h2>
+<div id="language">
+  {{ question.assignment.language }}
+</div>
 <div id="question">
   <section>
     <h3>Question</h3>
@@ -31,7 +34,29 @@
 </div>
 {# IDE goes here #}
 {% if student %}
-<div id="IDE">IDE goes here!</div>
+
+<div id="IDE">
+<p>Select Theme</p>
+<select onchange="selectTheme()" id="theme-select">
+  <option selected="">default</option>
+  <option>abcdef</option>
+  <option>base16-light</option>
+  <option>blackboard</option>
+  <option>cobalt</option>
+  <option>colorforth</option>
+  <option>monokai</option>
+</select>
+
+<textarea id="editor"></textarea>
+<button id="run" onclick="judge_code(
+'{{ question.id }}', '{{ question.assignment.language }}')">Run</button>
+<button id="submit" disabled onclick="submit_code(
+{{ question.id }}, {{ student.id }}, {{ assignment.id }})">Submit</button>
+</div>
+<div id="execution">
+  <div id="message"></div>
+  <div id="output"></div>
+</div>
 {% endif %}
 {% endblock content %}
 {% block form %}

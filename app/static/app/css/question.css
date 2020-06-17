@@ -28,3 +28,23 @@
   padding: 1rem;
   min-height: 30vh;
 }
+
+#run, #submit {
+  margin: 10px;
+  font-size: 20px;
+  padding: 5px;
+  border-radius: 10px;
+}
+
+#execution {
+    margin: 1rem;
+    background-color: #cecece;
+    border-radius: 5px;
+    padding: 1rem;
+    min-height: 30vh;
+    display: none;
+}
+
+#message {
+    font-size: 20px;
+}
