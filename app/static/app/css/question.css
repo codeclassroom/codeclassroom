@@ -30,10 +30,10 @@
 }
 
 #run, #submit {
-  margin: 10px;
-  font-size: 20px;
-  padding: 5px;
-  border-radius: 10px;
+    margin: 0.7rem;
+    font-size: 1.2rem;
+    padding: 0.4rem;
+    border-radius: 10px;
 }
 
 #execution {
@@ -46,5 +46,5 @@
 }
 
 #message {
-    font-size: 20px;
+    font-size: 1.5rem;
 }

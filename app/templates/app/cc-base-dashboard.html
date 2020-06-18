@@ -5,15 +5,6 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" type="text/css" href="{% static 'app/css/base-dashboard.css' %}">
-  {% if student %}
-  <link rel="stylesheet" href="{% static 'app/css/codemirror.css' %}">
-  <link rel="stylesheet" href="{% static 'app/css/theme/monokai.css' %}">
-  <link rel="stylesheet" href="{% static 'app/css/theme/abcdef.css' %}">
-  <link rel="stylesheet" href="{% static 'app/css/theme/base16-light.css' %}">
-  <link rel="stylesheet" href="{% static 'app/css/theme/blackboard.css' %}">
-  <link rel="stylesheet" href="{% static 'app/css/theme/cobalt.css' %}">
-  <link rel="stylesheet" href="{% static 'app/css/theme/colorforth.css' %}">
-  {% endif %}
   {% block link %}
   {% endblock link %}
   <title>CodeClassroom - {{ title }}</title>
@@ -97,47 +88,6 @@
   <script type="text/javascript">
     // show form on clicking add button
     document.querySelector('#add').addEventListener('click', (e) => document.querySelector('form').classList.toggle('show'));
-  </script>
-  {% endif %}
-  {% if student %}
-  <script defer type="text/javascript" src="{% static 'app/script.js' %}"></script>
-  <script src="{% static 'app/js/codemirror.js'%}"></script>
-  <!--CodeMirror Modes -->
-  <script src="{% static 'app/js/mode/clike/clike.js'%}"></script>
-  <script src="{% static 'app/js/mode/python/python.js'%}"></script>
-  <script src="{% static 'app/js/mode/shell/shell.js'%}"></script>
-  <script>
-    function getMode () {
-        // Used for changing the Syntax coloring according to language      
-        const lang = document.getElementById("language").innerText;
-        var c_like_langs = ["C", "C++", "Java"]
-        if (lang == "Python3"){
-          mode = "python"
-        }
-        else if (c_like_langs.includes(lang)){
-          mode = "clike"
-        }
-        else if (lang == "Bash"){
-          mode = "shell"
-        }
-        return mode
-    }
-    var code_editor = document.getElementById("editor");
-    if (code_editor !== null){
-      console.log("here");
-      var editor = CodeMirror.fromTextArea(code_editor, {
-        lineNumbers: true,
-        styleActiveLine: true,
-        matchBrackets: true,
-        mode: getMode()
-      });
-    }
-    function selectTheme(){
-      var input = document.getElementById("theme-select");
-      var theme = input.options[input.selectedIndex].textContent;
-      editor.setOption("theme", theme);
-      location.hash = "#" + theme;
-    }
   </script>
   {% endif %}
   {% endblock js %}
