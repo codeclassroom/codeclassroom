@@ -6,7 +6,19 @@
 {% endblock link %}
 {% block content %}
 <section id="classroom">
-  <h2>{{ classroom.title }}</h2>
+  <div>
+    <h2>{{ classroom.title }}</h2>
+    {% if professor %}
+    <div id="actions">
+      <a href="{% url 'app:edit-classroom' classroom.pk %}">
+        Edit Classrooom
+      </a>
+      <a id="delete-button" href="{% url 'app:delete-classroom' classroom.pk %}">
+        Delete Classroom
+      </a>
+    </div>
+    {% endif %}
+  </div>
   {% if student %}
   <p>Professor: {{ classroom.professor }}</p>
   {% endif %}
@@ -62,5 +74,9 @@
   enableSeconds : true,
   dateFormat : "Y-m-d H:i:S",
   });
+</script>
+<!-- Delete prompt text -->
+<script id="delete-question" type="application/json">
+  {"question":"Delete Classroom?"}
 </script>
 {% endblock js %}

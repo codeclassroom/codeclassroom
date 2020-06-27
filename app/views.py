@@ -4,6 +4,8 @@ app's views to handle web-app requests.
 Context variables to note:
 title -- text that will go inside the title tag in this format: (CodeClassroom - {title})
 active_link -- specifies which link in the sidebar shall be highlighted (see cc-base-dashboard.html)
+add -- boolean which specifies whether or not "add button" will be shown or not
+delete -- boolean which specifies whether or not delete button (made using an anchor tag) will work
 '''
 
 from pprint import pprint
@@ -79,6 +81,7 @@ def classrooms(request):
                 professor=professor)
             context['form'] = ClassroomCreateForm(
                 professor=professor, auto_id=True)
+            context['add'] = True
 
         elif student:
             context['student'] = student
@@ -189,6 +192,8 @@ def classroom(request, pk):
             context['professor'] = professor
             context['form'] = AssignmentCreateForm(
                 classroom=classroom, auto_id=True)
+            context['add'] = True
+            context['delete'] = True
 
         elif student:
             context['student'] = student
@@ -213,7 +218,7 @@ def classroom(request, pk):
     return render(request, 'app/cc-classroom.html', context)
 
 
-@login_required(login_url=reverse_lazy('app:login'))
+@login_required
 def edit_classroom(request, pk):
     classroom = Classroom.objects.filter(pk=pk).first()
 
@@ -250,14 +255,25 @@ def edit_classroom(request, pk):
             form.save()
 
             messages.success(request, 'Classroom updated!')
-            return redirect(reverse('app:dashboard'))
+            return redirect('app:classroom', pk=pk)
 
         else:
             context['form'] = form
             return render(request, 'app/edit-classroom.html', context)
 
 
-# TODO: add create assignment functionality to view
+@login_required
+def delete_classroom(request, pk):
+    '''View to delete classroom.'''
+
+    classroom = Classroom.objects.filter(pk=pk).first()
+    classroom.delete()
+
+    messages.success(request, 'Classroom deleted!')
+
+    return redirect('app:classrooms')
+
+
 @login_required
 def assignments(request):
     '''View to list out assignments ~~and also handle assignment creation~~.'''
@@ -271,6 +287,7 @@ def assignments(request):
             context['professor'] = professor
             assignments_list = Assignment.objects.filter(
                 classroom__professor=professor)
+            context['delete'] = True
 
         elif student:
             context['student'] = student
@@ -283,6 +300,7 @@ def assignments(request):
         return render(request, 'app/cc-assignments.html', context)
 
     # POST request from cc-classroom.html
+    # this will now not run
     elif request.method == 'POST':
         form = AssignmentCreateForm(
             request.POST,
@@ -366,6 +384,7 @@ def assignment(request, pk):
             context['professor'] = professor
             context['form'] = QuestionCreateForm(
                 assignment=assignment, auto_id=True)
+            context['add'] = True
 
         elif student:
             questions = assignment.question_set.filter(draft=False)
@@ -391,7 +410,7 @@ def assignment(request, pk):
     return render(request, 'app/cc-assignment.html', context)
 
 
-@login_required(login_url=reverse_lazy('app:login'))
+@login_required
 def edit_assignment(request, pk):
     professor = Professor.objects.filter(user=request.user).first()
 
@@ -433,13 +452,23 @@ def edit_assignment(request, pk):
             form.save()
 
             messages.success(request, 'Assignment Updated!')
-            return redirect(reverse('app:view-assignment', kwargs={
-                'pk': assignment.id,
-            }))
+            return redirect('app:assignments')
 
         else:
             context['form'] = form
             return render(request, 'app/edit-assignment.html', context)
+
+
+@login_required
+def delete_assignment(request, pk):
+    '''View to delete assignment.'''
+
+    assignment = Assignment.objects.filter(pk=pk)
+    assignment.delete()
+
+    messages.success(request, 'Assignment deleted!')
+
+    return redirect('app:assignments')
 
 
 @login_required(login_url=reverse_lazy('app:login'))
@@ -513,6 +542,7 @@ def question(request, pk):
 
     if professor:
         context['professor'] = professor
+        context['delete'] = True
 
     elif student:
         context['student'] = student
@@ -520,18 +550,8 @@ def question(request, pk):
     return render(request, 'app/cc-question.html', context)
 
 
-@login_required(login_url=reverse_lazy('app:login'))
-def edit_question(request, assignment_pk, pk):
-    professor = Professor.objects.filter(user=request.user).first()
-
-    if professor is None:
-        return HttpResponse('Not allowed.')
-
-    assignment = Assignment.objects.filter(pk=assignment_pk).first()
-
-    if assignment is None:
-        return HttpResponse('No valid assignment.')
-
+@login_required
+def edit_question(request, pk):
     question = Question.objects.filter(pk=pk).first()
 
     if question is None:
@@ -539,9 +559,7 @@ def edit_question(request, assignment_pk, pk):
 
     context = {
         'title': 'Edit Question',
-        # 'classroom_pk': classroom_pk,
-        'assignment_pk': assignment_pk,
-        'pk': question.id,
+        'question': question
     }
     if request.method == 'GET':
         context['form'] = QuestionEditForm(
@@ -562,15 +580,23 @@ def edit_question(request, assignment_pk, pk):
             form.save()
 
             messages.success(request, 'Question Updated!')
-            return redirect(reverse('app:view-question', kwargs={
-                'assignment_pk': assignment_pk,
-                'pk': question.id,
-            }))
+            return redirect('app:question', pk=pk)
 
         else:
             context['form'] = form
 
             return render(request, 'app/edit-question.html', context)
+
+
+@login_required
+def delete_question(request, pk):
+    question = Question.objects.filter(pk=pk).first()
+    assignment = question.assignment
+    question.delete()
+
+    messages.success(request, 'Question deleted!')
+
+    return redirect('app:assignment', pk=assignment.pk)
 
 
 def docs(request):

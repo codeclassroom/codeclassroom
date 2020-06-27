@@ -1,5 +1,21 @@
 @charset 'UTF-8';
 
+/* laying out edit/delete buttons */
+main > div:first-child {
+  display: flex;
+  justify-content: space-between;
+}
+
+/* copied from classroom.css */
+#actions > a {
+  margin-right: 1rem;
+  padding: 0.5rem;
+  background-color: #fff;
+  outline: none;
+  border: 1px solid #000;
+  border-radius: 5px;
+}
+
 #question {
   margin: 1rem;
   padding: 1rem;
