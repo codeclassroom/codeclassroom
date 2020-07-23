@@ -5,12 +5,17 @@
 {% endblock link %}
 {% block content %}
 <h2>Assignments</h2>
+{% block messages %}
+{{ block.super }}
+{% endblock messages %}
 <section id="assignments">
+  {% if assignments %}
   <section id="header">
     <strong>Name</strong>
     <strong>Classroom</strong>
     <strong>Language</strong>
   </section>
+  {% endif %}
   <section id="body">
     <!-- TODO: add triple dot SVG -->
     {% for assignment in assignments %}
@@ -24,8 +29,8 @@
     {% if professor %}
     <strong>:</strong>
     <div class="actions">
-      <a href="#">Edit</a>
-      <a href="#">Delete</a>
+      <a href="{% url 'app:edit-assignment' assignment.pk %}">Edit</a>
+      <a id="delete-button" href="{% url 'app:delete-assignment' assignment.pk %}">Delete</a>
     </div>
     {% endif %}
     {% empty %}
@@ -61,6 +66,10 @@
       }
     });
   }
+</script>
+<!-- Delete prompt text -->
+<script id="delete-question" type="application/json">
+  {"question":"Delete Assignment?"}
 </script>
 {% endif %}
 {% endblock js %}

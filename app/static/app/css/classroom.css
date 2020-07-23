@@ -4,6 +4,20 @@
   margin: 1rem 0;
 }
 
+#classroom > div:first-child {
+  display: flex;
+  justify-content: space-between;
+}
+
+#actions > a {
+  margin-right: 1rem;
+  padding: 0.5rem;
+  background-color: #fff;
+  outline: none;
+  border: 1px solid #000;
+  border-radius: 5px;
+}
+
 #assignments {
   margin: 1rem;
 }
