@@ -13,10 +13,21 @@
 <link rel="stylesheet" type="text/css" href="{% static 'app/css/question.css' %}">
 {% endblock link %}
 {% block content %}
-<h2>{{ question.title }}</h2>
-<div id="language">
+<div>
+  <h2>{{ question.title }}</h2>
+  <div id="language">
   {{ question.assignment.language }}
+  </div>
+  {% if professor %}
+  <div id="actions">
+    <a href="{% url 'app:edit-question' question.pk %}">Edit Question</a>
+    <a id="delete-button" href="{% url 'app:delete-question' question.pk %}">Delete Question</a>
+  </div>
+  {% endif %}
 </div>
+{% block messages %}
+{{ block.super }}
+{% endblock messages %}
 <div id="question">
   <section>
     <h3>Question</h3>
@@ -72,6 +83,7 @@
 {% endblock form %}
 {% block js %}
 {{ block.super }}
+
 {% if student %}
 <script defer type="text/javascript" src="{% static 'app/script.js' %}"></script>
 <script src="{% static 'app/js/codemirror.js'%}"></script>
@@ -111,6 +123,9 @@
     editor.setOption("theme", theme);
     location.hash = "#" + theme;
   }
+</script>
+<script id="delete-question" type="application/json">
+  {"question":"Delete Question?"}
 </script>
 {% endif %}
 {% endblock js %}
