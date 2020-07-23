@@ -2,98 +2,93 @@
 {% load static %}
 {% block link %}
   {% if student %}
-  <link rel="stylesheet" href="{% static 'app/css/codemirror.css' %}">
-  <link rel="stylesheet" href="{% static 'app/css/theme/monokai.css' %}">
-  <link rel="stylesheet" href="{% static 'app/css/theme/abcdef.css' %}">
-  <link rel="stylesheet" href="{% static 'app/css/theme/base16-light.css' %}">
-  <link rel="stylesheet" href="{% static 'app/css/theme/blackboard.css' %}">
-  <link rel="stylesheet" href="{% static 'app/css/theme/cobalt.css' %}">
-  <link rel="stylesheet" href="{% static 'app/css/theme/colorforth.css' %}">
+    <link rel="stylesheet" href="{% static 'app/css/codemirror.css' %}">
+    <link rel="stylesheet" href="{% static 'app/css/theme/monokai.css' %}">
+    <link rel="stylesheet" href="{% static 'app/css/theme/abcdef.css' %}">
+    <link rel="stylesheet" href="{% static 'app/css/theme/base16-light.css' %}">
+    <link rel="stylesheet" href="{% static 'app/css/theme/blackboard.css' %}">
+    <link rel="stylesheet" href="{% static 'app/css/theme/cobalt.css' %}">
+    <link rel="stylesheet" href="{% static 'app/css/theme/colorforth.css' %}">
   {% endif %}
-<link rel="stylesheet" type="text/css" href="{% static 'app/css/question.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'app/css/question.css' %}">
 {% endblock link %}
 {% block content %}
-<div>
-  <h2>{{ question.title }}</h2>
-  <div id="language">
-  {{ question.assignment.language }}
+  <div>
+    <h2>{{ question.title }}</h2>
+    <div id="language">
+      {{ question.assignment.language }}
+    </div>
+    {% if professor %}
+      <div id="actions">
+        <a href="{% url 'app:edit-question' question.pk %}">Edit Question</a>
+        <a id="delete-button" href="{% url 'app:delete-question' question.pk %}">Delete Question</a>
+      </div>
+    {% endif %}
   </div>
-  {% if professor %}
-  <div id="actions">
-    <a href="{% url 'app:edit-question' question.pk %}">Edit Question</a>
-    <a id="delete-button" href="{% url 'app:delete-question' question.pk %}">Delete Question</a>
+  {% block messages %}
+    {{ block.super }}
+  {% endblock messages %}
+  <div id="question">
+    <section>
+      <h3>Question</h3>
+      <p>{{ question.description }}</p>
+    </section>
+    <section>
+      <h3>Sample Input</h3>
+      <p>
+        {% if question.sample_input %}
+          {{ question.sample_input|linebreaksbr }}
+        {% else %}
+          No input.
+        {% endif %}
+      </p>
+    </section>
+    <section>
+      <h3>Sample Output</h3>
+      <p>{{ question.sample_output|linebreaksbr }}</p>
+    </section>
+    {% if professor %}
+      <h4>Marked for draft</h4>
+      <p>{{ question.draft }}</p>
+    {% endif %}
   </div>
+  {# IDE goes here #}
+  {% if student %}
+    <div id="IDE">
+      <p>Select Theme</p>
+      <select onchange="selectTheme()" id="theme-select">
+        <option selected="">default</option>
+        <option>abcdef</option>
+        <option>base16-light</option>
+        <option>blackboard</option>
+        <option>cobalt</option>
+        <option>colorforth</option>
+        <option>monokai</option>
+      </select>
+      <textarea id="editor"></textarea>
+      <button id="run" onclick="judge_code(
+      '{{ question.id }}', '{{ question.assignment.language }}')">Run</button>
+      <button id="submit" disabled onclick="submit_code(
+      {{ question.id }}, {{ student.id }}, {{ assignment.id }})">Submit</button>
+    </div>
+    <div id="execution">
+    </div>
   {% endif %}
-</div>
-{% block messages %}
-{{ block.super }}
-{% endblock messages %}
-<div id="question">
-  <section>
-    <h3>Question</h3>
-    <p>{{ question.description }}</p>
-  </section>
-  <section>
-    <h3>Sample Input</h3>
-    <p>
-      {% if question.sample_input %}
-      {{ question.sample_input|linebreaksbr }}
-      {% else %}
-      No input.
-      {% endif %}
-    </p>
-  </section>
-  <section>
-    <h3>Sample Output</h3>
-    <p>{{ question.sample_output|linebreaksbr }}</p>
-  </section>
-  {% if professor %}
-  <h4>Marked for draft</h4>
-  <p>{{ question.draft }}</p>
-  {% endif %}
-</div>
-{# IDE goes here #}
-{% if student %}
-
-<div id="IDE">
-<p>Select Theme</p>
-<select onchange="selectTheme()" id="theme-select">
-  <option selected="">default</option>
-  <option>abcdef</option>
-  <option>base16-light</option>
-  <option>blackboard</option>
-  <option>cobalt</option>
-  <option>colorforth</option>
-  <option>monokai</option>
-</select>
-
-<textarea id="editor"></textarea>
-<button id="run" onclick="judge_code(
-'{{ question.id }}', '{{ question.assignment.language }}')">Run</button>
-<button id="submit" disabled onclick="submit_code(
-{{ question.id }}, {{ student.id }}, {{ assignment.id }})">Submit</button>
-</div>
-<div id="execution">
-  <div id="message"></div>
-  <div id="output"></div>
-</div>
-{% endif %}
 {% endblock content %}
 {% block form %}
 {% endblock form %}
 {% block js %}
-{{ block.super }}
-
-{% if student %}
-<script defer type="text/javascript" src="{% static 'app/script.js' %}"></script>
-<script src="{% static 'app/js/codemirror.js'%}"></script>
-<!--CodeMirror Modes -->
-<script src="{% static 'app/js/mode/clike/clike.js'%}"></script>
-<script src="{% static 'app/js/mode/python/python.js'%}"></script>
-<script src="{% static 'app/js/mode/shell/shell.js'%}"></script>
-<script>
-  function getMode () {
-      // Used for changing the Syntax coloring according to language      
+  {{ block.super }}
+  {% if student %}
+    <script defer type="text/javascript" src="{% static 'app/script.js' %}"></script>
+    <script src="{% static 'app/js/codemirror.js'%}"></script>
+    <!--CodeMirror Modes -->
+    <script src="{% static 'app/js/mode/clike/clike.js'%}"></script>
+    <script src="{% static 'app/js/mode/python/python.js'%}"></script>
+    <script src="{% static 'app/js/mode/shell/shell.js'%}"></script>
+    <script>
+    function getMode () {
+      // Used for changing the Syntax coloring according to language
       const lang = document.getElementById("language").innerText;
       var c_like_langs = ["C", "C++", "Java"]
       if (lang == "Python3"){
@@ -106,26 +101,25 @@
         mode = "shell"
       }
       return mode
-  }
-  var code_editor = document.getElementById("editor");
-  if (code_editor !== null){
-    console.log("here");
-    var editor = CodeMirror.fromTextArea(code_editor, {
+    }
+    var code_editor = document.getElementById("editor");
+    if (code_editor !== null){
+      var editor = CodeMirror.fromTextArea(code_editor, {
       lineNumbers: true,
       styleActiveLine: true,
       matchBrackets: true,
       mode: getMode()
-    });
-  }
-  function selectTheme(){
-    var input = document.getElementById("theme-select");
-    var theme = input.options[input.selectedIndex].textContent;
-    editor.setOption("theme", theme);
-    location.hash = "#" + theme;
-  }
-</script>
-<script id="delete-question" type="application/json">
-  {"question":"Delete Question?"}
-</script>
-{% endif %}
+      });
+    }
+    function selectTheme(){
+      var input = document.getElementById("theme-select");
+      var theme = input.options[input.selectedIndex].textContent;
+      editor.setOption("theme", theme);
+      location.hash = "#" + theme;
+    }
+    </script>
+    <script id="delete-question" type="application/json">
+    {"question":"Delete Question?"}
+    </script>
+  {% endif %}
 {% endblock js %}

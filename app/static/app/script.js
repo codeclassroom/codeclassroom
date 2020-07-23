@@ -14,21 +14,44 @@ function getCookie(name) {
     return cookieValue;
 }
 
+function show_execution_status (execution) {
+    const execution_status_div = document.getElementById("execution");
+    execution_status_div.innerHTML = "";
+    var message = document.createElement('div');
+    message.setAttribute('id', 'message');
+
+    var output = document.createElement('div');
+    output.setAttribute('id', 'output');
+    
+    if (execution["status"] == "Wrong Answer"){
+        message.innerHTML = execution["status"] + "😢";
+        output.innerHTML = execution["output"];
+    }
+    else if (execution["status"] == "Accepted"){
+        message.innerText += execution["status"] + "👍";
+        output.innerText += execution["output"];
+    }
+    else {
+        output.innerText += execution["output"];
+        message.innerText += execution["error"];
+    }
+    execution_status_div.appendChild(message);
+    execution_status_div.appendChild(output);
+}
+
 function judge_code(question, lang) {
     let code_value = editor.getValue();
-    console.log(code_value);
+    const api_url = window.origin + '/api/';
+    let execution_status = document.getElementById("execution");
     if (code_value !== null) {
         let data = {
             code: code_value,
             language: lang,
             question_id: question
         };
-        const execution_status = document.getElementById("execution");
-        const msg = document.getElementById("message");
-        const op = document.getElementById("output");
         execution_status.style.display = 'block';
-        msg.innerHTML = "Processing ...";
-        const fetchPromise = fetch('/api/judge/', {
+        execution_status.innerHTML = "Processing ...";
+        const fetchPromise = fetch(api_url+'judge/', {
             method: 'POST',
             credentials: 'same-origin',
             headers: {
@@ -42,19 +65,7 @@ function judge_code(question, lang) {
             return response.json();
         }).then(execution => {
             console.log(execution);
-            if (execution["status"] == "Wrong Answer"){
-                msg.innerHTML = execution["status"] + "😢";
-                msg.style.color = "red";
-                op.innerHTML = execution["output"];
-            }
-            else if (execution["status"] == "Accepted"){
-                msg.innerHTML = execution["status"] + "👍";
-                msg.style.color = "green";
-                op.innerHTML = execution["output"];
-            }
-            execution_status.innerHTML = execution["status"];
-            op.innerHTML = execution["output"];
-            msg.innerHTML = execution["error"];
+            show_execution_status(execution);
         });
     }
 }
