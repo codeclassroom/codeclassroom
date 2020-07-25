@@ -1,7 +1,12 @@
 """All Judge/Code Running Utilities"""
 import coderunner
+import os
 
 from app.models import Assignment, Question
+from dotenv import load_dotenv
+load_dotenv()
+
+API_KEY = os.environ["JUDGE0_API"]
 
 
 def run_code(code, lang, question=None, testcase=None):
@@ -21,6 +26,8 @@ def run_code(code, lang, question=None, testcase=None):
     else:
         r = coderunner.code(code, lang, inp=testcase, path=False)
 
+    r.api(key=API_KEY)
+
     r.run()
 
     execution["status"] = r.getStatus()
@@ -28,6 +35,8 @@ def run_code(code, lang, question=None, testcase=None):
     execution["error"] = r.getError()
     execution["memory"] = r.getMemory()
     execution["execution_time"] = r.getTime()
+
+    print(type(expected_output))
 
     return execution
 

@@ -147,7 +147,7 @@ def join_classroom(request):
                 if student in classroom.students.all():
 
                     messages.warning(request, 'Already in Classroom!')
-                    return redirect(reverse('app:dashboard'))
+                    return redirect(reverse('app:classrooms'))
 
                 else:
                     classroom.students.add(student)
