@@ -1,15 +1,14 @@
-{% extends 'app/dashboard-professor.html' %}
+{% extends 'app/cc-base-dashboard.html' %}
 {% load static %}
 {% block link %}
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 {% endblock link %}
-{% block dashboard %}
-	<form action="{% url 'app:edit-assignment' assignment.id %}" method="POST">
+{% block content %}
+	<form style="display: block" action="{% url 'app:edit-assignment' assignment.id %}" method="POST">
 		{% csrf_token %}
 		{{ form.as_p }}
-		<button class="btn waves-effect waves-light" type="submit" name="submit" value="Update Assignment">Update</button>
+		<button type="submit" name="submit" value="Update Assignment">Update</button>
 	</form>
-{% endblock dashboard %}
 {% block js %}
 	<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 	<script type="text/javascript">
@@ -21,3 +20,4 @@
 	});
 	</script>
 {% endblock js %}
+{% endblock content %}

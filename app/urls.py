@@ -29,6 +29,8 @@ urlpatterns = [
     path('classrooms/<int:pk>', views.classroom, name='classroom'),
     path('classrooms/<int:pk>/edit', views.edit_classroom, name='edit-classroom'),
     path('classrooms/<int:pk>/delete', views.delete_classroom, name='delete-classroom'),
+    path('classrooms/join/', views.join_classroom, name='join-classroom'),
+
 
     # assignment views
     path('assignments/', views.assignments, name='assignments'),

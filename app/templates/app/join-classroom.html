@@ -1,7 +1,7 @@
-{% extends 'app/base.html' %}
+{% extends 'app/cc-base-dashboard.html' %}
 {% load static %}
 {% block content %}
-	<form action="{% url 'app:join-classroom' %}" method="POST">
+	<form style="display: block" action="{% url 'app:join-classroom' %}" method="POST">
 		{% csrf_token %}
 		{{ form.as_p }}
 		<input type="submit" name="submit" value="Join Classroom">

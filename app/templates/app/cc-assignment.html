@@ -34,7 +34,19 @@
 {% endblock link %}
 {% block content %}
 <section id="assignment">
-  <h2>{{ assignment.title }}</h2>
+  <div>
+      <h2>{{ assignment.title }}</h2>
+      {% if professor %}
+      <div id="actions">
+        <a href="{% url 'app:edit-assignment' assignment.id %}">
+          Edit Assignment
+        </a>
+        <a href="{% url 'app:delete-assignment' assignment.id %}">
+          Delete Assignment
+        </a>
+      </div>
+      {% endif %}
+  </div>
   <p>Language of focus: {{ assignment.language }}</p>
   <p>Deadline: {{ assignment.deadline }}</p>
 </section>

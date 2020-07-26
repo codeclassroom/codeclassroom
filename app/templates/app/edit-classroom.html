@@ -1,16 +1,9 @@
-{% extends 'app/base.html' %}
+{% extends 'app/cc-base-dashboard.html' %}
 {% load static %}
 {% block content %}
-	<div class="container">
-		<div class="card darken-1 z-depth-3 center">
-			<div class="card-content white-text">
-				<form action="{% url 'app:edit-classroom' pk %}" method="POST">
-					{% csrf_token %}
-					{{ form.as_p }}
-					<input class="btn waves-effect waves-light" type="submit" name="submit" value="Update Classroom">
-				</form>
-			</div>
-		</div><br>
-	</div>
-
+	<form style="display: block" action="{% url 'app:edit-classroom' pk %}" method="POST">
+	{% csrf_token %}
+	{{ form.as_p }}
+	<button type="submit" name="submit" value="Update Question">Update Classroom</button>
+	</form>
 {% endblock content %}
