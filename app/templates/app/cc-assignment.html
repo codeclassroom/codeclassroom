@@ -1,5 +1,6 @@
 {% extends 'app/cc-base-dashboard.html' %}
 {% load static %}
+
 {% block link %}
 <link rel="stylesheet" type="text/css" href="{% static 'app/css/assignment.css' %}">
 {% if student %}
@@ -32,6 +33,7 @@
   }
 </style>
 {% endblock link %}
+
 {% block content %}
 <section id="assignment">
   <div>
@@ -50,11 +52,14 @@
   <p>Language of focus: {{ assignment.language }}</p>
   <p>Deadline: {{ assignment.deadline }}</p>
 </section>
+
 {% block messages %}
 {{ block.super }}
 {% endblock messages %}
+
 <section id="questions">
   {% if questions %}
+  <h3>Questions</h3>
   <section id="header">
     <strong>Title</strong>
     <strong>Marks</strong>
@@ -82,6 +87,7 @@
   </section>
 </section>
 {% endblock content %}
+
 {% if professor %}
 {% block form %}
 <!-- TODO: think about actions values -->

@@ -1,5 +1,6 @@
 {% extends 'app/cc-base-dashboard.html' %}
 {% load static %}
+
 {% block link %}
   {% if student %}
     <link rel="stylesheet" href="{% static 'app/css/codemirror.css' %}">
@@ -12,6 +13,7 @@
   {% endif %}
   <link rel="stylesheet" type="text/css" href="{% static 'app/css/question.css' %}">
 {% endblock link %}
+
 {% block content %}
   <div>
     <h2>{{ question.title }}</h2>
@@ -25,9 +27,11 @@
       </div>
     {% endif %}
   </div>
+
   {% block messages %}
     {{ block.super }}
   {% endblock messages %}
+
   <div id="question">
     <section>
       <h3>Question</h3>
@@ -75,8 +79,10 @@
     </div>
   {% endif %}
 {% endblock content %}
+
 {% block form %}
 {% endblock form %}
+
 {% block js %}
   {{ block.super }}
   {% if student %}

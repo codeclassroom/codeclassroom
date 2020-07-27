@@ -1,13 +1,17 @@
 {% extends 'app/cc-base-dashboard.html' %}
 {% load static %}
+
 {% block link %}
 <link rel="stylesheet" type="text/css" href="{% static 'app/css/assignments.css' %}">
 {% endblock link %}
+
 {% block content %}
 <h2>Assignments</h2>
+
 {% block messages %}
 {{ block.super }}
 {% endblock messages %}
+
 <section id="assignments">
   {% if assignments %}
   <section id="header">
@@ -39,6 +43,7 @@
   </section>
 </section>
 {% endblock content %}
+
 {% block form %}
 <form method="POST" action="{% url 'app:assignments' %}">
   {% csrf_token %}
@@ -46,9 +51,11 @@
   <input type="submit" name="submit" value="Create New Assignment">
 </form>
 {% endblock form %}
+
 {% block svg %}
 {{ block.super }}
 {% endblock svg %}
+
 {% block js %}
 {{ block.super }}
 {% if professor %}

@@ -1,13 +1,17 @@
 {% extends 'app/cc-base-dashboard.html' %}
 {% load static %}
+
 {% block link %}
 <link rel="stylesheet" type="text/css" href="{% static 'app/css/classrooms.css' %}">
 {% endblock link %}
+
 {% block content %}
 <h2>Welcome to Code Classroom!</h2>
+
 {% block messages %}
 {{ block.super }}
 {% endblock messages %}
+
 <ul>
   {% for classroom in classrooms %}
   <li>
@@ -23,9 +27,11 @@
   {% endfor %}
 </ul>
 {% endblock content %}
+
 {% block form %}
 <!-- TODO: add join classroom form for students -->
 <form method="POST" action="{% url 'app:classrooms' %}">
+  <h2>Create Classroom</h2>
   {% csrf_token %}
   {{ form }}
   <input type="submit" name="submit" value="Create New Classroom">

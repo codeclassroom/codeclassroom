@@ -27,16 +27,17 @@
     </nav>
   </header>
   <main>
+    {% block content %}
     <section id="cta">
       <!-- Call to action section -->
       <h2>A great place for all your programming assignments!</h2>
-      <strong>Real Education. Real Results.</strong>
-      <p>A platform for the management of programming assignments in universities and schools.</p>
+      <p>A platform for management of programming assignments in universities and schools.</p>
     </section>
     <aside id="login-sign-up">
       <a href="{% url 'app:login' %}">Login</a>
       <a class="button" href="{% url 'app:signup' %}">Sign-Up</a>
     </aside>
+    {% endblock content %}
   </main>
 </body>
 </html>

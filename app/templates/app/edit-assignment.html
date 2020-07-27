@@ -1,8 +1,10 @@
 {% extends 'app/cc-base-dashboard.html' %}
 {% load static %}
+
 {% block link %}
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 {% endblock link %}
+
 {% block content %}
 	<form style="display: block" action="{% url 'app:edit-assignment' assignment.id %}" method="POST">
 		{% csrf_token %}

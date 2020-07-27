@@ -43,17 +43,4 @@ urlpatterns = [
     path('question/<int:pk>/edit', views.edit_question, name='edit-question'),
     path('question/<int:pk>/delete', views.delete_question, name='delete-question'),
 
-    # old views
-    path('dashboard/classroom/join/', views.join_classroom, name='join-classroom'),
-    path('dashboard/classroom/<int:pk>/', views.classroom, name='view-classroom'),
-    # path('dashboard/classroom/<int:pk>/edit/', views.edit_classroom, name='edit-classroom'),
-
-    path('dashboard/assignments/', views.all_assignments, name='all-assignments'),
-    path('dashboard/assignment/create/', views.create_assignment, name='create-assignment'),
-    path('dashboard/assignment/<int:pk>/', views.assignment, name='view-assignment'),
-    # path('dashboard/assignment/<int:pk>/edit/', views.edit_assignment, name='edit-assignment'),
-
-    path('dashboard/assignment/<int:pk>/question/create/', views.create_question, name='create-question'),
-    path('dashboard/assignment/<int:assignment_pk>/question/<int:pk>/', views.question, name='view-question'),
-    # path('dashboard/assignment/<int:assignment_pk>/question/<int:pk>/edit/', views.edit_question, name='edit-question'),
 ]

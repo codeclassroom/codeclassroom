@@ -1,9 +1,11 @@
 {% extends 'app/cc-base-dashboard.html' %}
 {% load static %}
+
 {% block link %}
 <link rel="stylesheet" type="text/css" href="{% static 'app/css/classroom.css' %}">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 {% endblock link %}
+
 {% block content %}
 <section id="classroom">
   <div>
@@ -19,14 +21,16 @@
     </div>
     {% endif %}
   </div>
-  {% if student %}
   <p>Professor: {{ classroom.professor }}</p>
+  {% if professor %}
+  <p>Join Code: {{ classroom.join_code }}</p>
   {% endif %}
-  <em>Join Code: {{ classroom.join_code }}</em>
 </section>
+
 {% block messages %}
 {{ block.super }}
 {% endblock messages %}
+
 <section id="assignments">
   <h3>Assignments</h3>
   <ul>
@@ -45,6 +49,7 @@
     {% endfor %}
   </ul>
 </section>
+
 <section id="students">
   <h3>Students</h3>
   <ol>
@@ -58,13 +63,16 @@
   </ol>
 </section>
 {% endblock content %}
+
 {% block form %}
 <form action="{% url 'app:classroom' classroom.pk %}" method="POST">
+  <h2>Create Assignment</h2>
   {% csrf_token %}
   {{ form }}
   <input type="submit" value="Add Assignment">
 </form>
 {% endblock form %}
+
 {% block js %}
 {{ block.super }}
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
