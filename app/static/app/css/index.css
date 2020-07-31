@@ -68,3 +68,179 @@ main {
   border: 1px solid #000;
   border-radius: 10px;
 }
+
+
+#intro {
+  display: inline-block;
+  margin: auto;
+  margin-left: 9%;
+  margin-top: 1%;
+}
+
+#topbuttons{
+  width: 198px;
+  float: right;
+}
+
+#logo{
+  margin-right: 7px;
+  margin-bottom: -2px;
+}
+
+#btn{
+  color: #606060;
+  background: none;
+  border: none;
+}
+
+#signupbtn{
+  border: 1px solid #707070;
+  color: #606060;
+  background: #FFFFFF;
+  border-radius: 6px;
+  padding: 10px 16px;
+  cursor: pointer;
+}
+
+button > a{
+  text-decoration: none;
+  color: #606060;
+  outline: none;
+}
+
+#formsignupbtn > a:active{
+  text-decoration: none;
+  outline: none;
+}
+
+#formsignupbtn{
+  border: 1px solid #707070;
+  background: #FFFFFF;
+  padding: 9px;
+  border-radius: 7px;
+  cursor: pointer;
+  transition-duration: 0.33s;
+}
+
+#layout{
+  display: flex;
+  margin: auto;
+  margin-top: 11%;
+}
+
+form{
+  color: #606060;
+  text-align: center;
+  padding: 1cm;
+  border: 1px solid #606060;
+  transition-duration: 0.33s;
+}
+
+form:hover{
+  box-shadow: 0 0 9px grey;
+}
+
+#form{
+  display: inline-block;
+  margin: auto;
+  margin-right: 0%;
+  width: 300px;
+  box-shadow: 0 0 5px grey;
+  transform: scale(1.1, 1.1);
+}
+
+input{
+  font-weight: 500;
+  box-shadow: 0 0 5px grey;
+  margin: 10px auto;
+  transition-duration: 0.33s;
+  display: inline-block;
+}
+
+input:hover{
+  box-shadow: 0 0 10px grey;
+}
+
+input:focus{
+  outline: none;
+}
+
+
+/*Forgot Password*/
+form > a{
+  float: right;
+  margin-right: 9px;
+  font-size: 13px;
+  color: #606060;
+  display: block;
+}
+
+#formlgnbtn{
+  display: block;
+  border: 1px solid #707070;
+  background: #FFFFFF;
+  padding-left: 14px;
+  padding-right: 14px;
+  padding-top: 9px;
+  padding-bottom: 9px;
+  border-radius: 7px;
+  margin-right: 12px;
+  margin-top: 33px;
+  cursor: pointer;
+}
+
+form > p{
+  margin-top: 25px;
+}
+
+#home{
+  display: inline-block;
+  margin: auto;
+  /*margin-top: 3%;*/
+}
+
+#image{
+  width: 36%;
+  margin: auto;
+  box-shadow: 0 0 12px grey;
+}
+
+#home > h1{
+  width: 473px;
+  font-size: 39px;
+}
+
+#home > h2{
+  width: 321px;
+}
+
+#home > p{
+  color: #606060;
+  font-size: 18px;
+  padding-left: 12px;
+  border-left: 3px solid #606060;
+  width: 363px;
+}
+
+#home > button{
+  font-size: 16px;
+}
+
+#lsbuttons{
+  width: 156px;
+  float: right;
+  margin-top: 2%;
+  margin-right: 0.81%;
+}
+
+button{
+  cursor: pointer;
+}
+
+#signupbtn > a{
+  color: #606060;
+}
+
+#formsignupbtn:hover{
+  box-shadow: 0 0 7px grey;
+}

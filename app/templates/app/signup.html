@@ -1,26 +1,41 @@
-{% extends 'app/base.html' %}
+{% extends 'app/cc-index.html' %}
 {% load static %}
 {% block content %}
 	{% block messages %}
 		{{ block.super }}
 	{% endblock messages %}
-	<div class="container">
-		<div class="card darken-1 z-depth-5">
-			<div class="card-content">
+		<div id="layout">
+			<div id="form">
 				<form action="{% url 'app:signup' %}" method="POST">
 					{% csrf_token %}
-					{{ form.as_p }}
-					<button class="btn waves-effect waves-light" type="submit" type="submit" name="submit" value="Create Account">Signup
-					<i class="material-icons right">send</i>
-					</button>
+					<input type="text" name="username" maxlength="150" autofocus="" required="" id="username" placeholder="username">
+					<input type="email" name="email" maxlength="254" id="email" placeholder="email">
+					<label for="user_type_0"><input type="radio" name="user_type" value="professor" required="" id="user_type_0">Professor</label>
+					<label for="user_type_1"><input type="radio" name="user_type" value="student" required="" id="user_type_1">
+					Student</label>
+					<!--
+					<input type="radio" name="user_type" value="Teacher" onclick="document.getElementById('TCode').style.display='block'"><font size="2pt"> Teacher</font>-->
+					<!--
+					<input type="radio" name="user_type" value="Student" onclick="document.getElementById('TCode').style.display='none'" checked><font size="2pt"> Student</font><br>
+					<span id="TCode" style="display: none;"><input type="text" name="TeacherCode" placeholder="eg. #54cef9" size="7" maxlength="7"><small> Enter identity code</small></span>-->
+
+					<input type="password" name="password1" required="" id="password1" placeholder="Enter Password">
+
+					<label for="password2">Password confirmation:</label> <input type="password" name="password2" required="" id="password2"> <span class="helptext">Enter the same password as before, for verification.</span>
+
+					<input id="formsignupbtn" type="submit" value="Create An Account">
+
+					<div>
+						<p>Already have an account ?</p>
+						<button><a href="{% url 'app:login' %}">Login</a></button>
+					</div>
 				</form>
 			</div>
-		</div><br>
-	</div>
-	<div class="container center">
-		<h4>Already have an account ?</h4>
-		<a class="btn waves-effect waves-light" href="{% url 'app:login' %}">Login</a>
-	</div>
+			<div id="intro">
+				<h1>A great place for all your projects and assignments!</h1>
+				<h2>Real Education. Real Results.</h2>
+				<p>A platform for the management of Programming assignments and projects in Universities/Schools.</p>
+			</div>
 {% endblock content %}
 {% block js %}
 	<script type="text/javascript" src="{% static 'app/signup.js' %}"></script>

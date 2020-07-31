@@ -1,28 +1,27 @@
-{% extends 'app/base.html' %}
+{% extends 'app/cc-index.html' %}
 {% load static %}
 {% block content %}
 	{% block messages %}
 		{{ block.super }}
 	{% endblock messages %}
-	<div class="container">
-		<div class="card darken-1 z-depth-5 center">
-			<img src="{% static 'app/images/login.png'%}">
-			<div class="card-content white-text">
-				<form action="{% url 'app:login' %}" method="POST">
-					{% csrf_token %}
-					<label for="username" class="left">Username:</label> <input type="text" name="username" autofocus="" required="" id="username">
-					<label for="password" class="left">Password:</label> <input type="password" name="password" required="" id="password">
-					<button class="btn waves-effect waves-light" type="submit" type="submit" name="submit" value="Login">Login
-					<i class="material-icons right">send</i>
-					</button>
-					<input type="hidden" name="next" value="{{ next }}">
-				</form>
-			</div>
-		</div><br>
-	</div>
-	<div class="container center">
-		<h5>Not on CodeClassroom yet !</h5>
-		<a class="btn waves-effect waves-light" href="{% url 'app:signup' %}">Sign-up</a>
+	<div id="layout">
+		<div id="form">
+			<form action="{% url 'app:login' %}" method="POST">
+				{% csrf_token %}
+				<input type="text" name="username" placeholder="Email or User Name">
+				<input type="password" name="password" placeholder="Password">
+				<a href="forgotpassword.html">Forgot Password?</a>
+				<input id="formlgnbtn" type="submit" value="Login">
+				<div>
+					<p>Not on CodeClassromm</p>
+					<button><a href="{% url 'app:signup' %}">Signup</a></button>
+				</div>
+			</form>
+		</div>
+		<div id="intro">
+			<h1>A great place for all your projects and assignments!</h1>
+			<p>A platform for the management of Programming assignments and projects in Universities/Schools.</p>
+		</div>
 	</div>
 {% endblock content %}
 {% block js %}
