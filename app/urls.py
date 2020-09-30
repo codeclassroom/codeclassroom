@@ -1,11 +1,13 @@
 from django.contrib.auth import views as auth_views
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
-from django.urls import path, reverse_lazy
+from django.urls import include, path, reverse_lazy
 from . import views
 
 app_name = 'app'
 urlpatterns = [
+    path('api/', include('api.urls')),
+
     path('', views.index, name='index'),
     path('signup/', views.signup, name='signup'),
     path('login/', auth_views.LoginView.as_view(
@@ -41,6 +43,6 @@ urlpatterns = [
     # question views
     path('question/<int:pk>', views.question, name='question'),
     path('question/<int:pk>/edit', views.edit_question, name='edit-question'),
-    path('question/<int:pk>/delete', views.delete_question, name='delete-question'),
+    path('question/<int:pk>/delete', views.delete_question, name='delete-question')
 
 ]

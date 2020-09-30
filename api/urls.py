@@ -37,12 +37,12 @@ urlpatterns = [
     path('', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     path('signup/professor', ProfessorSignupView.as_view(), name='prof-signup'),
     path('signup/student', StudentSignupView.as_view(), name='student-signup'),
-    path('login/', UserLoginView.as_view(), name='login'),
-    path('logout/', UserLogoutView.as_view(), name='logout'),
+    path('login', UserLoginView.as_view(), name='login'),
+    path('logout', UserLogoutView.as_view(), name='logout'),
 
-    path('students/', student_list, name='students'),
+    path('students', student_list, name='students'),
     path('students/<int:pk>', StudentDetail.as_view(), name='student'),
-    path('professors/', professor_list, name='professors'),
+    path('professors', professor_list, name='professors'),
     path('professors/<int:pk>', ProfessorDetail.as_view(), name='professor'),
 
     # All Classroom URLs
@@ -59,7 +59,7 @@ urlpatterns = [
 
     # All Question URLs
     path('questions/create', QuestionCreate.as_view(), name='question-create'),
-    path('questions/', QuestionList.as_view(), name='question-list'),
+    path('questions', QuestionList.as_view(), name='question-list'),
     path('questions/<int:pk>', QuestionDetail.as_view(), name='question-detail'),
 
     # All Solution/Submission URLs
@@ -68,8 +68,8 @@ urlpatterns = [
     path('submissions', SubmissionList.as_view(), name='submissions'),
 
     # Utility URLs
-    path('judge/', JudgeCode.as_view(), name='code-judge'),
-    path('codesim/', PlagiarismView.as_view(),
+    path('judge', JudgeCode.as_view(), name='code-judge'),
+    path('codesim', PlagiarismView.as_view(),
          name='plagiarism-detector'),
     path('email/feedback', FeedBackView.as_view(), name='feedback'),
     path('email/report', ReportQuesiton.as_view(), name='report-question'),
