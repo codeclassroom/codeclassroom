@@ -7,6 +7,7 @@ UserModel = get_user_model()
 
 
 class UsernameOrEmailBackend(ModelBackend):
+
     def authenticate(self, request, username=None, password=None, **kwargs):
         if username is None:
             username = kwargs.get(UserModel.USERNAME_FIELD)
