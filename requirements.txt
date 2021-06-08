@@ -1,6 +1,6 @@
 Django==2.2.9
 djangorestframework==3.11.0
-Pillow==6.2.1
+Pillow==8.2.0
 python-dotenv
 coderunner
 django-cors-headers
